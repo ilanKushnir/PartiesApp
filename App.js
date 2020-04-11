@@ -1,27 +1,55 @@
 import React from 'react';
 import {createStackNavigator} from 'react-navigation-stack';
 import {createAppContainer} from 'react-navigation';
-import {View, Text,StyleSheet} from 'react-native';
 import { Home } from './app/views/Home';
-import { NavBar } from './app/sections/Navbar';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import {Details} from "./app/views/Details";
+import { NavigationContainer } from '@react-navigation/native';
+import { Icon } from 'react-native-paper';
+import{View,Text} from 'react-native';
 
-const Stack = createStackNavigator({
-  HomeRT: {
-    screen: Home
+const HomeStack = createStackNavigator({
+  Home:{
+    screen: Home,
   },
-});
+  Details:{
+    screen: Details,
+  }  
 
-const HomeStack = createAppContainer(Stack);
+},
+);
+const Tab = createBottomTabNavigator();
+
+
+function HomeScreen() {
+  return (
+    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+      <Text>Home!</Text>
+    </View>
+  );
+}
+
+function SettingsScreen() {
+  return (
+    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+      <Text>Settings!</Text>
+    </View>
+  );
+}
 
 export default class App extends React.Component {
    render() {
     return (
-      <View>
-        <HomeStack/>
-        <NavBar/>
-       </View>
+      <NavigationContainer>
+        <Tab.Navigator>
+        <Tab.Screen name="Home" component={HomeScreen}/>
+        <Tab.Screen name="Details" component={SettingsScreen}/>
+        <Tab.Screen name = "New Party" component={HomeScreen}/>
+        <Tab.Screen name = "Join Party" component={SettingsScreen}/>
+        </Tab.Navigator>
+      </NavigationContainer>
     )
-  }
+   }
 }
 
 
