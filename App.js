@@ -1,6 +1,6 @@
 import React from 'react';
 import { StyleSheet, Text, View, TextInput, Button } from 'react-native';
-import { PartyView } from '.app/views/PartyView.js';
+import { PartyView } from './app/views/PartyView.js';
 
 export default function App() {
   return (
@@ -8,6 +8,7 @@ export default function App() {
       <View>
         <TextInput />
         <Button title="ADD" />
+        <PartyView />
       </View>
       <View></View>
     </View>

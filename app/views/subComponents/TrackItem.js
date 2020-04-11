@@ -1,11 +1,14 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
 
 const TrackItem = props => {
     return(
-        <TouchableOpacity onPress={props.onTrackSelect}>
+        <TouchableOpacity>
             <View style={styles.trackItem}>
-                <Text>{props.trackName}</Text>
+                <Image
+                    style={{ width: '100%', height: 200}}
+                    source={{ uri: props.imageSrc }}
+                />
             </View>
         </TouchableOpacity>
     );
@@ -16,7 +19,7 @@ const styles = StyleSheet.create({
         padding: 10,
         marginVertical: 10,
         backgroundColor: 'black',
-        borderColoe: 'black',
+        borderColor: 'black',
         borderWidth: 1
     }
 });
