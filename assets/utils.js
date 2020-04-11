@@ -4,4 +4,4 @@ const DB_TABLES = {
     TRACK: 'track'
 }
 
-export { DB_TABLES }
+export default { DB_TABLES }
