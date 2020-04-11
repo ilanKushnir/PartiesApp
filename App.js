@@ -1,24 +1,28 @@
 import React from 'react';
-import { StyleSheet, Text, View, TextInput, Button } from 'react-native';
-import { PartyView } from '.app/views/PartyView.js';
+import {createStackNavigator} from 'react-navigation-stack';
+import {createAppContainer} from 'react-navigation';
+import {View, Text,StyleSheet} from 'react-native';
+import { Home } from './app/views/Home';
+import { NavBar } from './app/sections/Navbar';
 
-export default function App() {
-  return (
-    <View style={{padding: 30 }}>
+const Stack = createStackNavigator({
+  HomeRT: {
+    screen: Home
+  },
+});
+
+const HomeStack = createAppContainer(Stack);
+
+export default class App extends React.Component {
+   render() {
+    return (
       <View>
-        <TextInput />
-        <Button title="ADD" />
-      </View>
-      <View></View>
-    </View>
-  );
+        <HomeStack/>
+        <NavBar/>
+       </View>
+    )
+  }
 }
 
-// const styles = StyleSheet.create({
-//   container: {
-//     flex: 1,
-//     backgroundColor: '#fff',
-//     alignItems: 'center',
-//     justifyContent: 'center',
-//   },
-// });
+
+    
