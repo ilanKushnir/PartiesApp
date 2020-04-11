@@ -3,10 +3,12 @@ import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
 
 const TrackItem = props => {
     return(
-        <TouchableOpacity>
+        <TouchableOpacity onPress={() => {
+            props.loadVideoFunc(props.id)
+        }}>
             <View style={styles.trackItem}>
                 <Image
-                    style={{ width: '100%', height: 200}}
+                    style={{ width: 50, height: 50}}
                     source={{ uri: props.imageSrc }}
                 />
             </View>
@@ -18,7 +20,7 @@ const styles = StyleSheet.create({
     trackItem: {
         padding: 10,
         marginVertical: 10,
-        backgroundColor: 'black',
+        backgroundColor: 'grey',
         borderColor: 'black',
         borderWidth: 1
     }

@@ -1,6 +1,7 @@
 import React from 'react';
 import { Text, View, FlatList, Image } from 'react-native';
 import TrackItem from './subComponents/TrackItem';
+import YoutubePlayer from './subComponents/YoutubePlayer';
 
 export class PartyView extends React.Component {
     static navigationOptions = {
@@ -9,7 +10,10 @@ export class PartyView extends React.Component {
 
     constructor(props) {
         super(props);
-        this.state = { listLoaded: false };
+        this.state = { 
+            listLoaded: false,
+            activeVideo: 'qSRrxpdMpVc'
+        };
     }
 
     componentDidMount() {
@@ -26,21 +30,31 @@ export class PartyView extends React.Component {
             })
     }
 
+    loadVideoToPlayer = (id) => {
+        console.log(id)
+        this.setState({
+            activeVideo: id
+        })
+    }
+
     render() {
         return(
             <View>
+                <YoutubePlayer videoId={this.state.activeVideo}/>
                 {this.state.listLoaded && (
                     <View style={{ paddingTop: 30 }}>
                         <FlatList 
                             data={ this.state.videoList }
                             renderItem={({item}) => 
                                     <TrackItem
+                                        key={item.id.videoId}
                                         id={item.id.videoId}
                                         title={item.snippet.title}
                                         imageSrc={item.snippet.thumbnails.high.url}
+                                        loadVideoFunc={this.loadVideoToPlayer}
                                     />
-                            
                             }
+                            keyExtractor={item => item.id.videoId}
                         />
                     </View>
                 )}
