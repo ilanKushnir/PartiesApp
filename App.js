@@ -1,6 +1,8 @@
 import React from 'react';
 import { StyleSheet, Text, View, TextInput, Button } from 'react-native';
 import { PartyView } from './app/views/PartyView.js';
+import SetPartyView from './app/views/SetPartyView.js';
+
 
 export default function App() {
   return (
