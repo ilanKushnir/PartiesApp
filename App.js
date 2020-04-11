@@ -6,6 +6,7 @@ export default function App() {
   return (
     <View style={{padding: 30 }}>
       <View>
+        <SetPartyView />
         <TextInput />
         <Button title="ADD" />
         <PartyView />
