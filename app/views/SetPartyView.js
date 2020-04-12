@@ -1,8 +1,9 @@
 import React from 'react';
-import { StyleSheet, Text, View, TextInput, Alert, TouchableOpacity} from 'react-native';
+import { StyleSheet, Text, View, TextInput, Alert, TouchableOpacity, Button} from 'react-native';
 import PartyView from './PartyView'
 import firebase from '../../firebase'
 import DB_TABLES from '../../assets/utils'
+import { styles } from '../styles/styles.js'
 
 export default class SetPartyView extends React.Component {
     constructor(props) {
@@ -73,21 +74,25 @@ export default class SetPartyView extends React.Component {
     render() {
         const { message, inputPlaceholder, buttonText, handleSetParty } = this.getAttributes(this.state.isNewParty)
         return (
-            <View>
+            <View style={styles.center}>
                 <Text>{message}</Text>
                 <TextInput onChangeText={inputValue => {this.setState({inputValue})}}>{inputPlaceholder}</TextInput>
                 <TouchableOpacity onPress={() => handleSetParty(this.state.inputValue)}>
                     <Text >{buttonText}</Text>
+                    <Button 
+                        title="Party View" 
+                        onPress={() => this.props.navigation.navigate('Party View')}>
+                    </Button>
                 </TouchableOpacity>
             </View>
         )
     }
 }
 
-const styles = StyleSheet.create({
-    button: {
-        flex: 2,
-        flexDirection: 'row',
-        alignItems: 'center'
-        }
-});
+// const styles = StyleSheet.create({
+//     button: {
+//         flex: 2,
+//         flexDirection: 'row',
+//         alignItems: 'center'
+//         }
+// });

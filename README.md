@@ -28,3 +28,16 @@ run
 npm install -g expo-cli
 or
 yarn add -g expo-cli
+
+6. React Navigation
+run
+npm install @react-navigation/native
+
+then:
+
+npm i react-native-gesture-handler react-native-reanimated react-native-screens react-native-safe-area-context @react-native-community/masked-view
+or if using expo:
+expo install react-native-gesture-handler react-native-reanimated react-native-screens react-native-safe-area-context @react-native-community/masked-view
+
+then: 
+npm install @react-navigation/stack @react-navigation/bottom-tabs @react-navigation/drawer
