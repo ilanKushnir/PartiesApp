@@ -27,10 +27,14 @@ export default class SetPartyView extends React.Component {
             ]
             handleSetParty = async (partyName) => {
                 try {
+                    // const lastCreatedParty = await db.collection('party').orderBy('creationTime', 'desc').limit(1);
+                    // console.log('last created party:', lastCreatedParty.doc());
+                    
                     const response = await db.collection('party').add({
                         name: partyName,
                         condition: 'pause',
-                        playlist: ''
+                        playlist: '',
+                        creationTime: new Date()
                     })
                     console.log('response --> party id', response.id);
                     
@@ -40,7 +44,8 @@ export default class SetPartyView extends React.Component {
                    
 
                     } catch(e) {
-                        Alert.alert(`Error starting new party ${e}`)
+                        console.log(`Error starting new party ${e}`)
+                        Alert.alert(`Error starting new party`)
                     }
                 }  
         } else {    // join to existing party
@@ -80,11 +85,3 @@ export default class SetPartyView extends React.Component {
         )
     }
 }
-
-// const styles = StyleSheet.create({
-//     button: {
-//         flex: 2,
-//         flexDirection: 'row',
-//         alignItems: 'center'
-//         }
-// });
