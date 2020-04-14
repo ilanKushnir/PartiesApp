@@ -14,16 +14,16 @@ const Stack = createStackNavigator();
 const MaterialBottomTabs = createMaterialBottomTabNavigator();
 
 export default class Navigator extends React.Component {
-
     createStack = () => {
     return (
         <Stack.Navigator>
         <Stack.Screen 
         name="Bottom Tabs" 
-        children={this.createBottomTabs}
+        component={this.createBottomTabs}
         options={{
-            title: ""}}
-            />
+            title: "",
+        }}
+        />
         </Stack.Navigator> 
         )
     }
@@ -39,13 +39,13 @@ export default class Navigator extends React.Component {
             
         }}
         />
-        <MaterialBottomTabs.Screen name="Tab 2" component={this.createPartyStack}
+        <MaterialBottomTabs.Screen name="Tab 2" component={this.createPartyStack} initialParams={{isNewParty:true}}
         options={{
             tabBarLabel: 'New Party',
             
         }}
         />
-        <MaterialBottomTabs.Screen name="Tab 3" component={this.createPartyStack}
+        <MaterialBottomTabs.Screen name="Tab 3" component={this.createPartyStack} initialParams={{isNewParty:false}}
         options={{
             tabBarLabel: 'Join Party',
             
@@ -54,19 +54,21 @@ export default class Navigator extends React.Component {
     </MaterialBottomTabs.Navigator>
     }
 
-    createPartyStack = () => {
-    return (
+    createPartyStack = ({ navigation,route }) => {
+        console.log('is new party ', route.params.isNewParty)
+        return (
         <Stack.Navigator>
         <Stack.Screen
             name="Set Party"
             component={SetPartyView}
-            />
-            <Stack.Screen
+            initialParams={{isNewParty: route.params.isNewParty}}
+        />
+        <Stack.Screen
             name="Party View"
             component={PartyView}
-            />
+        />
         </Stack.Navigator>
-    )
+        )
     }
 
 // getInitSetPartyView = (isNewParty) => {

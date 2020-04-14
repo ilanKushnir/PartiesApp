@@ -9,10 +9,10 @@ export default class SetPartyView extends React.Component {
     constructor(props) {
         super(props)
         this.state = { 
-            isNewParty: props.newParty,
+            isNewParty: props.route.params.isNewParty,
             inputValue: ''
          }
-        console.log('############### isNewParty', props.newParty)
+        console.log('############### isNewParty', props.route.params.isNewParty)
         this.getAttributes = this.getAttributes.bind(this);// ???
     }
 
@@ -34,12 +34,10 @@ export default class SetPartyView extends React.Component {
                     })
                     console.log(response.id);
                     
-                    const { id } = response
-                    Alert.alert(`Successfully created party with id ${id}`)
-                    // return (
-                         // ---> Render this component onto the main App using navigator
-                        // <PartyView partyId={{ id }} /> 
-                    // )
+                    const partyId = response.id
+                    Alert.alert(`Successfully created party with id ${partyId}`)
+                    this.props.navigation.navigate('Party View', {partyId})
+                   
 
                     } catch(e) {
                         Alert.alert(`Error starting new party ${e}`)
@@ -58,11 +56,8 @@ export default class SetPartyView extends React.Component {
                     
                     const name = party.data().name
                     Alert.alert(`Connected to Party ${name} succesfully`)
+                    this.props.navigation.navigate('Party View', {partyId})
 
-                    // return (
-                         // ---> Render this component onto the main App using navigator
-                        // <PartyView partyId={{ partyId }} />
-                    // )
                 } catch (e) {
                     Alert.alert(`Could not load party with id ${partyId}`)
                 }
@@ -79,10 +74,7 @@ export default class SetPartyView extends React.Component {
                 <TextInput onChangeText={inputValue => {this.setState({inputValue})}}>{inputPlaceholder}</TextInput>
                 <TouchableOpacity onPress={() => handleSetParty(this.state.inputValue)}>
                     <Text >{buttonText}</Text>
-                    <Button 
-                        title="Party View" 
-                        onPress={() => this.props.navigation.navigate('Party View')}>
-                    </Button>
+                    
                 </TouchableOpacity>
             </View>
         )
