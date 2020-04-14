@@ -27,24 +27,27 @@ export default class SetPartyView extends React.Component {
             ]
             handleSetParty = async (partyName) => {
                 try {
-                    // const lastCreatedParty = await db.collection('party').orderBy('creationTime', 'desc').limit(1);
-                    // console.log('last created party:', lastCreatedParty.doc());
+                    const lastCreatedParty = await db.collection('party').orderBy('creationTime', 'desc').limit(1).get();
+                    const partyData = lastCreatedParty.docs[0].data();
+                    let { joinId } = partyData;
+                    joinId++;
+                    // lastCreatedParties.forEach(lastCreated => joinId = ++lastCreated.data().joinId);
                     
                     const response = await db.collection('party').add({
-                        name: partyName,
+                        joinId,
+                        name: partyName || `Party #${joinId}`,
                         condition: 'pause',
                         playlist: '',
                         creationTime: new Date()
-                    })
+                    });
                     console.log('response --> party id', response.id);
                     
                     const partyId = response.id
-                    Alert.alert(`Successfully created party with id ${partyId}`)
+                    Alert.alert(`Successfully created ${partyName} party. Use id ${joinId} to join`)
                     this.props.navigation.navigate('Party View', {partyId})
                    
-
-                    } catch(e) {
-                        console.log(`Error starting new party ${e}`)
+                    } catch(error) {
+                        console.log(`Error starting new party ${error}`)
                         Alert.alert(`Error starting new party`)
                     }
                 }  
@@ -54,17 +57,23 @@ export default class SetPartyView extends React.Component {
                 'Party ID',
                 'Connect to Party'
             ]
-            handleSetParty = async (partyId) => {
+            handleSetParty = async (joinId) => {
                 try {
+                    const response = await db.collection('party').where('joinId', '==', parseInt(joinId)).limit(1).get()
+                    // TODO - handle wrond joinId
+                    const party = response.docs[0]
+
+                    const data = party.data()
+                    const { name } = data
+
+                    const partyId = party.id
                     
-                    const party = await db.collection('party').doc(partyId).get()
-                    
-                    const name = party.data().name
                     Alert.alert(`Connected to Party ${name} succesfully`)
                     this.props.navigation.navigate('Party View', {partyId})
 
                 } catch (e) {
-                    Alert.alert(`Could not load party with id ${partyId}`)
+                    console.log('Error join existing party', e)
+                    Alert.alert(`Could not load party with Join Id ${joinId}`)
                 }
             }
         }

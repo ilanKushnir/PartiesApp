@@ -18,6 +18,7 @@ export class PartyView extends React.Component {
             activeVideo: 'qSRrxpdMpVc',
             partyId: props.route.params.partyId,
             party: {
+                joinId: '',
                 partyName: '',
                 condition: '',
                 playlist: ''
@@ -33,6 +34,7 @@ export class PartyView extends React.Component {
                 const data = snapshot.data();
                 this.setState({
                     party: {
+                        joinId: data.joinId,
                         partyName: data.name,
                         condition: data.condition,
                         playlist: data.playlist
@@ -41,10 +43,10 @@ export class PartyView extends React.Component {
                 console.log('onSnapshot change-->', data.name, data.condition);
             })
 
-            // todo - when on component distruction --> call DBbindingResponse() to unbind it from DB
+            // TODO - when distructing component --> call DBbindingResponse() to unbind it from DB
         } catch (error) {
-            console.log('bindParty changesFromDB error', error)
-            Alert.alert(`Error getting updates from ${this.state.partyId}`);
+            console.log('bindParty changes From DB error', error)
+            Alert.alert(`Error getting updates from party #${this.state.party.joinId}`);
         }
 
 
@@ -93,7 +95,7 @@ export class PartyView extends React.Component {
     render() {
         return(
             <View>
-                <Text >{`Party ID - ${this.state.partyId}`}</Text>
+                <Text >{`Party Join ID - ${this.state.party.joinId}`}</Text>
                 <Text >{this.state.party.condition === 'play' ? 'PARTY PLAYING' : 'PARTY PAUESED'}</Text>
                 <TouchableOpacity onPress={this.onPressPlayPause}>
                     <Text >{ 'Play / Pause' }</Text>
