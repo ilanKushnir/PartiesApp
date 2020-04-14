@@ -12,7 +12,7 @@ export default class SetPartyView extends React.Component {
             isNewParty: props.route.params.isNewParty,
             inputValue: ''
          }
-        console.log('############### isNewParty', props.route.params.isNewParty)
+        console.log('setNetParty --> isNewParty', props.route.params.isNewParty)
         this.getAttributes = this.getAttributes.bind(this);// ???
     }
 
@@ -32,7 +32,7 @@ export default class SetPartyView extends React.Component {
                         condition: 'pause',
                         playlist: ''
                     })
-                    console.log(response.id);
+                    console.log('response --> party id', response.id);
                     
                     const partyId = response.id
                     Alert.alert(`Successfully created party with id ${partyId}`)

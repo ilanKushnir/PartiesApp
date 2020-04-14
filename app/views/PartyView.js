@@ -14,7 +14,7 @@ export class PartyView extends React.Component {
             listLoaded: false,
             activeVideo: 'qSRrxpdMpVc'
         };
-        console.log("on partyView:" , props)
+        console.log("on partyView:" , props.route.params.partyId)
     }
 
     componentDidMount() {

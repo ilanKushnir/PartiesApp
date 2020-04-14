@@ -6,8 +6,6 @@ import { NavigationContainer } from '@react-navigation/native'
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs'
 import { createStackNavigator } from '@react-navigation/stack'
 import HomeTab from '../../tabs/HomeTab.js'
-import NewPartyTab from '../../tabs/NewPartyTab.js'
-import JoinPartyTab from '../../tabs/JoinPartyTab.js'
 //import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 
 const Stack = createStackNavigator();
@@ -55,7 +53,7 @@ export default class Navigator extends React.Component {
     }
 
     createPartyStack = ({ navigation,route }) => {
-        console.log('is new party ', route.params.isNewParty)
+        console.log('createPartyStack --> is new party ', route.params.isNewParty)
         return (
         <Stack.Navigator>
         <Stack.Screen
