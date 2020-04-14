@@ -28,9 +28,8 @@ export class PartyView extends React.Component {
     
     bindPartyChangesFromDB = async () => {
         const db = firebase.firestore();
-        let counter = 0;
         try {
-            const currentState = await db.collection('party').doc(this.state.partyId).onSnapshot(snapshot => {
+            const DBbindingResponse = await db.collection('party').doc(this.state.partyId).onSnapshot(snapshot => {
                 const data = snapshot.data();
                 this.setState({
                     party: {
@@ -40,13 +39,9 @@ export class PartyView extends React.Component {
                     }
                 });
                 console.log('onSnapshot change-->', data.name, data.condition);
-                counter++;
             })
 
-            console.log(`PartyView --> onSnapshot party ${currentState}`);
-            if(counter === 5) {
-                currentState()
-            }
+            // todo - when on component distruction --> call DBbindingResponse() to unbind it from DB
         } catch (error) {
             console.log('bindParty changesFromDB error', error)
             Alert.alert(`Error getting updates from ${this.state.partyId}`);
