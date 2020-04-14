@@ -1,17 +1,18 @@
 import React from 'react';
-import { StyleSheet, Text, View, TextInput, Alert, TouchableOpacity} from 'react-native';
+import { StyleSheet, Text, View, TextInput, Alert, TouchableOpacity, Button} from 'react-native';
 import PartyView from './PartyView'
 import firebase from '../../firebase'
 import DB_TABLES from '../../assets/utils'
+import { styles } from '../styles/styles.js'
 
 export default class SetPartyView extends React.Component {
     constructor(props) {
         super(props)
         this.state = { 
-            isNewParty: props.newParty,
+            isNewParty: props.route.params.isNewParty,
             inputValue: ''
          }
-        console.log('############### isNewParty', props.newParty)
+        console.log('############### isNewParty', props.route.params.isNewParty)
         this.getAttributes = this.getAttributes.bind(this);// ???
     }
 
@@ -33,12 +34,10 @@ export default class SetPartyView extends React.Component {
                     })
                     console.log(response.id);
                     
-                    const { id } = response
-                    Alert.alert(`Successfully created party with id ${id}`)
-                    // return (
-                         // ---> Render this component onto the main App using navigator
-                        // <PartyView partyId={{ id }} /> 
-                    // )
+                    const partyId = response.id
+                    Alert.alert(`Successfully created party with id ${partyId}`)
+                    this.props.navigation.navigate('Party View', {partyId})
+                   
 
                     } catch(e) {
                         Alert.alert(`Error starting new party ${e}`)
@@ -57,11 +56,8 @@ export default class SetPartyView extends React.Component {
                     
                     const name = party.data().name
                     Alert.alert(`Connected to Party ${name} succesfully`)
+                    this.props.navigation.navigate('Party View', {partyId})
 
-                    // return (
-                         // ---> Render this component onto the main App using navigator
-                        // <PartyView partyId={{ partyId }} />
-                    // )
                 } catch (e) {
                     Alert.alert(`Could not load party with id ${partyId}`)
                 }
@@ -73,21 +69,22 @@ export default class SetPartyView extends React.Component {
     render() {
         const { message, inputPlaceholder, buttonText, handleSetParty } = this.getAttributes(this.state.isNewParty)
         return (
-            <View>
+            <View style={styles.center}>
                 <Text>{message}</Text>
                 <TextInput onChangeText={inputValue => {this.setState({inputValue})}}>{inputPlaceholder}</TextInput>
                 <TouchableOpacity onPress={() => handleSetParty(this.state.inputValue)}>
                     <Text >{buttonText}</Text>
+                    
                 </TouchableOpacity>
             </View>
         )
     }
 }
 
-const styles = StyleSheet.create({
-    button: {
-        flex: 2,
-        flexDirection: 'row',
-        alignItems: 'center'
-        }
-});
+// const styles = StyleSheet.create({
+//     button: {
+//         flex: 2,
+//         flexDirection: 'row',
+//         alignItems: 'center'
+//         }
+// });
