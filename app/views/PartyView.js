@@ -4,6 +4,7 @@ import TrackItem from './subComponents/TrackItem';
 import YoutubePlayer from './subComponents/YoutubePlayer';
 import firebase from '../../firebase';
 import { styles } from '../styles/styles.js'
+import { StackActions } from '@react-navigation/native'
 
 
 export class PartyView extends React.Component {
@@ -99,6 +100,9 @@ export class PartyView extends React.Component {
                 <Text >{this.state.party.condition === 'play' ? 'PARTY PLAYING' : 'PARTY PAUESED'}</Text>
                 <TouchableOpacity onPress={this.onPressPlayPause}>
                     <Text >{ 'Play / Pause' }</Text>
+                </TouchableOpacity>
+                <TouchableOpacity onPress= {() => this.props.navigation.dispatch(StackActions.popToTop())}>
+                    <Text >Start New Party</Text>
                 </TouchableOpacity>
 
                 <YoutubePlayer videoId={this.state.activeVideo}/>

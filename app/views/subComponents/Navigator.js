@@ -6,6 +6,7 @@ import { NavigationContainer } from '@react-navigation/native'
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs'
 import { createStackNavigator } from '@react-navigation/stack'
 import HomeTab from '../../tabs/HomeTab.js'
+import { BackButtonHandler } from './AndroidBackHandler.js'
 //import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 
 const Stack = createStackNavigator();
@@ -55,7 +56,12 @@ export default class Navigator extends React.Component {
     createPartyStack = ({ navigation,route }) => {
         console.log('createPartyStack --> is new party ', route.params.isNewParty)
         return (
-        <Stack.Navigator>
+        <Stack.Navigator 
+            screenOptions={{
+                gestureEnabled: false
+            }}
+            headerMode='none'
+        >
         <Stack.Screen
             name="Set Party"
             component={SetPartyView}
@@ -78,7 +84,8 @@ export default class Navigator extends React.Component {
     render() {
         return(
             <NavigationContainer>
-              {this.createStack()}
+                <BackButtonHandler/> 
+                {this.createStack()}
             </NavigationContainer>
         )
     }
