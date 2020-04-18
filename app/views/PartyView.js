@@ -96,13 +96,13 @@ export class PartyView extends React.Component {
     render() {
         return(
             <View>
-                <Text >{`Party Join ID - ${this.state.party.joinId}`}</Text>
-                <Text >{this.state.party.condition === 'play' ? 'PARTY PLAYING' : 'PARTY PAUESED'}</Text>
+                <Text style={styles.title}>{`Party Join ID - ${this.state.party.joinId}`}</Text>
+                <Text style={styles.title}>{this.state.party.condition === 'play' ? 'PARTY PLAYING' : 'PARTY PAUESED'}</Text>
                 <TouchableOpacity onPress={this.onPressPlayPause}>
-                    <Text >{ 'Play / Pause' }</Text>
+                    <Text style={styles.title}>{ 'Play / Pause' }</Text>
                 </TouchableOpacity>
                 <TouchableOpacity onPress= {() => this.props.navigation.dispatch(StackActions.popToTop())}>
-                    <Text >Start New Party</Text>
+                    <Text style={styles.title}>Leave Party</Text>
                 </TouchableOpacity>
 
                 <YoutubePlayer videoId={this.state.activeVideo}/>
