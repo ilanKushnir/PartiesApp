@@ -7,6 +7,7 @@ import { createMaterialBottomTabNavigator } from '@react-navigation/material-bot
 import { createStackNavigator } from '@react-navigation/stack'
 import HomeTab from '../../tabs/HomeTab.js'
 import { BackButtonHandler } from './AndroidBackHandler.js'
+import GoParty from '../GoPartyView.js'
 //import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 
 const Stack = createStackNavigator();
@@ -50,11 +51,41 @@ export default class Navigator extends React.Component {
             
         }}
         />
+        <MaterialBottomTabs.Screen name="Tab 4" component={this.createPartyTabStack}
+          options={{
+            tabBarLabel: 'Go Party',
+            
+        }}
+        />
     </MaterialBottomTabs.Navigator>
     }
 
+    createPartyTabStack = () => {
+        return (
+            <Stack.Navigator 
+                screenOptions={{
+                    gestureEnabled: false
+                }}
+                headerMode='none'
+            >
+                <Stack.Screen
+                name="Go Party"
+                component={GoParty}
+            />
+            <Stack.Screen
+                name="Set Party"
+                component={SetPartyView}
+                //initialParams={{isNewParty: route.params.isNewParty}}
+            />
+            <Stack.Screen
+                name="Party View"
+                component={PartyView}
+            />
+            </Stack.Navigator>
+            )
+    }
+
     createPartyStack = ({ navigation,route }) => {
-        console.log('createPartyStack --> is new party ', route.params.isNewParty)
         return (
         <Stack.Navigator 
             screenOptions={{
@@ -74,12 +105,6 @@ export default class Navigator extends React.Component {
         </Stack.Navigator>
         )
     }
-
-// getInitSetPartyView = (isNewParty) => {
-//   return (
-//     <SetPartyView newParty = {isNewParty}/>
-//   )
-// }
 
     render() {
         return(

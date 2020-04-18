@@ -4,6 +4,7 @@ import PartyView from './PartyView'
 import firebase from '../../firebase'
 import DB_TABLES from '../../assets/utils'
 import { styles } from '../styles/styles.js'
+import { StackActions } from '@react-navigation/native'
 
 export default class SetPartyView extends React.Component {
     constructor(props) {
@@ -84,11 +85,13 @@ export default class SetPartyView extends React.Component {
         const { message, inputPlaceholder, buttonText, handleSetParty } = this.getAttributes(this.state.isNewParty)
         return (
             <View style={styles.center}>
-                <Text>{message}</Text>
-                <TextInput onChangeText={inputValue => {this.setState({inputValue})}}>{inputPlaceholder}</TextInput>
+                <Text style={styles.title}>{message}</Text>
+                <TextInput style={styles.title} onChangeText={inputValue => {this.setState({inputValue})}}>{inputPlaceholder}</TextInput>
                 <TouchableOpacity onPress={() => handleSetParty(this.state.inputValue)}>
-                    <Text >{buttonText}</Text>
-                    
+                    <Text style={styles.title}>{buttonText}</Text>
+                </TouchableOpacity>
+                <TouchableOpacity onPress= {() => this.props.navigation.dispatch(StackActions.popToTop())}>
+                    <Text style={styles.title}>Cancel</Text>
                 </TouchableOpacity>
             </View>
         )

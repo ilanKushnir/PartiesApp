@@ -7,7 +7,7 @@ export const styles = StyleSheet.create({
     alignItems: 'center'
   },
   title: {
-    fontSize: 36,
+    fontSize: 20,
     marginBottom: 16
   }
 });
