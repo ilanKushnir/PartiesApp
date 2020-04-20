@@ -7,11 +7,11 @@ import { createMaterialBottomTabNavigator } from '@react-navigation/material-bot
 import { createStackNavigator } from '@react-navigation/stack'
 import HomeTab from '../../tabs/HomeTab.js'
 import { BackButtonHandler } from './AndroidBackHandler.js'
-import GoParty from '../GoPartyView.js'
-//import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
+import PartyTime from '../PartyTimeView.js'
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 
 const Stack = createStackNavigator();
-const MaterialBottomTabs = createMaterialBottomTabNavigator();
+const Tab = createMaterialBottomTabNavigator();
 
 export default class Navigator extends React.Component {
     createStack = () => {
@@ -28,36 +28,38 @@ export default class Navigator extends React.Component {
         )
     }
 
-    createBottomTabs = (props) => {
-    return <MaterialBottomTabs.Navigator>
-        <MaterialBottomTabs.Screen
-        name="Tab 1"
-        style={{ marginBottom: 16 }}
-        component={HomeTab}
+    createBottomTabs = () => {
+    return <Tab.Navigator>
+        <Tab.Screen name="Home Tab" component={HomeTab}
         options={{
             tabBarLabel: 'Home',
-            
+            tabBarIcon: ({ color }) => (
+                <MaterialCommunityIcons name="home" color={color} size={30} />),
         }}
         />
-        <MaterialBottomTabs.Screen name="Tab 2" component={this.createPartyStack} initialParams={{isNewParty:true}}
+        <Tab.Screen name="New Party Tab" component={this.createPartyStack} initialParams={{isNewParty:true}}
         options={{
             tabBarLabel: 'New Party',
-            
+            tabBarIcon: ({ color }) => (
+                <MaterialCommunityIcons name="music" color={color} size={30} />),
         }}
         />
-        <MaterialBottomTabs.Screen name="Tab 3" component={this.createPartyStack} initialParams={{isNewParty:false}}
+        <Tab.Screen name="Join Party Tab" component={this.createPartyStack} initialParams={{isNewParty:false}}
         options={{
             tabBarLabel: 'Join Party',
-            
+            tabBarIcon: ({ color }) => (
+                <MaterialCommunityIcons name="music" color={color} size={30} />),
         }}
         />
-        <MaterialBottomTabs.Screen name="Tab 4" component={this.createPartyTabStack}
+        <Tab.Screen name="Party Tab" component={this.createPartyTabStack}
           options={{
             tabBarLabel: 'Go Party',
-            
+            tabBarIcon: ({ color }) => (
+                <MaterialCommunityIcons name="music" color={color} size={30} />),
         }}
+        
         />
-    </MaterialBottomTabs.Navigator>
+    </Tab.Navigator>
     }
 
     createPartyTabStack = () => {
@@ -68,14 +70,13 @@ export default class Navigator extends React.Component {
                 }}
                 headerMode='none'
             >
-                <Stack.Screen
-                name="Go Party"
-                component={GoParty}
+            <Stack.Screen
+                name="Party Time"
+                component={PartyTime}
             />
             <Stack.Screen
                 name="Set Party"
                 component={SetPartyView}
-                //initialParams={{isNewParty: route.params.isNewParty}}
             />
             <Stack.Screen
                 name="Party View"
@@ -85,7 +86,7 @@ export default class Navigator extends React.Component {
             )
     }
 
-    createPartyStack = ({ navigation,route }) => {
+    createPartyStack = ({ route }) => {
         return (
         <Stack.Navigator 
             screenOptions={{

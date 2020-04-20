@@ -91,7 +91,25 @@ export class PartyView extends React.Component {
         catch (error) {
             console.log(error)
         }
-      }
+    }
+
+    onPressLeaveParty = () => 
+        Alert.alert(
+            'Leaving so soon?',
+            'Are you sure you want to leave this party?',
+            [
+                {
+                    text: 'Leave',
+                    onPress: () => this.props.navigation.dispatch(StackActions.popToTop())
+                },
+                {
+                    text: 'Stay',
+                    onPress: () => {}
+                }
+            ]
+        );
+            
+    
 
     render() {
         return(
@@ -101,7 +119,7 @@ export class PartyView extends React.Component {
                 <TouchableOpacity onPress={this.onPressPlayPause}>
                     <Text style={styles.title}>{ 'Play / Pause' }</Text>
                 </TouchableOpacity>
-                <TouchableOpacity onPress= {() => this.props.navigation.dispatch(StackActions.popToTop())}>
+                <TouchableOpacity onPress= {this.onPressLeaveParty}>
                     <Text style={styles.title}>Leave Party</Text>
                 </TouchableOpacity>
 
