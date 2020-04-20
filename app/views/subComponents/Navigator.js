@@ -7,7 +7,7 @@ import { createMaterialBottomTabNavigator } from '@react-navigation/material-bot
 import { createStackNavigator } from '@react-navigation/stack'
 import HomeTab from '../../tabs/HomeTab.js'
 import { BackButtonHandler } from './AndroidBackHandler.js'
-import GoParty from '../GoPartyView.js'
+import PartyTime from '../PartyTimeView.js'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 
 const Stack = createStackNavigator();
@@ -28,11 +28,9 @@ export default class Navigator extends React.Component {
         )
     }
 
-    createBottomTabs = (props) => {
+    createBottomTabs = () => {
     return <Tab.Navigator>
-        <Tab.Screen
-        name="Tab 1"
-        component={HomeTab}
+        <Tab.Screen name="Home Tab" component={HomeTab}
         options={{
             tabBarLabel: 'Home',
             tabBarIcon: ({ color }) => (
@@ -73,8 +71,8 @@ export default class Navigator extends React.Component {
                 headerMode='none'
             >
             <Stack.Screen
-                name="Go Party"
-                component={GoParty}
+                name="Party Time"
+                component={PartyTime}
             />
             <Stack.Screen
                 name="Set Party"
@@ -88,7 +86,7 @@ export default class Navigator extends React.Component {
             )
     }
 
-    createPartyStack = ({ navigation,route }) => {
+    createPartyStack = ({ route }) => {
         return (
         <Stack.Navigator 
             screenOptions={{

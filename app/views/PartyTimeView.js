@@ -2,7 +2,7 @@ import React from 'react'
 import { View, Button, Text } from 'react-native'
 import { styles } from '../styles/styles.js'
 
-export default class GoParty extends React.Component {
+export default class PartyTime extends React.Component {
     render() {
         return(
             <View style={styles.center}>
