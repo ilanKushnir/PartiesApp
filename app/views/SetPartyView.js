@@ -86,7 +86,7 @@ export default class SetPartyView extends React.Component {
         return (
             <View style={styles.center}>
                 <Text style={styles.title}>{message}</Text>
-                <TextInput style={styles.title} onChangeText={inputValue => {this.setState({inputValue})}}>{inputPlaceholder}</TextInput>
+                <TextInput style={styles.title} onChangeText={inputValue => {this.setState({inputValue})}} placeholder={inputPlaceholder} />
                 <TouchableOpacity onPress={() => handleSetParty(this.state.inputValue)}>
                     <Text style={styles.title}>{buttonText}</Text>
                 </TouchableOpacity>
