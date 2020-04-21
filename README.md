@@ -1,6 +1,10 @@
 Read Me
 
-
+Run
+1. run npm install
+2. run npm init
+3. connect your phone to the same Wi-fi network as your pc
+4. scan RQ code and use it to open Expo
 
 
 Installation:
