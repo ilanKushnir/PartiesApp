@@ -22,7 +22,7 @@ export default class SetPartyView extends React.Component {
         let message, inputPlaceholder, buttonText, handleSetParty
         if(isNewParty){
             [message, inputPlaceholder, buttonText] = [
-                'Please enter Party name (optional)', 
+                'Please enter a name for your party', 
                 'Party name', 
                 'Start new party'
             ]
@@ -56,7 +56,7 @@ export default class SetPartyView extends React.Component {
             [message, inputPlaceholder, buttonText] = [
                 'Please enter Party ID',
                 'Party ID',
-                'Connect to Party'
+                'Join'
             ]
             handleSetParty = async (joinId) => {
                 try {
@@ -86,13 +86,18 @@ export default class SetPartyView extends React.Component {
         return (
             <View style={styles.center}>
                 <Text style={styles.title}>{message}</Text>
-                <TextInput style={styles.title} onChangeText={inputValue => {this.setState({inputValue})}}>{inputPlaceholder}</TextInput>
-                <TouchableOpacity onPress={() => handleSetParty(this.state.inputValue)}>
-                    <Text style={styles.title}>{buttonText}</Text>
-                </TouchableOpacity>
-                <TouchableOpacity onPress= {() => this.props.navigation.dispatch(StackActions.popToTop())}>
-                    <Text style={styles.title}>Cancel</Text>
-                </TouchableOpacity>
+                <TextInput style={styles.input} placeholder={inputPlaceholder} 
+                            onChangeText={inputValue => {this.setState({inputValue})}}>
+                </TextInput>
+                <Button
+                    onPress={() => handleSetParty(this.state.inputValue)}
+                    title={buttonText}
+                ></Button>
+                <Button
+                    onPress={() => this.props.navigation.dispatch(StackActions.popToTop())}
+                    title="Cancel"
+                    color="#d2691e"
+                ></Button>
             </View>
         )
     }

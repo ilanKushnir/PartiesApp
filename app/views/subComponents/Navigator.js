@@ -53,7 +53,7 @@ export default class Navigator extends React.Component {
         />
         <Tab.Screen name="Party Tab" component={this.createPartyTabStack}
           options={{
-            tabBarLabel: 'Go Party',
+            tabBarLabel: 'Party Time',
             tabBarIcon: ({ color }) => (
                 <MaterialCommunityIcons name="music" color={color} size={30} />),
         }}
