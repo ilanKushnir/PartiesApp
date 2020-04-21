@@ -7,7 +7,22 @@ export const styles = StyleSheet.create({
     alignItems: 'center'
   },
   title: {
-    fontSize: 20,
+    fontSize: 24,
     marginBottom: 16
+  },
+  input: {
+    borderWidth: 1,
+    borderColor: '#777',
+    padding: 8,
+    margin: 10,
+    width: 200,
+    height: 50
+  },
+  row: {
+    flexDirection: 'row',
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    justifyContent: 'space-evenly',
   }
 });
