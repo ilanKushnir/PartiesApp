@@ -7,8 +7,8 @@ import { createMaterialBottomTabNavigator } from '@react-navigation/material-bot
 import { createStackNavigator } from '@react-navigation/stack'
 import HomeTab from '../../tabs/HomeTab.js'
 import { BackButtonHandler } from './AndroidBackHandler.js'
-import PartyTime from '../PartyTimeView.js'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
+import PartyTimeView from '../PartyTimeView.js'
 
 const Stack = createStackNavigator();
 const Tab = createMaterialBottomTabNavigator();
@@ -51,13 +51,20 @@ export default class Navigator extends React.Component {
                 <MaterialCommunityIcons name="music" color={color} size={30} />),
         }}
         />
-        <Tab.Screen name="Party Tab" component={this.createPartyTabStack}
-          options={{
-            tabBarLabel: 'Party Time',
-            tabBarIcon: ({ color }) => (
-                <MaterialCommunityIcons name="music" color={color} size={30} />),
-        }}
-        
+        <Tab.Screen 
+            name="Party Time Tab" 
+            component={this.createPartyTabStack}
+            options={{
+                tabBarLabel: 'Party Time',
+                tabBarIcon: ({ color }) => (
+                    <MaterialCommunityIcons name="music" color={color} size={30} />),
+                }}
+            listeners={({ navigation, route }) => ({
+                tabPress: e => {
+                  e.preventDefault();
+                  navigation.navigate('Party Time Tab');
+                },
+              })}
         />
     </Tab.Navigator>
     }
@@ -72,7 +79,7 @@ export default class Navigator extends React.Component {
             >
             <Stack.Screen
                 name="Party Time"
-                component={PartyTime}
+                component={PartyTimeView}
             />
             <Stack.Screen
                 name="Set Party"
