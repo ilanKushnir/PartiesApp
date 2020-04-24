@@ -61,7 +61,7 @@ export class PartyView extends React.Component {
             await this.bindPartyChangesFromDB()
 
             // fetch videos from youtube
-            const response = await fetch('https://www.googleapis.com/youtube/v3/search?part=snippet&q=mountain+bike&type=video&key=AIzaSyD5F1tSOzNANixramS8xr4dLmd-PYW87Go')
+            const response = await fetch('https://www.googleapis.com/youtube/v3/search?part=snippet&q=mountain+bike&type=video&key=AIzaSyAupliSgIaeUYlInVoB8PSqxX1CSerpkaY')
             const responseJson = await response.json()
             this.setState({
                 listLoaded: true,
