@@ -5,22 +5,17 @@ import { WebView } from 'react-native-webview';
 export default class YoutubePlayer extends React.Component {
     constructor(props) {
         super(props);
-        this.state = { youtubeVideoId: props.videoId };
     }
-    
+
     render() {
-        let youtubeUrl = `https://www.youtube.com/embed/${this.state.youtubeVideoId}`;
+        let youtubeUrl = `https://www.youtube.com/embed/${this.props.videoId}`;
+        console.log('youtube player loaded id: ', this.props.videoId);
 
         return (
-            <View style={{flex: 1}}>
-                <Text>-- web view --</Text>
-                    <WebView 
-                        style={{ margin: 20}}
-                        javascriptEnabled={true}
-                        source={{uri: youtubeUrl}}
-                    />
-                <Text>-- web view --</Text>
-            </View>
+            <WebView
+                javascriptEnabled={true}
+                source={{ uri: youtubeUrl }}
+            />
         )
     }
 }
