@@ -1,5 +1,7 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
+import { View, TouchableOpacity, Image, Text } from 'react-native';
+import { styles } from '../../styles/styles.js'
+
 
 const TrackItem = props => {
     return (
@@ -8,22 +10,15 @@ const TrackItem = props => {
         }}>
             <View style={styles.trackItem}>
                 <Image
-                    style={{ width: 50, height: 50 }}
+                    style={{ width: 35, height: 35, marginRight: 10 }}
                     source={{ uri: props.imageSrc }}
                 />
+                <Text>
+                    {props.title}
+                </Text>
             </View>
         </TouchableOpacity>
     );
 }
-
-const styles = StyleSheet.create({
-    trackItem: {
-        padding: 10,
-        marginVertical: 10,
-        backgroundColor: 'grey',
-        borderColor: 'black',
-        borderWidth: 1
-    }
-});
 
 export default TrackItem;
