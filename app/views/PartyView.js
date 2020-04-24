@@ -18,7 +18,7 @@ export class PartyView extends React.Component {
         super(props);
         this.state = {
             listLoaded: false,
-            activeVideo: 'qSRrxpdMpVc',
+            activeVideo: '',
             partyId: props.route.params.partyId,
             party: {
                 joinId: '',
@@ -73,7 +73,6 @@ export class PartyView extends React.Component {
     }
 
     loadVideoToPlayer = (id) => {
-        console.log('video id', id)
         this.setState({
             activeVideo: id
         })
@@ -115,9 +114,13 @@ export class PartyView extends React.Component {
 
     render() {
         return (
+
             <View style={{ flex: 1 }}>
+                <View style={{ flex: 2 }}>
+                    <YoutubePlayer videoId={this.state.activeVideo} />
+                </View>
+
                 <View style={{
-                    flex: 1,
                     flexDirection: "row"
                 }}>
                     <Text style={styles.partyStat}>{`ID: ${this.state.party.joinId}`}</Text>
@@ -128,12 +131,6 @@ export class PartyView extends React.Component {
                     <TouchableOpacity onPress={this.onPressLeaveParty}>
                         <Text style={styles.partyStat}>Leave</Text>
                     </TouchableOpacity>
-
-                </View>
-
-                {/* renders the WebView component */}
-                <View style={{ flex: 2 }}>
-                    <YoutubePlayer videoId={this.state.activeVideo} />
                 </View>
 
                 <View style={{ flex: 3, paddingTop: 30 }}>

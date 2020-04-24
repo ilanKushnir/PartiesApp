@@ -2,13 +2,13 @@ import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
 
 const TrackItem = props => {
-    return(
+    return (
         <TouchableOpacity onPress={() => {
             props.loadVideoFunc(props.id)
         }}>
             <View style={styles.trackItem}>
                 <Image
-                    style={{ width: 50, height: 50}}
+                    style={{ width: 50, height: 50 }}
                     source={{ uri: props.imageSrc }}
                 />
             </View>
