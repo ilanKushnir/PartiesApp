@@ -1,8 +1,7 @@
 import React from 'react'
-import { View, Button, Text } from 'react-native'
+import { View, Button, Text,TouchableOpacity } from 'react-native'
 import { styles } from '../styles/styles.js'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
-import {Icon} from 'react-native-vector-icons'
 
 export default class PartyTimeView extends React.Component {
     render() {
@@ -16,7 +15,9 @@ export default class PartyTimeView extends React.Component {
                         color="#6495ed"
                     >
                     </MaterialCommunityIcons>
-                    <Text style={{ fontSize: 15 }}>Start New</Text>
+                    <TouchableOpacity onPress={() => this.props.navigation.navigate('Set Party', {isNewParty: true})}>
+                        <Text style={{ fontSize: 15 }}>Start New</Text>
+                    </TouchableOpacity>
                 </View>
                 <View style={styles.column}>
                     <MaterialCommunityIcons 
@@ -26,26 +27,11 @@ export default class PartyTimeView extends React.Component {
                         color="#6495ed"
                     >
                     </MaterialCommunityIcons>
-                    <Text style={{ fontSize: 15 }}>Join</Text>
+                    <TouchableOpacity onPress={() => this.props.navigation.navigate('Set Party', {isNewParty: false})}>
+                                            <Text style={{ fontSize: 15 }}>Join</Text>
+                    </TouchableOpacity>
                  </View>
             </View>
         )
     }
 }
-
-// return(
-        //     <View style={styles.center,styles.row}>
-        //         <Button 
-        //             style={styles.title} 
-        //             onPress= {() => this.props.navigation.navigate('Set Party', {isNewParty: true})}
-        //             title="Start New Party"
-        //         />
-        //         <Button 
-        //             style={styles.title} 
-        //             onPress= {() => this.props.navigation.navigate('Set Party', {isNewParty: false})}
-        //             title="Join Party"
-        //         />
-        //     </View>
-        // )
-
-        

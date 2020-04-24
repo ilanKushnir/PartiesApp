@@ -14,19 +14,6 @@ const Stack = createStackNavigator();
 const Tab = createMaterialBottomTabNavigator();
 
 export default class Navigator extends React.Component {
-    createStack = () => {
-    return (
-        <Stack.Navigator>
-        <Stack.Screen 
-        name="Bottom Tabs" 
-        component={this.createBottomTabs}
-        options={{
-            title: "",
-        }}
-        />
-        </Stack.Navigator> 
-        )
-    }
 
     createBottomTabs = () => {
     return <Tab.Navigator>
@@ -117,8 +104,8 @@ export default class Navigator extends React.Component {
     render() {
         return(
             <NavigationContainer>
-                <BackButtonHandler/> 
-                {this.createStack()}
+                {/* <BackButtonHandler/>  */}
+                {this.createBottomTabs()}
             </NavigationContainer>
         )
     }
