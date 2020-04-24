@@ -10,6 +10,10 @@ export const styles = StyleSheet.create({
     fontSize: 24,
     marginBottom: 16
   },
+  partyStat: {
+    fontSize: 17,
+    padding: 10
+  },
   input: {
     borderWidth: 1,
     borderColor: '#777',

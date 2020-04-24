@@ -16,7 +16,7 @@ export class PartyView extends React.Component {
 
     constructor(props) {
         super(props);
-        this.state = { 
+        this.state = {
             listLoaded: false,
             activeVideo: 'qSRrxpdMpVc',
             partyId: props.route.params.partyId,
@@ -27,9 +27,9 @@ export class PartyView extends React.Component {
                 playlist: ''
             }
         };
-        console.log("Created partyView with partyId:" , props.route.params.partyId)
+        console.log("Created partyView with partyId:", props.route.params.partyId)
     }
-    
+
     bindPartyChangesFromDB = async () => {
         const db = firebase.firestore();
         try {
@@ -61,13 +61,13 @@ export class PartyView extends React.Component {
             await this.bindPartyChangesFromDB()
 
             // fetch videos from youtube
-            const response = await fetch('https://www.googleapis.com/youtube/v3/search?part=snippet&q=mountain+bike&type=video&key=AIzaSyCTsyYIUmK2QxzUCV8d-khZiHd8sNFLbNE')            
+            const response = await fetch('https://www.googleapis.com/youtube/v3/search?part=snippet&q=mountain+bike&type=video&key=AIzaSyD5F1tSOzNANixramS8xr4dLmd-PYW87Go')
             const responseJson = await response.json()
             this.setState({
                 listLoaded: true,
                 videoList: Array.from(responseJson.items)
             })
-        } catch(error) {
+        } catch (error) {
             console.log(error);
         }
     }
@@ -83,11 +83,11 @@ export class PartyView extends React.Component {
         const db = firebase.firestore();
         try {
             const newCondition = this.state.party.condition === 'play' ? 'pause' : 'play'
-            await db.collection('party').doc(this.state.partyId).update({condition: newCondition})
+            await db.collection('party').doc(this.state.partyId).update({ condition: newCondition })
             const updatedParty = this.state.party
             updatedParty.condition = newCondition
             // this.setState({
-                // party: updatedParty
+            // party: updatedParty
             // })
         }
         catch (error) {
@@ -95,7 +95,7 @@ export class PartyView extends React.Component {
         }
     }
 
-    onPressLeaveParty = () => 
+    onPressLeaveParty = () =>
         Alert.alert(
             'Leaving so soon?',
             'Are you sure you want to leave this party?',
@@ -106,51 +106,57 @@ export class PartyView extends React.Component {
                 },
                 {
                     text: 'Stay',
-                    onPress: () => {}
+                    onPress: () => { }
                 }
             ]
         );
-            
-    
+
+
 
     render() {
-        return(
-            <View style={{flex: 1}}>
-                <Text style={styles.title}>{`Party Join ID - ${this.state.party.joinId}`}</Text>
-                <Text style={styles.title}>{this.state.party.condition === 'play' ? 'PARTY PLAYING' : 'PARTY PAUESED'}</Text>
-                <TouchableOpacity onPress={this.onPressPlayPause}>
-                    <Text style={styles.title}>{ 'Play / Pause' }</Text>
-                </TouchableOpacity>
-                <TouchableOpacity onPress= {this.onPressLeaveParty}>
-                    <Text style={styles.title}>Leave Party</Text>
-                </TouchableOpacity>
+        return (
+            <View style={{ flex: 1 }}>
+                <View style={{
+                    flex: 1,
+                    flexDirection: "row"
+                }}>
+                    <Text style={styles.partyStat}>{`ID: ${this.state.party.joinId}`}</Text>
+                    <Text style={styles.partyStat}>{this.state.party.condition === 'play' ? 'PLAYING' : 'PAUESED'}</Text>
+                    <TouchableOpacity onPress={this.onPressPlayPause}>
+                        <Text style={styles.partyStat}>{'Play / Pause'}</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={this.onPressLeaveParty}>
+                        <Text style={styles.partyStat}>Leave</Text>
+                    </TouchableOpacity>
+
+                </View>
 
                 {/* renders the WebView component */}
-                <YoutubePlayer videoId={this.state.activeVideo}/> 
+                <View style={{ flex: 2 }}>
+                    <YoutubePlayer videoId={this.state.activeVideo} />
+                </View>
 
-                {this.state.listLoaded && (
-                    <View style={{ paddingTop: 30 }}>
-                        <FlatList 
-                            data={ this.state.videoList }
-                            renderItem={({item}) => 
-                                    <TrackItem
-                                        key={item.id.videoId}
-                                        id={item.id.videoId}
-                                        title={item.snippet.title}
-                                        imageSrc={item.snippet.thumbnails.high.url}
-                                        loadVideoFunc={this.loadVideoToPlayer}
-                                    />
+                <View style={{ flex: 3, paddingTop: 30 }}>
+                    {this.state.listLoaded && (
+                        <FlatList
+                            data={this.state.videoList}
+                            renderItem={({ item }) =>
+                                <TrackItem
+                                    key={item.id.videoId}
+                                    id={item.id.videoId}
+                                    title={item.snippet.title}
+                                    imageSrc={item.snippet.thumbnails.high.url}
+                                    loadVideoFunc={this.loadVideoToPlayer}
+                                />
                             }
                             keyExtractor={item => item.id.videoId}
                         />
-                    </View>
-                )}
+                    )}
 
-                { !this.state.listLoaded && (
-                    <View style={{ paddingTop: 30}}>
+                    {!this.state.listLoaded && (
                         <Text> LOADING </Text>
-                    </View>
-                )}
+                    )}
+                </View>
 
             </View>
         )

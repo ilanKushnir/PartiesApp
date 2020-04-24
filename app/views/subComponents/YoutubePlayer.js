@@ -7,20 +7,16 @@ export default class YoutubePlayer extends React.Component {
         super(props);
         this.state = { youtubeVideoId: props.videoId };
     }
-    
+
     render() {
         let youtubeUrl = `https://www.youtube.com/embed/${this.state.youtubeVideoId}`;
 
         return (
-            <View style={{flex: 1}}>
-                <Text>-- web view --</Text>
-                    <WebView 
-                        style={{ margin: 20}}
-                        javascriptEnabled={true}
-                        source={{uri: youtubeUrl}}
-                    />
-                <Text>-- web view --</Text>
-            </View>
+            <WebView
+                style={{ flex: 6 }}
+                javascriptEnabled={true}
+                source={{ uri: youtubeUrl }}
+            />
         )
     }
 }
