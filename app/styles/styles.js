@@ -34,5 +34,15 @@ export const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  trackItem: {
+    flexDirection: 'row',
+    alignContent: 'center',
+    padding: 10,
+    marginBottom: 10,
+    marginHorizontal: 10,
+    backgroundColor: 'skyblue',
+    borderColor: 'powderblue',
+    borderWidth: 3
   }
 });
