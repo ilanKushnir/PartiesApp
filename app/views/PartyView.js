@@ -125,8 +125,9 @@ export class PartyView extends React.Component {
                     <Text style={styles.title}>Leave Party</Text>
                 </TouchableOpacity>
 
+                {/* renders the WebView component */}
+                <YoutubePlayer videoId={this.state.activeVideo}/> 
 
-                <YoutubePlayer videoId={this.state.activeVideo}/>
                 {this.state.listLoaded && (
                     <View style={{ paddingTop: 30 }}>
                         <FlatList 
