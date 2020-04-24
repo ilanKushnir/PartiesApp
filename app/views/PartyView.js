@@ -5,6 +5,8 @@ import YoutubePlayer from './subComponents/YoutubePlayer';
 import firebase from '../../firebase';
 import { styles } from '../styles/styles.js'
 import { StackActions } from '@react-navigation/native'
+import { WebView } from 'react-native-webview';
+
 
 
 export class PartyView extends React.Component {
@@ -113,7 +115,7 @@ export class PartyView extends React.Component {
 
     render() {
         return(
-            <View>
+            <View style={{flex: 1}}>
                 <Text style={styles.title}>{`Party Join ID - ${this.state.party.joinId}`}</Text>
                 <Text style={styles.title}>{this.state.party.condition === 'play' ? 'PARTY PLAYING' : 'PARTY PAUESED'}</Text>
                 <TouchableOpacity onPress={this.onPressPlayPause}>
@@ -122,6 +124,7 @@ export class PartyView extends React.Component {
                 <TouchableOpacity onPress= {this.onPressLeaveParty}>
                     <Text style={styles.title}>Leave Party</Text>
                 </TouchableOpacity>
+
 
                 <YoutubePlayer videoId={this.state.activeVideo}/>
                 {this.state.listLoaded && (

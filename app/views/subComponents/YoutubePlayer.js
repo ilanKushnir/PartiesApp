@@ -12,14 +12,8 @@ export default class YoutubePlayer extends React.Component {
         let youtubeUrl = `https://www.youtube.com/embed/${this.state.youtubeVideoId}`;
 
         return (
-            <View>
+            <View style={{flex: 1}}>
                 <Text>-- web view --</Text>
-                    <WebView
-                        originWhitelist={['*']}
-                        source={{ html: '<h1>Hello world</h1>' }}
-                        style={{ backgroundColor:  'pink' }}
-                    />
-
                     <WebView 
                         style={{ margin: 20}}
                         javascriptEnabled={true}
