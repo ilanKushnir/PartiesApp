@@ -14,7 +14,6 @@ export default class SetPartyView extends React.Component {
             inputValue: ''
          }
         console.log('setNetParty --> isNewParty', props.route.params.isNewParty)
-        this.getAttributes = this.getAttributes.bind(this);// ???
     }
 
     getAttributes = (isNewParty) => {
@@ -32,7 +31,6 @@ export default class SetPartyView extends React.Component {
                     const partyData = lastCreatedParty.docs[0].data();
                     let { joinId } = partyData;
                     joinId++;
-                    // lastCreatedParties.forEach(lastCreated => joinId = ++lastCreated.data().joinId);
                     
                     const response = await db.collection('party').add({
                         joinId,

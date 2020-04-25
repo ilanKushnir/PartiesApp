@@ -1,11 +1,12 @@
 import React from 'react';
-import { Text, View, FlatList, Image, Alert, TouchableOpacity } from 'react-native';
+import { Text, View, Alert, TouchableOpacity } from 'react-native';
 import TrackItem from './subComponents/TrackItem';
 import YoutubePlayer from './subComponents/YoutubePlayer';
 import firebase from '../../firebase';
 import { styles } from '../styles/styles.js'
 import { StackActions } from '@react-navigation/native'
 import { WebView } from 'react-native-webview';
+import Playlist from './subComponents/Playlist.js'
 
 
 
@@ -17,7 +18,6 @@ export class PartyView extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            listLoaded: false,
             activeVideo: '',
             partyId: props.route.params.partyId,
             party: {
@@ -27,6 +27,7 @@ export class PartyView extends React.Component {
                 playlist: ''
             }
         };
+        this.loadVideoToPlayer = this.loadVideoToPlayer.bind(this);
         console.log("Created partyView with partyId:", props.route.params.partyId)
     }
 
@@ -59,14 +60,6 @@ export class PartyView extends React.Component {
         try {
             // bind party continues updates from DB to this component
             await this.bindPartyChangesFromDB()
-
-            // fetch videos from youtube
-            const response = await fetch('https://www.googleapis.com/youtube/v3/search?part=snippet&q=mountain+bike&type=video&key=AIzaSyAupliSgIaeUYlInVoB8PSqxX1CSerpkaY')
-            const responseJson = await response.json()
-            this.setState({
-                listLoaded: true,
-                videoList: Array.from(responseJson.items)
-            })
         } catch (error) {
             console.log(error);
         }
@@ -85,9 +78,9 @@ export class PartyView extends React.Component {
             await db.collection('party').doc(this.state.partyId).update({ condition: newCondition })
             const updatedParty = this.state.party
             updatedParty.condition = newCondition
-            // this.setState({
-            // party: updatedParty
-            // })
+            this.setState({
+            party: updatedParty
+            })
         }
         catch (error) {
             console.log(error)
@@ -95,17 +88,19 @@ export class PartyView extends React.Component {
     }
 
     onPressLeaveParty = () =>
+    // call componentWillUnmount and kill this component (and unbind DB listening)
+    
         Alert.alert(
             'Leaving so soon?',
             'Are you sure you want to leave this party?',
             [
                 {
-                    text: 'Leave',
-                    onPress: () => this.props.navigation.dispatch(StackActions.popToTop())
-                },
-                {
                     text: 'Stay',
                     onPress: () => { }
+                },
+                {
+                    text: 'Leave',
+                    onPress: () => this.props.navigation.dispatch(StackActions.popToTop())
                 }
             ]
         );
@@ -133,27 +128,7 @@ export class PartyView extends React.Component {
                     </TouchableOpacity>
                 </View>
 
-                <View style={{ flex: 3, paddingTop: 30 }}>
-                    {this.state.listLoaded && (
-                        <FlatList
-                            data={this.state.videoList}
-                            renderItem={({ item }) =>
-                                <TrackItem
-                                    key={item.id.videoId}
-                                    id={item.id.videoId}
-                                    title={item.snippet.title}
-                                    imageSrc={item.snippet.thumbnails.high.url}
-                                    loadVideoFunc={this.loadVideoToPlayer}
-                                />
-                            }
-                            keyExtractor={item => item.id.videoId}
-                        />
-                    )}
-
-                    {!this.state.listLoaded && (
-                        <Text> LOADING </Text>
-                    )}
-                </View>
+                <Playlist loadVideoToPlayer={this.loadVideoToPlayer}/>
 
             </View>
         )
