@@ -13,7 +13,6 @@ export default class SetPartyView extends React.Component {
             isNewParty: props.route.params.isNewParty,
             inputValue: ''
          }
-        console.log('setNetParty --> isNewParty', props.route.params.isNewParty)
     }
 
     getAttributes = (isNewParty) => {
@@ -39,7 +38,6 @@ export default class SetPartyView extends React.Component {
                         playlist: '',
                         creationTime: new Date()
                     });
-                    console.log('response --> party id', response.id);
                     
                     const partyId = response.id
                     Alert.alert(`Successfully created ${partyName} party. Use id ${joinId} to join`)

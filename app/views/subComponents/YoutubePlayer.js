@@ -4,13 +4,6 @@ import { WebView } from 'react-native-webview';
 export default class YoutubePlayer extends React.Component {
     constructor(props) {
         super(props);
-        console.log(props)
-    }
-
-    onPlayerReady = event => {
-        if(this.props.condition === 'play') {
-            event.target.playVideo();
-        }
     }
 
     render() {
@@ -40,9 +33,16 @@ export default class YoutubePlayer extends React.Component {
                         },
                         videoId: '${this.props.videoId}',
                         events: {
-                            'onReady': ${this.onPlayerReady}
+                            'onReady': onPlayerReady
                         }
                     });
+                }
+
+                let play = ${this.props.condition === 'play'};
+                function onPlayerReady(event) {
+                    if(play) {
+                        event.target.playVideo();
+                    }
                 }
                 </script>
             </body>

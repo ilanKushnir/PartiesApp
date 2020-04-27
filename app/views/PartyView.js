@@ -18,7 +18,7 @@ export class PartyView extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            activeVideo: '',
+            activeVideo: 'XsFe56c_k2c',
             partyId: props.route.params.partyId,
             party: {
                 joinId: '',
@@ -28,7 +28,6 @@ export class PartyView extends React.Component {
             }
         };
         this.loadVideoToPlayer = this.loadVideoToPlayer.bind(this);
-        console.log("Created partyView with partyId:", props.route.params.partyId)
     }
 
     bindPartyChangesFromDB = async () => {
@@ -44,7 +43,6 @@ export class PartyView extends React.Component {
                         playlist: data.playlist
                     }
                 });
-                console.log('onSnapshot change-->', data.name, data.condition);
             })
 
             // TODO - when distructing component --> call DBbindingResponse() to unbind it from DB
@@ -112,7 +110,7 @@ export class PartyView extends React.Component {
 
             <View style={{ flex: 1 }}>
                 <View style={{ flex: 2 }}>
-                    <YoutubePlayer videoId={this.state.activeVideo} />
+                    <YoutubePlayer videoId={this.state.activeVideo} condition={this.state.party.condition}/>
                 </View>
 
                 <View style={{
