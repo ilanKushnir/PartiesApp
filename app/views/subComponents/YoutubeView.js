@@ -1,11 +1,18 @@
 import React from 'react';
 import { WebView } from 'react-native-webview';
 
-export default class YoutubePlayer extends React.Component {
+export default class YoutubeView extends React.Component {
     constructor(props) {
         super(props);
+    
     }
 
+    currentTimeHandler(currentTime) {
+        console.log(currentTime);
+        this.setState( {
+            activeVideo : {id: this.props.activeVideo.id, currentTime: currentTime}
+        });
+    }
     render() {
         const html = `
             <!DOCTYPE html>
@@ -17,7 +24,7 @@ export default class YoutubePlayer extends React.Component {
                 tag.src = "https://www.youtube.com/iframe_api";
                 var firstScriptTag = document.getElementsByTagName('script')[0];
                 firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
-
+                    
                 var player;
                 function onYouTubeIframeAPIReady() {
                     player = new YT.Player('player', {
@@ -31,7 +38,7 @@ export default class YoutubePlayer extends React.Component {
                             playsinline: 1,
                             modestbranding: 1
                         },
-                        videoId: '${this.props.videoId}',
+                        videoId: '${this.props.activeVideo.id}',
                         events: {
                             'onReady': onPlayerReady
                         }
@@ -39,16 +46,23 @@ export default class YoutubePlayer extends React.Component {
                 }
 
                 let play = ${this.props.condition === 'play'};
+                let currentTime = ${this.props.activeVideo.currentTime};
                 function onPlayerReady(event) {
                     if(play) {
+                        event.target.seekTo(currentTime, false);
                         event.target.playVideo();
                     }
                 }
-                </script>
+
+               setInterval(()=> {
+                window.ReactNativeWebView.postMessage(player.getCurrentTime())
+               },5000);
+               
+               </script>
             </body>
             </html>`;
 
-        let playerState = this.props.condition === 'play' ? `player.playVideo();` : `player.pauseVideo();` 
+        let playerState = this.props.condition === 'play' ? `player.playVideo();` : `player.pauseVideo();`
 
         setTimeout(() => {
             this.webref.injectJavaScript(playerState);
@@ -62,6 +76,8 @@ export default class YoutubePlayer extends React.Component {
                 ref={r => (this.webref = r)}
                 originWhitelist={['*']}
                 allowsInlineMediaPlayback={true}
+                onMessage={event => {
+                    this.currentTimeHandler(event.nativeEvent.data)}}
             />
         )
     }

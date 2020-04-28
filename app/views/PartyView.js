@@ -1,7 +1,7 @@
 import React from 'react';
 import { Text, View, Alert, TouchableOpacity } from 'react-native';
 import TrackItem from './subComponents/TrackItem';
-import YoutubePlayer from './subComponents/YoutubePlayer';
+import YoutubeView from './subComponents/YoutubeView';
 import firebase from '../../firebase';
 import { styles } from '../styles/styles.js'
 import { StackActions } from '@react-navigation/native'
@@ -18,7 +18,10 @@ export class PartyView extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            activeVideo: 'XsFe56c_k2c',
+            activeVideo: {
+                id: 'XsFe56c_k2c',
+                currentTime: '0',
+            },
             partyId: props.route.params.partyId,
             party: {
                 joinId: '',
@@ -35,14 +38,22 @@ export class PartyView extends React.Component {
         try {
             const DBbindingResponse = await db.collection('party').doc(this.state.partyId).onSnapshot(snapshot => {
                 const data = snapshot.data();
+
+                console.log(data.playlist);
+
                 this.setState({
                     party: {
                         joinId: data.joinId,
                         partyName: data.name,
                         condition: data.condition,
-                        playlist: data.playlist
+                        playlist: data.playlist,
+                    },
+                    activeVideo: {
+                        id: this.state.activeVideo.id,
+                        currentTime: data.currentTime
                     }
                 });
+                console.log(this.state.activeVideo);
             })
 
             // TODO - when distructing component --> call DBbindingResponse() to unbind it from DB
@@ -63,9 +74,10 @@ export class PartyView extends React.Component {
         }
     }
 
+   
     loadVideoToPlayer = (id) => {
         this.setState({
-            activeVideo: id
+            activeVideo : {id: id, currentTime: 0}
         })
     }
 
@@ -76,9 +88,9 @@ export class PartyView extends React.Component {
             await db.collection('party').doc(this.state.partyId).update({ condition: newCondition })
             const updatedParty = this.state.party
             updatedParty.condition = newCondition
-            this.setState({
-            party: updatedParty
-            })
+            // this.setState({
+            // party: updatedParty
+            // })
         }
         catch (error) {
             console.log(error)
@@ -86,8 +98,8 @@ export class PartyView extends React.Component {
     }
 
     onPressLeaveParty = () =>
-    // call componentWillUnmount and kill this component (and unbind DB listening)
-    
+        // call componentWillUnmount and kill this component (and unbind DB listening)
+
         Alert.alert(
             'Leaving so soon?',
             'Are you sure you want to leave this party?',
@@ -110,7 +122,7 @@ export class PartyView extends React.Component {
 
             <View style={{ flex: 1 }}>
                 <View style={{ flex: 2 }}>
-                    <YoutubePlayer videoId={this.state.activeVideo} condition={this.state.party.condition}/>
+                    <YoutubeView activeVideo={this.state.activeVideo} condition={this.state.party.condition} />
                 </View>
 
                 <View style={{
@@ -126,7 +138,7 @@ export class PartyView extends React.Component {
                     </TouchableOpacity>
                 </View>
 
-                <Playlist loadVideoToPlayer={this.loadVideoToPlayer}/>
+                <Playlist loadVideoToPlayer={this.loadVideoToPlayer} />
 
             </View>
         )
