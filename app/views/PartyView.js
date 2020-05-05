@@ -20,7 +20,7 @@ export class PartyView extends React.Component {
         this.state = {
             activeVideo: {
                 id: 'XsFe56c_k2c',
-                currentTime: '0',
+                currentTime: props.route.params.currentTime
             },
             partyId: props.route.params.partyId,
             party: {
@@ -28,7 +28,8 @@ export class PartyView extends React.Component {
                 partyName: '',
                 condition: '',
                 playlist: ''
-            }
+            },
+            isHost: props.route.params.isHost
         };
         this.loadVideoToPlayer = this.loadVideoToPlayer.bind(this);
     }
@@ -38,9 +39,6 @@ export class PartyView extends React.Component {
         try {
             const DBbindingResponse = await db.collection('party').doc(this.state.partyId).onSnapshot(snapshot => {
                 const data = snapshot.data();
-
-                console.log(data.playlist);
-
                 this.setState({
                     party: {
                         joinId: data.joinId,
@@ -53,7 +51,6 @@ export class PartyView extends React.Component {
                         currentTime: data.currentTime
                     }
                 });
-                console.log(this.state.activeVideo);
             })
 
             // TODO - when distructing component --> call DBbindingResponse() to unbind it from DB
@@ -61,8 +58,6 @@ export class PartyView extends React.Component {
             console.log('bindParty changes From DB error', error)
             Alert.alert(`Error getting updates from party #${this.state.party.joinId}`);
         }
-
-
     }
 
     async componentDidMount() {
@@ -74,11 +69,15 @@ export class PartyView extends React.Component {
         }
     }
 
-   
     loadVideoToPlayer = (id) => {
         this.setState({
             activeVideo : {id: id, currentTime: 0}
         })
+    }
+
+    updateCurrentTimeInDB = async (currentTime) => {
+        const db = firebase.firestore();
+        await db.collection('party').doc(this.state.partyId).update({ currentTime: currentTime })
     }
 
     onPressPlayPause = async () => {
@@ -115,14 +114,15 @@ export class PartyView extends React.Component {
             ]
         );
 
-
+                
 
     render() {
         return (
 
             <View style={{ flex: 1 }}>
                 <View style={{ flex: 2 }}>
-                    <YoutubeView activeVideo={this.state.activeVideo} condition={this.state.party.condition} />
+                    <YoutubeView activeVideo={this.state.activeVideo} condition={this.state.party.condition}
+                        updateCurrentTimeInDB={this.updateCurrentTimeInDB} isHost={this.state.isHost}/>
                 </View>
 
                 <View style={{
