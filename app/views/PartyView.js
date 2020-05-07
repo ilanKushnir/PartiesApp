@@ -19,8 +19,8 @@ export class PartyView extends React.Component {
         super(props);
         this.state = {
             activeVideo: {
-                id: 'XsFe56c_k2c',
-                currentTime: props.route.params.currentTime
+                id: '',
+                currentTime: 0
             },
             partyId: props.route.params.partyId,
             party: {
@@ -47,7 +47,7 @@ export class PartyView extends React.Component {
                         playlist: data.playlist,
                     },
                     activeVideo: {
-                        id: this.state.activeVideo.id,
+                        id: data.activeVideoId,
                         currentTime: data.currentTime
                     }
                 });
@@ -69,15 +69,17 @@ export class PartyView extends React.Component {
         }
     }
 
-    loadVideoToPlayer = (id) => {
-        this.setState({
-            activeVideo : {id: id, currentTime: 0}
-        })
+    loadVideoToPlayer = async (id) => {
+        // this.setState({
+        //     activeVideo : {id: id, currentTime: 0}
+        // })
+        const db = firebase.firestore();
+        await db.collection('party').doc(this.state.partyId).update({ activeVideoId: id, currentTime: 0 });
     }
 
     updateCurrentTimeInDB = async (currentTime) => {
         const db = firebase.firestore();
-        await db.collection('party').doc(this.state.partyId).update({ currentTime: currentTime })
+        await db.collection('party').doc(this.state.partyId).update({ currentTime: currentTime });
     }
 
     onPressPlayPause = async () => {

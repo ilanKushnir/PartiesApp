@@ -22,7 +22,7 @@ export default class YoutubeView extends React.Component {
                 tag.src = "https://www.youtube.com/iframe_api";
                 var firstScriptTag = document.getElementsByTagName('script')[0];
                 firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
-                    
+
                 var player;
                 function onYouTubeIframeAPIReady() {
                     player = new YT.Player('player', {
@@ -38,29 +38,35 @@ export default class YoutubeView extends React.Component {
                         },
                         videoId: '${this.props.activeVideo.id}',
                         events: {
-                            
+                            'onReady': onPlayerReady,
                             'onStateChange': onPlayerStateChange
                         }
                     });
                 }
+                
+                function onPlayerReady(event) {
+                    if(player.getPlayerState() == YT.PlayerState.CUED) {
+                        event.target.seekTo(${this.props.activeVideo.currentTime});
+                    }
+                }
 
                 function onPlayerStateChange(event) {
-                    if (${this.props.isHost} && event.data == YT.PlayerState.PAUSED) {
-                        window.ReactNativeWebView.postMessage(player.getCurrentTime())
-                    }
+                    if(${this.props.isHost} && event.data == YT.PlayerState.PAUSED) {
+                        window.ReactNativeWebView.postMessage(player.getCurrentTime());
+                    } 
                 }
 
                </script>
             </body>
             </html>`;
 
+
         let playerState = this.props.condition === 'play' ? 
-                            `player.seekTo(${this.props.activeVideo.currentTime});
-                            player.playVideo();` : `player.pauseVideo();`
+                            `player.playVideo();` : `player.pauseVideo();`
 
         setTimeout(() => {
             this.webref.injectJavaScript(playerState);
-        }, 10);
+        }, 1000);
 
         return (
             <WebView
@@ -71,28 +77,9 @@ export default class YoutubeView extends React.Component {
                 originWhitelist={['*']}
                 allowsInlineMediaPlayback={true}
                 onMessage={event => {
-                    this.currentTimeHandler(event.nativeEvent.data)}}
+                    console.log(event.nativeEvent.data)}}
+                    //this.currentTimeHandler(event.nativeEvent.data)}}
             />
         )
     }
 }
-
-// 'onReady': onPlayerReady,
-
-// function onPlayerReady(event) {
-//     if(${this.props.condition === 'play'}) {
-//         event.target.seekTo(${this.props.activeVideo.currentTime});
-//         event.target.playVideo();
-//     }
-// }
-
-// setInterval(()=> {
-//     window.ReactNativeWebView.postMessage(player.getCurrentTime())
-// },2000);
-
-// setTimeout(() => {
-//     if(${this.props.condition === 'play'} && ${this.state.joinedNow}) {
-//         player.seekTo(${this.props.activeVideo.currentTime});
-//         player.playVideo();
-//     }
-// },1000);
