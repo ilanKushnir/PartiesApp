@@ -46,9 +46,7 @@ export default class YoutubeView extends React.Component {
                 
                 function onPlayerReady(event) {
                     event.target.seekTo(${this.props.activeVideo.currentTime});
-                    
                     window.ReactNativeWebView.postMessage("on ready: " + player.getPlayerState());
-
                 }
 
                 function onPlayerStateChange(event) {
@@ -71,9 +69,7 @@ export default class YoutubeView extends React.Component {
 
         setTimeout(() => {
             this.webref.injectJavaScript(playerState);
-        }, 1000);
-
-        console.log(this.props)
+        }, 2000);
 
         return (
             <WebView
@@ -86,6 +82,7 @@ export default class YoutubeView extends React.Component {
                 onMessage={event => {
                     console.log(event.nativeEvent.data)}}
                     //this.currentTimeHandler(event.nativeEvent.data)}}
+                mediaPlaybackRequiresUserAction={false}
             />
         )
     }
