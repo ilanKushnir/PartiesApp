@@ -1,7 +1,7 @@
 import React from 'react';
 import { Text, View, Alert, TouchableOpacity } from 'react-native';
 import TrackItem from './subComponents/TrackItem';
-import YoutubePlayer from './subComponents/YoutubePlayer';
+import YoutubeView from './subComponents/YoutubeView';
 import firebase from '../../firebase';
 import { styles } from '../styles/styles.js'
 import { StackActions } from '@react-navigation/native'
@@ -18,14 +18,18 @@ export class PartyView extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            activeVideo: 'XsFe56c_k2c',
+            activeVideo: {
+                id: '',
+                currentTime: 0
+            },
             partyId: props.route.params.partyId,
             party: {
                 joinId: '',
                 partyName: '',
                 condition: '',
                 playlist: ''
-            }
+            },
+            isHost: props.route.params.isHost
         };
         this.loadVideoToPlayer = this.loadVideoToPlayer.bind(this);
     }
@@ -40,7 +44,11 @@ export class PartyView extends React.Component {
                         joinId: data.joinId,
                         partyName: data.name,
                         condition: data.condition,
-                        playlist: data.playlist
+                        playlist: data.playlist,
+                    },
+                    activeVideo: {
+                        id: data.activeVideoId,
+                        currentTime: data.currentTime
                     }
                 });
             })
@@ -50,8 +58,6 @@ export class PartyView extends React.Component {
             console.log('bindParty changes From DB error', error)
             Alert.alert(`Error getting updates from party #${this.state.party.joinId}`);
         }
-
-
     }
 
     async componentDidMount() {
@@ -63,10 +69,17 @@ export class PartyView extends React.Component {
         }
     }
 
-    loadVideoToPlayer = (id) => {
-        this.setState({
-            activeVideo: id
-        })
+    loadVideoToPlayer = async (id) => {
+        // this.setState({
+        //     activeVideo : {id: id, currentTime: 0}
+        // })
+        const db = firebase.firestore();
+        await db.collection('party').doc(this.state.partyId).update({ activeVideoId: id, currentTime: 0 });
+    }
+
+    updateCurrentTimeInDB = async (currentTime) => {
+        const db = firebase.firestore();
+        await db.collection('party').doc(this.state.partyId).update({ currentTime: currentTime });
     }
 
     onPressPlayPause = async () => {
@@ -76,9 +89,9 @@ export class PartyView extends React.Component {
             await db.collection('party').doc(this.state.partyId).update({ condition: newCondition })
             const updatedParty = this.state.party
             updatedParty.condition = newCondition
-            this.setState({
-            party: updatedParty
-            })
+            // this.setState({
+            // party: updatedParty
+            // })
         }
         catch (error) {
             console.log(error)
@@ -86,8 +99,8 @@ export class PartyView extends React.Component {
     }
 
     onPressLeaveParty = () =>
-    // call componentWillUnmount and kill this component (and unbind DB listening)
-    
+        // call componentWillUnmount and kill this component (and unbind DB listening)
+
         Alert.alert(
             'Leaving so soon?',
             'Are you sure you want to leave this party?',
@@ -103,14 +116,15 @@ export class PartyView extends React.Component {
             ]
         );
 
-
+                
 
     render() {
         return (
 
             <View style={{ flex: 1 }}>
                 <View style={{ flex: 2 }}>
-                    <YoutubePlayer videoId={this.state.activeVideo} condition={this.state.party.condition}/>
+                    <YoutubeView activeVideo={this.state.activeVideo} condition={this.state.party.condition}
+                        updateCurrentTimeInDB={this.updateCurrentTimeInDB} isHost={this.state.isHost}/>
                 </View>
 
                 <View style={{
@@ -126,7 +140,7 @@ export class PartyView extends React.Component {
                     </TouchableOpacity>
                 </View>
 
-                <Playlist loadVideoToPlayer={this.loadVideoToPlayer}/>
+                <Playlist loadVideoToPlayer={this.loadVideoToPlayer} />
 
             </View>
         )

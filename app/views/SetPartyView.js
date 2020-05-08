@@ -36,12 +36,15 @@ export default class SetPartyView extends React.Component {
                         name: partyName || `Party #${joinId}`,
                         condition: 'pause',
                         playlist: '',
-                        creationTime: new Date()
+                        creationTime: new Date(),
+                        activeVideoId: '',
+                        currentTime: 0
                     });
                     
                     const partyId = response.id
                     Alert.alert(`Successfully created ${partyName} party. Use id ${joinId} to join`)
-                    this.props.navigation.navigate('Party View', {partyId})
+                    this.props.navigation.navigate('Party View', 
+                        {partyId,isHost: true})
                    
                     } catch(error) {
                         console.log(`Error starting new party ${error}`)
@@ -62,11 +65,11 @@ export default class SetPartyView extends React.Component {
 
                     const data = party.data()
                     const { name } = data
-
                     const partyId = party.id
                     
                     Alert.alert(`Connected to Party ${name} succesfully`)
-                    this.props.navigation.navigate('Party View', {partyId})
+                    this.props.navigation.navigate('Party View', 
+                        {partyId,isHost:false})
 
                 } catch (e) {
                     console.log('Error join existing party', e)
