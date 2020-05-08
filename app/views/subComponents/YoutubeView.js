@@ -45,12 +45,14 @@ export default class YoutubeView extends React.Component {
                 }
                 
                 function onPlayerReady(event) {
-                    if(player.getPlayerState() == YT.PlayerState.CUED) {
-                        event.target.seekTo(${this.props.activeVideo.currentTime});
-                    }
+                    event.target.seekTo(${this.props.activeVideo.currentTime});
+                    
+                    window.ReactNativeWebView.postMessage("on ready: " + player.getPlayerState());
+
                 }
 
                 function onPlayerStateChange(event) {
+                    window.ReactNativeWebView.postMessage("on state change: " + player.getPlayerState());
                     if(${this.props.isHost} && event.data == YT.PlayerState.PAUSED) {
                         window.ReactNativeWebView.postMessage(player.getCurrentTime());
                     } 
@@ -62,11 +64,16 @@ export default class YoutubeView extends React.Component {
 
 
         let playerState = this.props.condition === 'play' ? 
-                            `player.playVideo();` : `player.pauseVideo();`
+                            `player.playVideo();
+                            window.ReactNativeWebView.postMessage("on play: " + player.getPlayerState());` : 
+                            `player.pauseVideo();
+                            window.ReactNativeWebView.postMessage("on pause: " + player.getPlayerState());`;
 
         setTimeout(() => {
             this.webref.injectJavaScript(playerState);
         }, 1000);
+
+        console.log(this.props)
 
         return (
             <WebView
