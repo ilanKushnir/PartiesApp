@@ -29,15 +29,17 @@ export class PartyView extends React.Component {
                 condition: '',
                 playlist: ''
             },
-            isHost: props.route.params.isHost
+            userId: props.route.params.userId,
+            isHost: props.route.params.isHost,
+            isActionMaker: false
         };
         this.loadVideoToPlayer = this.loadVideoToPlayer.bind(this);
+        this.db = firebase.firestore();
     }
 
     bindPartyChangesFromDB = async () => {
-        const db = firebase.firestore();
         try {
-            const DBbindingResponse = await db.collection('party').doc(this.state.partyId).onSnapshot(snapshot => {
+            this.dbbindingResponse = await this.db.collection('party').doc(this.state.partyId).onSnapshot(snapshot => {
                 const data = snapshot.data();
                 this.setState({
                     party: {
@@ -51,6 +53,13 @@ export class PartyView extends React.Component {
                         currentTime: data.currentTime
                     }
                 });
+
+                // use it to update currentTime on Db when new user joins party
+
+                // if (activeUsers.length !== this.state.activeUsers.length && this.state.isHost) {
+                //     await this.updateCurrentTimeInDB();
+                // }
+                this.updateHost(data.activeUsers);
             })
 
             // TODO - when distructing component --> call DBbindingResponse() to unbind it from DB
@@ -58,6 +67,16 @@ export class PartyView extends React.Component {
             console.log('bindParty changes From DB error', error)
             Alert.alert(`Error getting updates from party #${this.state.party.joinId}`);
         }
+    }
+    
+    updateHost = (activeUsers) => {
+        const isHost = activeUsers[0] === this.state.userId;
+        if(isHost && !this.state.isHost) {
+            Alert.alert(`You are now ${this.state.party.partyName} new host!`)
+        }
+        this.setState({
+            isHost
+        })
     }
 
     async componentDidMount() {
@@ -73,34 +92,33 @@ export class PartyView extends React.Component {
         // this.setState({
         //     activeVideo : {id: id, currentTime: 0}
         // })
-        const db = firebase.firestore();
-        await db.collection('party').doc(this.state.partyId).update({ activeVideoId: id, currentTime: 0 });
+        await this.db.collection('party').doc(this.state.partyId).update({ activeVideoId: id, currentTime: 0 });
     }
 
     updateCurrentTimeInDB = async (currentTime) => {
-        const db = firebase.firestore();
-        await db.collection('party').doc(this.state.partyId).update({ currentTime: currentTime });
+        await this.db.collection('party').doc(this.state.partyId).update({ currentTime: currentTime });
+        this.setState({
+            isActionMaker: false
+        })
     }
 
     onPressPlayPause = async () => {
-        const db = firebase.firestore();
         try {
             const newCondition = this.state.party.condition === 'play' ? 'pause' : 'play'
-            await db.collection('party').doc(this.state.partyId).update({ condition: newCondition })
+            await this.db.collection('party').doc(this.state.partyId).update({ condition: newCondition })
             const updatedParty = this.state.party
             updatedParty.condition = newCondition
-            // this.setState({
-            // party: updatedParty
-            // })
+            this.setState({
+                party: updatedParty,
+                isActionMaker: true
+            })            
         }
         catch (error) {
             console.log(error)
         }
     }
 
-    onPressLeaveParty = () =>
-        // call componentWillUnmount and kill this component (and unbind DB listening)
-
+    onPressLeaveParty = () => {
         Alert.alert(
             'Leaving so soon?',
             'Are you sure you want to leave this party?',
@@ -111,11 +129,32 @@ export class PartyView extends React.Component {
                 },
                 {
                     text: 'Leave',
-                    onPress: () => this.props.navigation.dispatch(StackActions.popToTop())
+                    onPress: () => { this.leaveParty(); }
                 }
             ]
         );
+    }
 
+    leaveParty = async () => {
+        this.props.navigation.dispatch(StackActions.popToTop());
+
+        try {
+            const party = await this.db.collection('party').doc(this.state.partyId).get();
+            let { activeUsers } = party.data();
+
+            this.dbbindingResponse();           // unbind party changes from DB for this component
+            if (activeUsers.length === 1) {     // if last user - delete party
+                const response = await this.db.collection('party').doc(this.state.partyId).delete();
+                Alert.alert(`Party ${this.state.party.partyName} is closed for no active users`);
+            } else {    // update active users
+                activeUsers = activeUsers.filter(userId => userId !== this.state.userId);
+                await this.db.collection('party').doc(this.state.partyId).update({ activeUsers });
+            }
+        }catch (error) {
+            console.log(`Error on leave party ${error}`);
+            Alert.alert(`Error on leave party`);
+        }
+    }
                 
 
     render() {
@@ -123,8 +162,13 @@ export class PartyView extends React.Component {
 
             <View style={{ flex: 1 }}>
                 <View style={{ flex: 2 }}>
-                    <YoutubeView activeVideo={this.state.activeVideo} condition={this.state.party.condition}
-                        updateCurrentTimeInDB={this.updateCurrentTimeInDB} isHost={this.state.isHost}/>
+                    <YoutubeView 
+                    activeVideo={this.state.activeVideo} 
+                    condition={this.state.party.condition}
+                    updateCurrentTimeInDB={this.updateCurrentTimeInDB}
+                    isHost={this.state.isHost}
+                    isActionMaker={this.state.isActionMaker}
+                    />
                 </View>
 
                 <View style={{
