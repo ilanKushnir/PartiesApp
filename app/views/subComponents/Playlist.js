@@ -13,12 +13,13 @@ export default class Playlist extends React.Component {
             playlistId: 'eNsALXiAswwhWgVolghC',
             tracks: []
         };
+
+        this.db = firebase.firestore();
     }
     
     bindPlaylistChangesFromDB = async () => {
-        const db = firebase.firestore();
         try {
-            const DBbindingResponse = await db.collection('playlist').doc(this.state.playlistId).onSnapshot(snapshot => {
+            const DBbindingResponse = await this.db.collection('playlist').doc(this.state.playlistId).onSnapshot(snapshot => {
                 let tracks = [];
                 const data = snapshot.data();
                 for (let trackId = 0; trackId < data.tracks.length; trackId++) {
@@ -48,12 +49,11 @@ export default class Playlist extends React.Component {
 
     // invoke it whenever the client is making changes on his playlist component
     onUpdatePlaylist = async () => {
-        const db = firebase.firestore();
         try {
             const trackReferencesOnDB = this.state.tracks.map(track => {
-                return db.doc(`/track/${track.id}`);
+                return this.db.doc(`/track/${track.id}`);
             });
-            await db.collection('playlist').doc(this.state.playlistId).set({
+            await this.db.collection('playlist').doc(this.state.playlistId).set({
                 tracks: trackReferencesOnDB
             });
 
@@ -66,8 +66,6 @@ export default class Playlist extends React.Component {
     }
 
     onAddToPlaylist = async () => {
-        const db = firebase.firestore();
-
         // TODO method that generates a <TrackItem> component 
         // <Search> component should return track details {videoId, snippet.title, snippet.thumbnails.high.url }
         const newTrack = {  //  dummy track
@@ -91,7 +89,7 @@ export default class Playlist extends React.Component {
             // const responseJson = await response.json();
             // const trackssss = Array.from(responseJson.items);
             // for(let i = 0 ; i < trackssss.length; i++) {
-            //     const response = await db.collection('track').add({
+            //     const response = await this.db.collection('track').add({
             //         videoId: trackssss[i].id.videoId,
             //         title: trackssss[i].snippet.title,
             //         image: trackssss[i].snippet.thumbnails.high.url
@@ -102,7 +100,7 @@ export default class Playlist extends React.Component {
             //     tracks: [...this.state.tracks, trackssss[i]]
             // });
             // }
-            const response = await db.collection('track').add({
+            const response = await this.db.collection('track').add({
                 videoId: newTrack.id.videoId,
                 title: newTrack.snippet.title,
                 image: newTrack.snippet.thumbnails.high.url
