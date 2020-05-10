@@ -9,6 +9,7 @@ import HomeTab from '../../tabs/HomeTab.js'
 import { BackButtonHandler } from './AndroidBackHandler.js'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 import PartyTimeView from '../PartyTimeView.js'
+import AddToPlaylistView from './AddToPlaylistView.js'
 
 const Stack = createStackNavigator();
 const Tab = createMaterialBottomTabNavigator();
@@ -16,93 +17,101 @@ const Tab = createMaterialBottomTabNavigator();
 export default class Navigator extends React.Component {
 
     createBottomTabs = () => {
-    return <Tab.Navigator>
-        <Tab.Screen name="Home Tab" component={HomeTab}
-        options={{
-            tabBarLabel: 'Home',
-            tabBarIcon: ({ color }) => (
-                <MaterialCommunityIcons name="home" color={color} size={30} />),
-        }}
-        />
-        <Tab.Screen name="New Party Tab" component={this.createPartyStack} initialParams={{isNewParty:true}}
-        options={{
-            tabBarLabel: 'New Party',
-            tabBarIcon: ({ color }) => (
-                <MaterialCommunityIcons name="music" color={color} size={30} />),
-        }}
-        />
-        <Tab.Screen name="Join Party Tab" component={this.createPartyStack} initialParams={{isNewParty:false}}
-        options={{
-            tabBarLabel: 'Join Party',
-            tabBarIcon: ({ color }) => (
-                <MaterialCommunityIcons name="music" color={color} size={30} />),
-        }}
-        />
-        <Tab.Screen 
-            name="Party Time Tab" 
-            component={this.createPartyTabStack}
-            options={{
-                tabBarLabel: 'Party Time',
-                tabBarIcon: ({ color }) => (
-                    <MaterialCommunityIcons name="music" color={color} size={30} />),
+        return <Tab.Navigator>
+            <Tab.Screen name="Home Tab" component={HomeTab}
+                options={{
+                    tabBarLabel: 'Home',
+                    tabBarIcon: ({ color }) => (
+                        <MaterialCommunityIcons name="home" color={color} size={30} />),
                 }}
-            listeners={({ navigation, route }) => ({
-                tabPress: e => {
-                  e.preventDefault();
-                  navigation.navigate('Party Time Tab');
-                },
-              })}
-        />
-    </Tab.Navigator>
+            />
+            <Tab.Screen name="New Party Tab" component={this.createPartyStack} initialParams={{ isNewParty: true }}
+                options={{
+                    tabBarLabel: 'New Party',
+                    tabBarIcon: ({ color }) => (
+                        <MaterialCommunityIcons name="music" color={color} size={30} />),
+                }}
+            />
+            <Tab.Screen name="Join Party Tab" component={this.createPartyStack} initialParams={{ isNewParty: false }}
+                options={{
+                    tabBarLabel: 'Join Party',
+                    tabBarIcon: ({ color }) => (
+                        <MaterialCommunityIcons name="music" color={color} size={30} />),
+                }}
+            />
+            <Tab.Screen
+                name="Party Time Tab"
+                component={this.createPartyTabStack}
+                options={{
+                    tabBarLabel: 'Party Time',
+                    tabBarIcon: ({ color }) => (
+                        <MaterialCommunityIcons name="music" color={color} size={30} />),
+                }}
+                listeners={({ navigation, route }) => ({
+                    tabPress: e => {
+                        e.preventDefault();
+                        navigation.navigate('Party Time Tab');
+                    },
+                })}
+            />
+        </Tab.Navigator>
     }
 
     createPartyTabStack = () => {
         return (
-            <Stack.Navigator 
+            <Stack.Navigator
                 screenOptions={{
                     gestureEnabled: false
                 }}
                 headerMode='none'
             >
-            <Stack.Screen
-                name="Party Time"
-                component={PartyTimeView}
-            />
-            <Stack.Screen
-                name="Set Party"
-                component={SetPartyView}
-            />
-            <Stack.Screen
-                name="Party View"
-                component={PartyView}
-            />
-            </Stack.Navigator>
-            )
+                <Stack.Screen
+                    name="Party Time"
+                    component={PartyTimeView}
+                />
+                <Stack.Screen
+                    name="Set Party"
+                    component={SetPartyView}
+                />
+                <Stack.Screen
+                    name="Party View"
+                    component={PartyView}
+                />
+                <Stack.Screen
+                    name="Add To Playlist"
+                    component={AddToPlaylistView}
+                />
+            </Stack.Navigator >
+        )
     }
 
     createPartyStack = ({ route }) => {
         return (
-        <Stack.Navigator 
-            screenOptions={{
-                gestureEnabled: false
-            }}
-            headerMode='none'
-        >
-        <Stack.Screen
-            name="Set Party"
-            component={SetPartyView}
-            initialParams={{isNewParty: route.params.isNewParty}}
-        />
-        <Stack.Screen
-            name="Party View"
-            component={PartyView}
-        />
-        </Stack.Navigator>
+            <Stack.Navigator
+                screenOptions={{
+                    gestureEnabled: false
+                }}
+                headerMode='none'
+            >
+                <Stack.Screen
+                    name="Set Party"
+                    component={SetPartyView}
+                    initialParams={{ isNewParty: route.params.isNewParty }}
+                />
+                <Stack.Screen
+                    name="Party View"
+                    component={PartyView}
+                />
+                <Stack.Screen
+                    name="Add To Playlist"
+                    component={AddToPlaylistView}
+                />
+            </Stack.Navigator>
         )
     }
 
     render() {
-        return(
+        return (
             <NavigationContainer>
                 {/* <BackButtonHandler/>  */}
                 {this.createBottomTabs()}
