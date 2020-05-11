@@ -10,6 +10,7 @@ import { BackButtonHandler } from './AndroidBackHandler.js'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 import PartyTimeView from '../PartyTimeView.js'
 import AddToPlaylistView from './AddToPlaylistView.js'
+import Playlist from './Playlist.js'
 
 const Stack = createStackNavigator();
 const Tab = createMaterialBottomTabNavigator();

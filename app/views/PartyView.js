@@ -184,11 +184,7 @@ export class PartyView extends React.Component {
                     </TouchableOpacity>
                 </View>
 
-                <TouchableOpacity onPress={() => this.props.navigation.navigate('Add To Playlist')}>
-                    <Text style={{ fontSize: 15 }}>Add To Playlist</Text>
-                </TouchableOpacity>
-
-                <Playlist loadVideoToPlayer={this.loadVideoToPlayer} />
+                <Playlist loadVideoToPlayer={this.loadVideoToPlayer} navigation={this.props.navigation} />
 
             </View>
         )

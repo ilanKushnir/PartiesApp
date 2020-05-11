@@ -44,5 +44,15 @@ export const styles = StyleSheet.create({
     backgroundColor: 'skyblue',
     borderColor: 'powderblue',
     borderWidth: 3
+  },
+  trackItemSelected: {
+    flexDirection: 'row',
+    alignContent: 'center',
+    padding: 10,
+    marginBottom: 10,
+    marginHorizontal: 10,
+    backgroundColor: 'green',
+    borderColor: 'green',
+    borderWidth: 3
   }
 });
