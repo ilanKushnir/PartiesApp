@@ -10,14 +10,17 @@ export default class TrackItem extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+            togglingMode: props.togglingMode,
             selected: false
         };
     }
 
     toggleItemSelection() {
-        this.setState(prevState => ({
-            selected: !prevState.selected
-        }));
+        if (this.state.togglingMode) {
+            this.setState(prevState => ({
+                selected: !prevState.selected
+            }));
+        }
     }
 
     render() {

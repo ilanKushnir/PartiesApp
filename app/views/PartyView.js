@@ -88,7 +88,9 @@ export class PartyView extends React.Component {
         }
     }
 
-    loadVideoToPlayer = async (id) => {
+    loadVideoToPlayer = async (item) => {
+        const id = item.id
+        console.log(id)
         // this.setState({
         //     activeVideo : {id: id, currentTime: 0}
         // })

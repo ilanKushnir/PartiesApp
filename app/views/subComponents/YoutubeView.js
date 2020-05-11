@@ -9,7 +9,7 @@ export default class YoutubeView extends React.Component {
     currentTimeHandler = (currentTime) => {
         this.props.updateCurrentTimeInDB(currentTime);
     }
-    
+
     render() {
 
         const html = `
@@ -59,8 +59,8 @@ export default class YoutubeView extends React.Component {
             </html>`;
 
 
-        let playerState = this.props.condition === 'play' ? 
-                            `player.playVideo();` : `player.pauseVideo();`;
+        let playerState = this.props.condition === 'play' ?
+            `player.playVideo();` : `player.pauseVideo();`;
 
         setTimeout(() => {
             this.webref.injectJavaScript(playerState);
@@ -76,10 +76,10 @@ export default class YoutubeView extends React.Component {
                 allowsInlineMediaPlayback={true}
                 onMessage={event => {
                     console.log(
-                        'isHost:', this.props.isHost, 
-                        'actionMaker:', this.props.isActionMaker, 
+                        'isHost:', this.props.isHost,
+                        'actionMaker:', this.props.isActionMaker,
                         'currentTime:', event.nativeEvent.data
-                        );
+                    );
                     this.currentTimeHandler(event.nativeEvent.data);
                 }}
                 mediaPlaybackRequiresUserAction={false}

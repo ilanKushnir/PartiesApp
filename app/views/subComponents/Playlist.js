@@ -78,6 +78,7 @@ export default class Playlist extends React.Component {
     }
 
     onAddToPlaylist = async (newTrack) => {
+        console.log(newTrack)
         // TODO method that generates a <TrackItem> component 
         // <Search> component should return track details {videoId, snippet.title, snippet.thumbnails.high.url }
 
@@ -151,6 +152,8 @@ export default class Playlist extends React.Component {
                                 id={item.videoId}
                                 title={item.title}
                                 imageSrc={item.image}
+                                item={item}
+                                togglingMode={false}
                                 onClickFunc={this.props.loadVideoToPlayer}
                             />
                         }

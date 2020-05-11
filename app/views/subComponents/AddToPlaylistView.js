@@ -6,12 +6,6 @@ import { styles } from '../../styles/styles.js'
 import { StackActions } from '@react-navigation/native'
 import { WebView } from 'react-native-webview';
 
-
-
-
-
-
-
 export default class AddToPlaylistView extends React.Component {
     static navigationOptions = {
         header: null
@@ -23,7 +17,7 @@ export default class AddToPlaylistView extends React.Component {
             listLoaded: false,
             activeVideo: '',
             searchValue: '',
-            tracksArray: ['track1', 'track2']
+            tracksArray: []
         };
         this.addTrackToPlaylist = this.addTrackToPlaylist.bind(this);
     }
@@ -37,8 +31,9 @@ export default class AddToPlaylistView extends React.Component {
             var searchString = this.state.searchValue.split(' ').join('+');
             console.log('searching for: ' + searchString)
             // fetch videos from youtube
-            const response = await fetch(`https://www.googleapis.com/youtube/v3/search?part=snippet&q=${this.state.searchValue}&type=video&key=AIzaSyD5F1tSOzNANixramS8xr4dLmd-PYW87Go`)
+            const response = await fetch(`https://www.googleapis.com/youtube/v3/search?part=snippet&q=${this.state.searchValue}&type=video&key=AIzaSyBA1MCrElZzexam8ythKLd4TvkhVYtxbos`)
             const responseJson = await response.json()
+            // console.log(responseJson)
             this.setState({
                 listLoaded: true,
                 videoList: Array.from(responseJson.items)
@@ -59,10 +54,16 @@ export default class AddToPlaylistView extends React.Component {
     }
 
     addTrackToPlaylist = (track) => {
-        console.log("Add to PL: ", track)
-        // this.setState(prevState => ({
-        //     tracksArray: [...prevState.tracksArray, track]
-        // }));      
+        const newTracksArray = this.state.tracksArray
+        const itemIndex = (newTracksArray.size != 0) ? newTracksArray.findIndex(item => item.id.videoId === track.id.videoId) : -1
+
+        if (itemIndex != -1) {
+            newTracksArray.splice(itemIndex, 1)
+            this.setState({ tracksArray: newTracksArray });
+        } else {
+            newTracksArray.push(track)
+            this.setState({ tracksArray: newTracksArray });
+        }
     }
 
     render() {
@@ -109,6 +110,7 @@ export default class AddToPlaylistView extends React.Component {
                                     id={item.id.videoId}
                                     title={item.snippet.title}
                                     imageSrc={item.snippet.thumbnails.high.url}
+                                    togglingMode={true}
                                     item={item}
                                     onClickFunc={this.addTrackToPlaylist.bind(this)}
                                 />
