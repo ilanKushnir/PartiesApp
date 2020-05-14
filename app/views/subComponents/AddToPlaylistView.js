@@ -29,7 +29,6 @@ export default class AddToPlaylistView extends React.Component {
     async fetchYoutubeVideos() {
         try {
             var searchString = this.state.searchValue.split(' ').join('+');
-            console.log('searching for: ' + searchString)
             // fetch videos from youtube
             const response = await fetch(`https://www.googleapis.com/youtube/v3/search?part=snippet&q=${this.state.searchValue}&type=video&key=AIzaSyBA1MCrElZzexam8ythKLd4TvkhVYtxbos`)
             const responseJson = await response.json()
@@ -70,7 +69,7 @@ export default class AddToPlaylistView extends React.Component {
                     <Text style={{ color: 'black' }}>Choose which tracks to add:</Text>
                     <Button
                         onPress={() => {
-                            this.props.route.params.onReturnFunc(this.state.tracksArray)
+                            this.props.route.params.addTracksArrayToPlaylistFunc(this.state.tracksArray)
                             this.props.navigation.dispatch(StackActions.pop())
                         }}
                         title="Done"

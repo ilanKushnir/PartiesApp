@@ -89,8 +89,7 @@ export class PartyView extends React.Component {
     }
 
     loadVideoToPlayer = async (item) => {
-        const id = item.id
-
+        const id = item.videoId
         await this.db.collection('party').doc(this.state.partyId).update({ activeVideoId: id, currentTime: 0 });
     }
 

@@ -76,7 +76,6 @@ export default class Playlist extends React.Component {
     }
 
     onAddToPlaylist = async (newTrack) => {
-        console.log(newTrack)
         // TODO method that generates a <TrackItem> component 
         // <Search> component should return track details {videoId, snippet.title, snippet.thumbnails.high.url }
 
@@ -127,20 +126,18 @@ export default class Playlist extends React.Component {
     render() {
         return (
             <View style={{ flex: 3, paddingTop: 30 }}>
-                <TouchableOpacity onPress={() => {
-                    this.props.navigation.navigate('Add To Playlist', {
-                        addTracksArrayToPlaylistFunc: this.onAddToPlaylistMultipleTracks
-                    });
-                }}
-                >
-                    <Text style={{ fontSize: 15 }}>Add To Playlist</Text>
-                </TouchableOpacity>
+
 
                 <Button
-                    onPress={this.onAddToPlaylist}
-                    title="add (dummy) track to playlist & db"
+                    onPress={() => {
+                        this.props.navigation.navigate('Add To Playlist', {
+                            addTracksArrayToPlaylistFunc: this.onAddToPlaylistMultipleTracks
+                        })
+                    }}
+                    title="Add Tracks To Playlist"
                     color="#d2691e"
                 ></Button>
+
                 {this.state.listLoaded && (
                     <FlatList
                         data={this.state.tracks}
