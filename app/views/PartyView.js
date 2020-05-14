@@ -68,10 +68,10 @@ export class PartyView extends React.Component {
             Alert.alert(`Error getting updates from party #${this.state.party.joinId}`);
         }
     }
-    
+
     updateHost = (activeUsers) => {
         const isHost = activeUsers[0] === this.state.userId;
-        if(isHost && !this.state.isHost) {
+        if (isHost && !this.state.isHost) {
             Alert.alert(`You are now ${this.state.party.partyName} new host!`)
         }
         this.setState({
@@ -88,10 +88,8 @@ export class PartyView extends React.Component {
         }
     }
 
-    loadVideoToPlayer = async (id) => {
-        // this.setState({
-        //     activeVideo : {id: id, currentTime: 0}
-        // })
+    loadVideoToPlayer = async (item) => {
+        const id = item.videoId
         await this.db.collection('party').doc(this.state.partyId).update({ activeVideoId: id, currentTime: 0 });
     }
 
@@ -111,7 +109,7 @@ export class PartyView extends React.Component {
             this.setState({
                 party: updatedParty,
                 isActionMaker: true
-            })            
+            })
         }
         catch (error) {
             console.log(error)
@@ -150,24 +148,24 @@ export class PartyView extends React.Component {
                 activeUsers = activeUsers.filter(userId => userId !== this.state.userId);
                 await this.db.collection('party').doc(this.state.partyId).update({ activeUsers });
             }
-        }catch (error) {
+        } catch (error) {
             console.log(`Error on leave party ${error}`);
             Alert.alert(`Error on leave party`);
         }
     }
-                
+
 
     render() {
         return (
 
             <View style={{ flex: 1 }}>
                 <View style={{ flex: 2 }}>
-                    <YoutubeView 
-                    activeVideo={this.state.activeVideo} 
-                    condition={this.state.party.condition}
-                    updateCurrentTimeInDB={this.updateCurrentTimeInDB}
-                    isHost={this.state.isHost}
-                    isActionMaker={this.state.isActionMaker}
+                    <YoutubeView
+                        activeVideo={this.state.activeVideo}
+                        condition={this.state.party.condition}
+                        updateCurrentTimeInDB={this.updateCurrentTimeInDB}
+                        isHost={this.state.isHost}
+                        isActionMaker={this.state.isActionMaker}
                     />
                 </View>
 
@@ -184,7 +182,7 @@ export class PartyView extends React.Component {
                     </TouchableOpacity>
                 </View>
 
-                <Playlist loadVideoToPlayer={this.loadVideoToPlayer} />
+                <Playlist loadVideoToPlayer={this.loadVideoToPlayer} navigation={this.props.navigation} />
 
             </View>
         )
