@@ -10,7 +10,7 @@ export default class TrackItem extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            togglingMode: props.togglingMode,
+            togglingMode: props.togglingMode || false,
             selected: false
         };
     }

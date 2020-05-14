@@ -47,8 +47,6 @@ export default class Playlist extends React.Component {
             console.log('bindPlaylist changes From DB error', error)
             Alert.alert(`Error getting updates from playlist #${this.state.playlistId}`);
         }
-
-
     }
 
     // invoke it whenever the client is making changes on his playlist component
@@ -71,7 +69,7 @@ export default class Playlist extends React.Component {
 
     onAddToPlaylistMultipleTracks = (tracksArray) => {
         tracksArray.forEach(track => {
-            console.log(element)
+            console.log(track)
             this.onAddToPlaylist(track)
         });
 
@@ -131,7 +129,7 @@ export default class Playlist extends React.Component {
             <View style={{ flex: 3, paddingTop: 30 }}>
                 <TouchableOpacity onPress={() => {
                     this.props.navigation.navigate('Add To Playlist', {
-                        onReturnFunc: this.onAddToPlaylistMultipleTracks
+                        addTracksArrayToPlaylistFunc: this.onAddToPlaylistMultipleTracks
                     });
                 }}
                 >

@@ -43,12 +43,6 @@ export default class AddToPlaylistView extends React.Component {
         }
     }
 
-    loadVideoToPlayer = (id) => {
-        this.setState({
-            activeVideo: id
-        })
-    }
-
     onChangeText = (text) => {
         this.setState({ searchValue: text })
     }
