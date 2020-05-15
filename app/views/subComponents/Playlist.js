@@ -67,45 +67,35 @@ export default class Playlist extends React.Component {
 
     }
 
-    onAddToPlaylistMultipleTracks = (tracksArray) => {
-        tracksArray.forEach(track => {
-            console.log(track)
-            this.onAddToPlaylist(track)
-        });
 
-    }
+    onAddToPlaylist = async (tracksRaw) => {    // can handle both single track or array of tracks
+        // handle single track case
+        if (tracksRaw.length === undefined) {
+            tracksRaw = [tracksRaw];
+        }
 
-    onAddToPlaylist = async (newTrack) => {
-        // TODO method that generates a <TrackItem> component 
-        // <Search> component should return track details {videoId, snippet.title, snippet.thumbnails.high.url }
-
-        // const newTrack = {  //  dummy track
-        //     id: {
-        //         videoId: "AN0Bc5YF-pw"
-        //     },
-        //     snippet: {
-        //         title: "9 Weird Things Only Mountain Bike Riders Do",
-        //         thumbnails: {
-        //             high: {
-        //                 url: "https://i.ytimg.com/vi/AN0Bc5YF-pw/default.jpg"
-        //             }
-        //         }
-        //     }
-        // }
-
+        const tracks = tracksRaw.map(track => ({
+            videoId: track.id.videoId,
+            title: track.snippet.title,
+            image: track.snippet.thumbnails.high.url
+        }));
 
         try {
-            const response = await this.db.collection('track').add({
-                videoId: newTrack.id.videoId,
-                title: newTrack.snippet.title,
-                image: newTrack.snippet.thumbnails.high.url
+            const batch = this.db.batch();  //  batch perform ATOMIC action on DB
+            tracks.forEach(track => {
+                const trackReference = this.db.collection('track').doc();
+                batch.set(trackReference, track);
+                track.id = trackReference.id;
+                console.log('on batch, track uid', trackReference.id);
+                
             });
 
-            newTrack.id = response.id;
+            await batch.commit();
+
             this.setState({
-                tracks: [...this.state.tracks, newTrack]
+                tracks: this.state.tracks.concat(tracks)
             });
-
+            
             await this.onUpdatePlaylist();
         }
         catch (error) {
@@ -131,7 +121,7 @@ export default class Playlist extends React.Component {
                 <Button
                     onPress={() => {
                         this.props.navigation.navigate('Add To Playlist', {
-                            addTracksArrayToPlaylistFunc: this.onAddToPlaylistMultipleTracks
+                            addTracksArrayToPlaylistFunc: this.onAddToPlaylist
                         })
                     }}
                     title="Add Tracks To Playlist"
