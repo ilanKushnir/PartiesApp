@@ -31,12 +31,18 @@ export default class SetPartyView extends React.Component {
                     let { joinId } = partyData;
                     joinId++;
                     const userId = 1;
+
+                    const playlistResponse = await db.collection('playlist').add({
+                        tracks: []
+                    });
+                    const playlistId = playlistResponse.id;
+                    console.log("created new playlist in db: ",playlistId);
                     
                     const response = await db.collection('party').add({
                         joinId,
                         name: partyName || `Party #${joinId}`,
                         condition: 'pause',
-                        playlist: '',
+                        playlist: playlistId,
                         creationTime: new Date(),
                         activeVideoId: '',
                         currentTime: 0,
@@ -67,9 +73,10 @@ export default class SetPartyView extends React.Component {
                     // TODO - handle wrond joinId
                     // Generate id 100 from scratch if DB is empty
                     const party = response.docs[0];
-                    const partyId = party.id
+                    const partyId = party.id;
                     const data = party.data();
                     const { name, activeUsers } = data;
+                    const { playlist } = data;
                     
                     const userId = activeUsers[activeUsers.length - 1] + 1;
                     await db.collection('party').doc(partyId).update({ activeUsers: [...activeUsers, userId] });

@@ -17,6 +17,7 @@ export class PartyView extends React.Component {
 
     constructor(props) {
         super(props);
+        console.log("partyView ctor: ",props);
         this.state = {
             activeVideo: {
                 id: '',
@@ -38,9 +39,11 @@ export class PartyView extends React.Component {
     }
 
     bindPartyChangesFromDB = async () => {
+        console.log("partyView bind ");
         try {
             this.dbbindingResponse = await this.db.collection('party').doc(this.state.partyId).onSnapshot(snapshot => {
                 const data = snapshot.data();
+                
                 this.setState({
                     party: {
                         joinId: data.joinId,
@@ -156,6 +159,7 @@ export class PartyView extends React.Component {
 
 
     render() {
+        
         return (
 
             <View style={{ flex: 1 }}>
@@ -182,7 +186,7 @@ export class PartyView extends React.Component {
                     </TouchableOpacity>
                 </View>
 
-                <Playlist loadVideoToPlayer={this.loadVideoToPlayer} navigation={this.props.navigation} />
+                <Playlist playlist={this.state.party.playlist} loadVideoToPlayer={this.loadVideoToPlayer} navigation={this.props.navigation} />
 
             </View>
         )

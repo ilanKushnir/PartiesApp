@@ -12,9 +12,10 @@ import { Button } from 'react-native';
 export default class Playlist extends React.Component {
     constructor(props) {
         super(props);
+        console.log("playlist ctor: ",props)
         this.state = {
             listLoaded: false,
-            playlistId: 'eNsALXiAswwhWgVolghC',
+            playlistId: this.props.playlist,
             tracks: []
         };
 
@@ -23,9 +24,11 @@ export default class Playlist extends React.Component {
 
     bindPlaylistChangesFromDB = async () => {
         try {
+            console.log("on bind playlist changes from db: ", this.state.playlistId)
             const DBbindingResponse = await this.db.collection('playlist').doc(this.state.playlistId).onSnapshot(snapshot => {
                 let tracks = [];
                 const data = snapshot.data();
+
                 for (let trackId = 0; trackId < data.tracks.length; trackId++) {
                     data.tracks[trackId].get().then(result => {
                         const data = result.data();
@@ -69,7 +72,6 @@ export default class Playlist extends React.Component {
 
     onAddToPlaylistMultipleTracks = (tracksArray) => {
         tracksArray.forEach(track => {
-            console.log(track)
             this.onAddToPlaylist(track)
         });
 
