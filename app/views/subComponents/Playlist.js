@@ -14,7 +14,7 @@ export default class Playlist extends React.Component {
         super(props);
         this.state = {
             listLoaded: false,
-            playlistId: 'eNsALXiAswwhWgVolghC',
+            playlistId: this.props.playlistId,
             tracks: []
         };
 

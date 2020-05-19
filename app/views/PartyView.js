@@ -182,7 +182,7 @@ export class PartyView extends React.Component {
                     </TouchableOpacity>
                 </View>
 
-                <Playlist loadVideoToPlayer={this.loadVideoToPlayer} navigation={this.props.navigation} />
+                <Playlist playlistId={this.state.party.playlist} loadVideoToPlayer={this.loadVideoToPlayer} navigation={this.props.navigation} />
 
             </View>
         )
