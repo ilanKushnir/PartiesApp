@@ -26,20 +26,24 @@ export default class Playlist extends React.Component {
             const DBbindingResponse = await this.db.collection('playlist').doc(this.state.playlistId).onSnapshot(snapshot => {
                 let tracks = [];
                 const data = snapshot.data();
-                for (let trackId = 0; trackId < data.tracks.length; trackId++) {
-                    data.tracks[trackId].get().then(result => {
-                        const data = result.data();
-                        if (data) {
-                            data.id = result.id;
-                            tracks.push(data);
-                        }
-                    }).then(() => {
-                        this.setState({
-                            tracks,
-                            listLoaded: tracks.length !== 0
+
+                if (data) { // if data is not undefined = the playlist exists in db
+                    for (let trackId = 0; trackId < data.tracks.length; trackId++) {
+                        data.tracks[trackId].get().then(result => {
+                            const data = result.data();
+                            if (data) {
+                                data.id = result.id;
+                                tracks.push(data);
+                            }
+                        }).then(() => {
+                            this.setState({
+                                tracks,
+                                listLoaded: tracks.length !== 0
+                            });
                         });
-                    });
+                    }
                 }
+                // TODO - add else statement for a scenario that the playlist was deleted from db
             });
 
             // TODO - when distructing component --> call DBbindingResponse() to unbind it from DB

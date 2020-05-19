@@ -8,8 +8,8 @@ import { createStackNavigator } from '@react-navigation/stack'
 import HomeTab from '../../tabs/HomeTab.js'
 import { BackButtonHandler } from './AndroidBackHandler.js'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
-import PartyTimeView from '../PartyTimeView.js'
-import AddToPlaylistView from './AddToPlaylistView.js'
+import PartyTimeTab from '../../tabs/PartyTimeTab.js'
+import AddToPlaylistView from '../AddToPlaylistView.js'
 import Playlist from './Playlist.js'
 
 const Stack = createStackNavigator();
@@ -68,7 +68,7 @@ export default class Navigator extends React.Component {
             >
                 <Stack.Screen
                     name="Party Time"
-                    component={PartyTimeView}
+                    component={PartyTimeTab}
                 />
                 <Stack.Screen
                     name="Set Party"

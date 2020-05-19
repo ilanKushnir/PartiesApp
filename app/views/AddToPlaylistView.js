@@ -1,8 +1,8 @@
 import React from 'react';
 import { Text, View, FlatList, Image, Alert, TouchableOpacity, Button, TextInput } from 'react-native';
-import TrackItem from './TrackItem';
-import YoutubeView from './YoutubeView';
-import { styles } from '../../styles/styles.js'
+import TrackItem from './subComponents/TrackItem';
+import YoutubeView from './subComponents/YoutubeView';
+import { styles } from '../styles/styles.js'
 import { StackActions } from '@react-navigation/native'
 import { WebView } from 'react-native-webview';
 

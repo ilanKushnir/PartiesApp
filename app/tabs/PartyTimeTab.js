@@ -3,7 +3,7 @@ import { View, Button, Text,TouchableOpacity } from 'react-native'
 import { styles } from '../styles/styles.js'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 
-export default class PartyTimeView extends React.Component {
+export default class PartyTimeTab extends React.Component {
     render() {
         return(
             <View style={styles.center,styles.row}>

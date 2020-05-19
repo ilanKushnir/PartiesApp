@@ -31,12 +31,17 @@ export default class SetPartyView extends React.Component {
                     let { joinId } = partyData;
                     joinId++;
                     const userId = 1;
+
+                    const playlistResponse = await db.collection('playlist').add({
+                        tracks: []
+                    });
+                    const playlistId = playlistResponse.id;
                     
                     const response = await db.collection('party').add({
                         joinId,
                         name: partyName || `Party #${joinId}`,
                         condition: 'pause',
-                        playlist: '',
+                        playlist: playlistId,
                         creationTime: new Date(),
                         activeVideoId: '',
                         currentTime: 0,
@@ -48,7 +53,8 @@ export default class SetPartyView extends React.Component {
                     this.props.navigation.navigate('Party View', {
                         userId,
                         partyId,
-                        isHost: true
+                        isHost: true,
+                        playlistId: playlistId
                     });
                     } catch(error) {
                         console.log(`Error starting new party ${error}`);
@@ -70,6 +76,7 @@ export default class SetPartyView extends React.Component {
                     const partyId = party.id
                     const data = party.data();
                     const { name, activeUsers } = data;
+                    const { playlist } = data;
                     
                     const userId = activeUsers[activeUsers.length - 1] + 1;
                     await db.collection('party').doc(partyId).update({ activeUsers: [...activeUsers, userId] });
@@ -78,7 +85,8 @@ export default class SetPartyView extends React.Component {
                     this.props.navigation.navigate('Party View', {
                         userId,
                         partyId,
-                        isHost:false
+                        isHost:false,
+                        playlistId: playlist
                     });
                 } catch (e) {
                     console.log('Error join existing party', e)

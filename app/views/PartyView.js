@@ -27,7 +27,7 @@ export class PartyView extends React.Component {
                 joinId: '',
                 partyName: '',
                 condition: '',
-                playlist: ''
+                playlist: props.route.params.playlistId
             },
             userId: props.route.params.userId,
             isHost: props.route.params.isHost,
