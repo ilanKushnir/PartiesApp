@@ -5,7 +5,7 @@ import firebase from '../../../firebase.js';
 import { StackActions } from '@react-navigation/native';
 import { styles } from '../../styles/styles.js';
 import { Button } from 'react-native';
-
+import {MaterialCommunityIcons,Foundation} from 'react-native-vector-icons';
 
 
 
@@ -120,8 +120,6 @@ export default class Playlist extends React.Component {
     render() {
         return (
             <View style={{ flex: 3, paddingTop: 30 }}>
-
-
                 <Button
                     onPress={() => {
                         this.props.navigation.navigate('Add To Playlist', {

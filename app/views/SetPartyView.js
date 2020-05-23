@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, View, TextInput, Alert, TouchableOpacity, Button} from 'react-native';
+import { StyleSheet, Text, View, TextInput, Alert, TouchableOpacity, Button, Keyboard} from 'react-native';
 import PartyView from './PartyView'
 import firebase from '../../firebase'
 import DB_TABLES from '../../assets/utils'
@@ -103,10 +103,13 @@ export default class SetPartyView extends React.Component {
             <View style={styles.center}>
                 <Text style={styles.title}>{message}</Text>
                 <TextInput style={styles.input} placeholder={inputPlaceholder} 
-                            onChangeText={inputValue => {this.setState({inputValue})}}>
+                            onChangeText={inputValue => this.setState({inputValue})}>
                 </TextInput>
                 <Button
-                    onPress={() => handleSetParty(this.state.inputValue)}
+                    onPress={() => {
+                        Keyboard.dismiss();
+                        handleSetParty(this.state.inputValue);
+                    }}
                     title={buttonText}
                 ></Button>
                 <Button
