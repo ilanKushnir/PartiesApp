@@ -14,26 +14,31 @@ export default class Playlist extends React.Component {
         super(props);
         this.state = {
             listLoaded: false,
-            playlistId: this.props.playlistId,
+            playlist: this.props.playlist,
             tracks: []
         };
 
         this.db = firebase.firestore();
     }
 
+    getPlaylistId = async () => {
+        const playlist = await this.state.playlist.get();
+        return playlist.id;
+    }
+
     bindPlaylistChangesFromDB = async () => {
-        try {
+        try {            
             const DBbindingResponse = await this.db.collection('playlist').doc(this.state.playlistId).onSnapshot(snapshot => {
                 let tracks = [];
-                const data = snapshot.data();
+                const playlistData = snapshot.data();
 
-                if (data) { // if data is not undefined = the playlist exists in db
-                    for (let trackId = 0; trackId < data.tracks.length; trackId++) {
-                        data.tracks[trackId].get().then(result => {
-                            const data = result.data();
-                            if (data) {
-                                data.id = result.id;
-                                tracks.push(data);
+                if (playlistData) { // if data is not undefined = the playlist exists in db
+                    for (let trackId = 0; trackId < playlistData.tracks.length; trackId++) {
+                        playlistData.tracks[trackId].get().then(result => {
+                            const TrackData = result.data();
+                            if (TrackData) {
+                                TrackData.id = result.id;
+                                tracks.push(TrackData);
                             }
                         }).then(() => {
                             this.setState({
@@ -91,7 +96,6 @@ export default class Playlist extends React.Component {
                 batch.set(trackReference, track);
                 track.id = trackReference.id;
                 console.log('on batch, track uid', trackReference.id);
-                
             });
 
             await batch.commit();
@@ -110,6 +114,10 @@ export default class Playlist extends React.Component {
 
     async componentDidMount() {
         try {
+            const playlistId = await this.getPlaylistId();
+            this.setState({
+                playlistId
+            });
             // bind party continues updates from DB to this component
             await this.bindPlaylistChangesFromDB()
         } catch (error) {
