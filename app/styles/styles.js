@@ -10,9 +10,15 @@ export const styles = StyleSheet.create({
     fontSize: 24,
     marginBottom: 16
   },
-  partyStat: {
+  partyId: {
     fontSize: 17,
     padding: 10
+  },
+  partyName: {
+    fontSize: 25,
+    padding: 10,
+    fontStyle: 'italic',
+    fontWeight: 'bold'
   },
   input: {
     borderWidth: 1,
@@ -28,6 +34,20 @@ export const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     justifyContent: 'space-evenly',
+  },
+  rowHeader: {
+    flexDirection: 'row',
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginHorizontal: 10
+  },
+  rowPlayer: {
+    flexDirection: 'row',
+    flex: 1,
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginHorizontal: 70
   },
   column: {
     flexDirection: 'column',

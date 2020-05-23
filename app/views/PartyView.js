@@ -1,14 +1,12 @@
 import React from 'react';
-import { Text, View, Alert, TouchableOpacity } from 'react-native';
+import { Text, View, Alert, TouchableOpacity, Button } from 'react-native';
 import TrackItem from './subComponents/TrackItem';
 import YoutubeView from './subComponents/YoutubeView';
 import firebase from '../../firebase';
 import { styles } from '../styles/styles.js'
 import { StackActions } from '@react-navigation/native'
-import { WebView } from 'react-native-webview';
 import Playlist from './subComponents/Playlist.js'
-
-
+import Player from './subComponents/Player.js'
 
 export class PartyView extends React.Component {
     static navigationOptions = {
@@ -159,7 +157,13 @@ export class PartyView extends React.Component {
         return (
 
             <View style={{ flex: 1 }}>
-                <View style={{ flex: 2 }}>
+                <View style={styles.rowHeader}>
+                    <Text style={styles.partyId}>{`ID: ${this.state.party.joinId}`}</Text>
+                    <Text style={styles.partyName}>{this.state.party.partyName}</Text>
+                    <Button title="Leave" onPress={this.onPressLeaveParty} color="#ff0000"/>
+                </View>
+
+                <View style={{ flex: 3 }}>
                     <YoutubeView
                         activeVideo={this.state.activeVideo}
                         condition={this.state.party.condition}
@@ -169,21 +173,13 @@ export class PartyView extends React.Component {
                     />
                 </View>
 
-                <View style={{
-                    flexDirection: "row"
-                }}>
-                    <Text style={styles.partyStat}>{`ID: ${this.state.party.joinId}`}</Text>
-                    <Text style={styles.partyStat}>{this.state.party.condition === 'play' ? 'PLAYING' : 'PAUESED'}</Text>
-                    <TouchableOpacity onPress={this.onPressPlayPause}>
-                        <Text style={styles.partyStat}>{'Play / Pause'}</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity onPress={this.onPressLeaveParty}>
-                        <Text style={styles.partyStat}>Leave</Text>
-                    </TouchableOpacity>
-                </View>
+                <Player onPressPlayPause={this.onPressPlayPause} condition={this.state.party.condition}></Player>
 
-                <Playlist playlistId={this.state.party.playlist} loadVideoToPlayer={this.loadVideoToPlayer} navigation={this.props.navigation} />
-
+                <Playlist
+                    playlistId={this.state.party.playlist}
+                    loadVideoToPlayer={this.loadVideoToPlayer}
+                    navigation={this.props.navigation}
+                />
             </View>
         )
     }

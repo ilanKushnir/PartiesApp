@@ -74,14 +74,7 @@ export default class YoutubeView extends React.Component {
                 ref={r => (this.webref = r)}
                 originWhitelist={['*']}
                 allowsInlineMediaPlayback={true}
-                onMessage={event => {
-                    console.log(
-                        'isHost:', this.props.isHost,
-                        'actionMaker:', this.props.isActionMaker,
-                        'currentTime:', event.nativeEvent.data
-                    );
-                    this.currentTimeHandler(event.nativeEvent.data);
-                }}
+                onMessage={event => this.currentTimeHandler(event.nativeEvent.data)}
                 mediaPlaybackRequiresUserAction={false}
             />
         )
