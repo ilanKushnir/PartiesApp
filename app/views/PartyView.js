@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text, View, Alert, TouchableOpacity, Button } from 'react-native';
+import { Text, View, Alert, TouchableOpacity, Button, Clipboard } from 'react-native';
 import TrackItem from './subComponents/TrackItem';
 import YoutubeView from './subComponents/YoutubeView';
 import firebase from '../../firebase';
@@ -158,7 +158,12 @@ export class PartyView extends React.Component {
 
             <View style={{ flex: 1 }}>
                 <View style={styles.rowHeader}>
-                    <Text style={styles.partyId}>{`ID: ${this.state.party.joinId}`}</Text>
+                    <TouchableOpacity onPress={() => {
+                        Clipboard.setString(`${this.state.party.joinId}`);
+                        Alert.alert("Party id copied to clipboard");
+                    }}>
+                        <Text style={styles.partyId}>{`ID: ${this.state.party.joinId}`}</Text>
+                    </TouchableOpacity>
                     <Text style={styles.partyName}>{this.state.party.partyName}</Text>
                     <Button title="Leave" onPress={this.onPressLeaveParty} color="#ff0000"/>
                 </View>
