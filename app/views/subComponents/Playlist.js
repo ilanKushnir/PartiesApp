@@ -5,7 +5,8 @@ import firebase from '../../../firebase.js';
 import { StackActions } from '@react-navigation/native';
 import { styles } from '../../styles/styles.js';
 import { Button } from 'react-native';
-
+import { SwipeableFlatList } from 'react-native-swipeable-flat-list';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 
 
@@ -71,6 +72,25 @@ export default class Playlist extends React.Component {
 
     }
 
+    onRemoveFromPlaylist = async (trackId) => {
+        try {
+            const batch = this.db.batch();  //  batch perform ATOMIC action on DB
+            console.log(`removing track with id: ${trackId}`);
+            const remainingTracks = this.state.tracks.filter((track) => {
+                return track.id !== trackId
+            });
+            console.log(remainingTracks);
+            this.setState({
+                tracks: remainingTracks
+            }, () =>
+                this.onUpdatePlaylist()
+            );
+        }
+        catch (error) {
+            console.log(error)
+        }
+
+    }
 
     onAddToPlaylist = async (tracksRaw) => {    // can handle both single track or array of tracks
         // handle single track case
@@ -91,7 +111,7 @@ export default class Playlist extends React.Component {
                 batch.set(trackReference, track);
                 track.id = trackReference.id;
                 console.log('on batch, track uid', trackReference.id);
-                
+
             });
 
             await batch.commit();
@@ -99,7 +119,7 @@ export default class Playlist extends React.Component {
             this.setState({
                 tracks: this.state.tracks.concat(tracks)
             });
-            
+
             await this.onUpdatePlaylist();
         }
         catch (error) {
@@ -133,10 +153,15 @@ export default class Playlist extends React.Component {
                 ></Button>
 
                 {this.state.listLoaded && (
-                    <FlatList
+                    <SwipeableFlatList
                         data={this.state.tracks}
-                        renderItem={({ item }) =>
+                        keyExtractor={item => item.id}
+                        bounceFirstRowOnMount={false}
+
+                        renderItem={({ item }) => (
                             <TrackItem
+
+                                style={{ height: 48 }}
                                 key={item.id}
                                 id={item.videoId}
                                 title={item.title}
@@ -145,8 +170,42 @@ export default class Playlist extends React.Component {
                                 togglingMode={false}
                                 onClickFunc={this.props.loadVideoToPlayer}
                             />
+                        )
                         }
-                        keyExtractor={item => item.id}
+                       
+                        renderLeft={({ item }) => (
+                            <MaterialCommunityIcons
+                                style={{
+                                    width: 60,
+                                    height: 60,
+                                    position: "relative",
+                                    top: 5,
+                                    left: 15,
+
+                                }}
+                                onPress={() => this.onRemoveFromPlaylist(item.id)}
+                                name="delete"
+                                size={40}
+                                color="#ff0000"
+                            />
+                        )}
+                        // renderRight={({ item }) => (
+                        //     <MaterialCommunityIcons
+                        //         style={{
+                        //             width: 60,
+                        //             height: 60,
+                        //             position: "relative",
+                        //             top: 5,
+                        //             left: 15,
+
+                        //         }}
+                        //         onPress={() => Alert.alert('Noice')}
+                        //         name="heart-outline"
+                        //         size={40}
+                        //         color="#ff0000"
+                        //     />
+                        // )}
+
                     />
                 )}
 
