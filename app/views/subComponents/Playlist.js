@@ -7,6 +7,8 @@ import { styles } from '../../styles/styles.js';
 import { Button } from 'react-native';
 import { SwipeableFlatList } from 'react-native-swipeable-flat-list';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import DraggableFlatList from 'react-native-draggable-flatlist'
+
 
 
 
@@ -137,11 +139,23 @@ export default class Playlist extends React.Component {
         }
     }
 
+    renderItem = ({ item, drag }) => (
+        <TrackItem
+            style={{ height: 48 }}
+            key={item.id}
+            id={item.videoId}
+            title={item.title}
+            imageSrc={item.image}
+            item={item}
+            togglingMode={false}
+            onClickFunc={this.props.loadVideoToPlayer}
+            onLongPress={drag}
+        />
+    )
+
     render() {
         return (
             <View style={{ flex: 3, paddingTop: 30 }}>
-
-
                 <Button
                     onPress={() => {
                         this.props.navigation.navigate('Add To Playlist', {
@@ -153,58 +167,20 @@ export default class Playlist extends React.Component {
                 ></Button>
 
                 {this.state.listLoaded && (
-                    <SwipeableFlatList
+
+                    <DraggableFlatList
                         data={this.state.tracks}
                         keyExtractor={item => item.id}
                         bounceFirstRowOnMount={false}
-
-                        renderItem={({ item }) => (
-                            <TrackItem
-
-                                style={{ height: 48 }}
-                                key={item.id}
-                                id={item.videoId}
-                                title={item.title}
-                                imageSrc={item.image}
-                                item={item}
-                                togglingMode={false}
-                                onClickFunc={this.props.loadVideoToPlayer}
-                            />
-                        )
+                        onDragEnd={({ data }) =>
+                            this.setState({
+                                tracks: data
+                            }, () =>
+                                this.onUpdatePlaylist()
+                            )
                         }
-                       
-                        renderLeft={({ item }) => (
-                            <MaterialCommunityIcons
-                                style={{
-                                    width: 60,
-                                    height: 60,
-                                    position: "relative",
-                                    top: 5,
-                                    left: 15,
 
-                                }}
-                                onPress={() => this.onRemoveFromPlaylist(item.id)}
-                                name="delete"
-                                size={40}
-                                color="#ff0000"
-                            />
-                        )}
-                        // renderRight={({ item }) => (
-                        //     <MaterialCommunityIcons
-                        //         style={{
-                        //             width: 60,
-                        //             height: 60,
-                        //             position: "relative",
-                        //             top: 5,
-                        //             left: 15,
-
-                        //         }}
-                        //         onPress={() => Alert.alert('Noice')}
-                        //         name="heart-outline"
-                        //         size={40}
-                        //         color="#ff0000"
-                        //     />
-                        // )}
+                        renderItem={this.renderItem}
 
                     />
                 )}
@@ -216,3 +192,36 @@ export default class Playlist extends React.Component {
         )
     }
 }
+
+  // renderLeft={({ item }) => (
+                    //     <MaterialCommunityIcons
+                    //         style={{
+                    //             width: 60,
+                    //             height: 60,
+                    //             position: "relative",
+                    //             top: 5,
+                    //             left: 15,
+
+                    //         }}
+                    //         onPress={() => this.onRemoveFromPlaylist(item.id)}
+                    //         name="delete"
+                    //         size={40}
+                    //         color="#ff0000"
+                    //     />
+                    // )}
+                    // renderRight={({ item }) => (
+                    //     <MaterialCommunityIcons
+                    //         style={{
+                    //             width: 60,
+                    //             height: 60,
+                    //             position: "relative",
+                    //             top: 5,
+                    //             left: 15,
+
+                    //         }}
+                    //         onPress={() => Alert.alert('Noice')}
+                    //         name="heart-outline"
+                    //         size={40}
+                    //         color="#ff0000"
+                    //     />
+                    // )}
