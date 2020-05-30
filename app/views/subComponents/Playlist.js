@@ -144,14 +144,14 @@ export default class Playlist extends React.Component {
 
     render() {
         return (
-            <View style={{ flex: 3, paddingTop: 30 }}>
+            <View style={{ flex: 3, paddingTop: 0 }}>
                 <View style={{ flexDirection: "row" }}>
                     <Button
                         onPress={() => {
                             this.toggleEditMode()
                         }}
                         title={this.state.editMode ? "Done" : "Edit"}
-                        color={this.state.editMode ? "#4da6ff" : "#d2691e"}
+                        color={this.state.editMode ? "#87211c" : "#d2691e"}
                     ></Button>
 
                     <Button

@@ -67,7 +67,9 @@ export default class YoutubeView extends React.Component {
         }, 2000);
 
         return (
+
             <WebView
+                pointerEvents="none"
                 javascriptEnabled={true}
                 useWebKit={true}
                 source={{ html }}
@@ -77,6 +79,7 @@ export default class YoutubeView extends React.Component {
                 onMessage={event => this.currentTimeHandler(event.nativeEvent.data)}
                 mediaPlaybackRequiresUserAction={false}
             />
+
         )
     }
 }

@@ -19,7 +19,10 @@ const Tab = createMaterialBottomTabNavigator();
 export default class Navigator extends React.Component {
 
     createBottomTabs = () => {
-        return <Tab.Navigator>
+        return <Tab.Navigator
+            initialRouteName="Home"
+            barStyle={{ backgroundColor: '#ff6347' }}
+        >
             <Tab.Screen
                 name="Home Tab"
                 component={HomeTab}

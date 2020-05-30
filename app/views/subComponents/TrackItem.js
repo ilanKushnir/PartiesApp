@@ -34,7 +34,7 @@ export default class TrackItem extends React.Component {
 
                 <View style={this.state.selected ? styles.trackItemSelected : styles.trackItem}>
                     <Image
-                        style={{ flex: 2, width: 35, height: 35, marginRight: 10 }}
+                        style={{ flex: 1, width: 20, height: 35, marginRight: 10 }}
                         source={{ uri: this.props.imageSrc }}
                     />
                     <Text style={{ flex: 6 }}>
