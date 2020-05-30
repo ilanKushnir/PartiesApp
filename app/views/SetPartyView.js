@@ -15,6 +15,11 @@ export default class SetPartyView extends React.Component {
          }
     }
 
+    getPlaylistId = async (playlist) => {
+        const playlistResponse = await playlist.get();
+        return playlistResponse.id;
+    }
+
     getAttributes = (isNewParty) => {
         const db = firebase.firestore();
         let message, inputPlaceholder, buttonText, handleSetParty;
@@ -27,34 +32,42 @@ export default class SetPartyView extends React.Component {
             handleSetParty = async (partyName) => {
                 try {
                     const lastCreatedParty = await db.collection('party').orderBy('creationTime', 'desc').limit(1).get();
-                    const partyData = lastCreatedParty.docs[0].data();
-                    let { joinId } = partyData;
-                    joinId++;
+                    let joinId;
+                    if(lastCreatedParty.docs[0]) {
+                        const partyData = lastCreatedParty.docs[0].data();
+                        joinId = partyData.joinId;
+                        joinId++;
+                    } else {
+                        joinId = 100;
+                    }
                     const userId = 1;
 
                     const playlistResponse = await db.collection('playlist').add({
                         tracks: []
                     });
-                    const playlistId = playlistResponse.id;
-                    
+                    const { id:playlistId } = playlistResponse;
+                    const playlist = await db.doc(`/playlist/${playlistId}`);   // playlist Reference on DB
+
+
+                    const currentTime = new Date();
                     const response = await db.collection('party').add({
                         joinId,
                         name: partyName || `Party #${joinId}`,
                         condition: 'pause',
-                        playlist: playlistId,
-                        creationTime: new Date(),
+                        playlist,
+                        creationTime: currentTime,
                         activeVideoId: '',
                         currentTime: 0,
+                        lastUpdatedTime: currentTime,
                         activeUsers: [ userId ]
                     });
                     
                     const partyId = response.id;
-                    Alert.alert(`Successfully created ${partyName} party. Use id ${joinId} to join`);
                     this.props.navigation.navigate('Party View', {
                         userId,
                         partyId,
                         isHost: true,
-                        playlistId: playlistId
+                        playlist: playlistId
                     });
                     } catch(error) {
                         console.log(`Error starting new party ${error}`);
@@ -69,24 +82,48 @@ export default class SetPartyView extends React.Component {
             ];
             handleSetParty = async (joinId) => {
                 try {
+                    /////// TRANSACTION USE
+                    // const response = await db.collection('party').where('joinId', '==', parseInt(joinId)).limit(1);
+                    // // const partyRef = response.docs[0];
+                    // let name, activeUsers, playlist, userId;
+
+                    // const transaction = db.runTransaction(transaction => {
+                    //     return transaction.get(response)
+                    //       .then(party => {
+                    //         const partyId = party.id
+                    //         const data = party.data();
+                    //         name = data.name;
+                    //         activeUsers = data.activeUsers;
+                    //         playlist = data.activeVideoId;
+                            
+                    //         userId = activeUsers[activeUsers.length - 1] + 1;
+                    //         transaction.update(partyRef, { activeUsers: [...activeUsers, userId] });
+                    //       });
+                    //   }).then(result => {
+                    //     Alert.alert(`Connected to Party ${name} succesfully`);
+                    //     this.props.navigation.navigate('Party View', {
+                    //         userId,
+                    //         partyId,
+                    //         isHost:false,
+                    //         playlist
+                    //     });
+                    //     console.log('Transaction success!');
+                    //   })
+
                     const response = await db.collection('party').where('joinId', '==', parseInt(joinId)).limit(1).get();
-                    // TODO - handle wrond joinId
-                    // Generate id 100 from scratch if DB is empty
                     const party = response.docs[0];
                     const partyId = party.id
                     const data = party.data();
-                    const { name, activeUsers } = data;
-                    const { playlist } = data;
+                    const { name, activeUsers, playlist, lastUpdatedTime } = data;
+                    const playlistId = await this.getPlaylistId(playlist);
                     
                     const userId = activeUsers[activeUsers.length - 1] + 1;
                     await db.collection('party').doc(partyId).update({ activeUsers: [...activeUsers, userId] });
-
-                    Alert.alert(`Connected to Party ${name} succesfully`);
                     this.props.navigation.navigate('Party View', {
                         userId,
                         partyId,
                         isHost:false,
-                        playlistId: playlist
+                        playlist: playlistId
                     });
                 } catch (e) {
                     console.log('Error join existing party', e)
@@ -96,7 +133,6 @@ export default class SetPartyView extends React.Component {
         }
         return { message, inputPlaceholder, buttonText, handleSetParty };
     }
-
     render() {
         const { message, inputPlaceholder, buttonText, handleSetParty } = this.getAttributes(this.state.isNewParty);
         return (

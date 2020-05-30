@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Text, View, Alert, TouchableOpacity, Button, Clipboard } from 'react-native';
 import TrackItem from './subComponents/TrackItem';
@@ -18,14 +19,15 @@ export class PartyView extends React.Component {
         this.state = {
             activeVideo: {
                 id: '',
-                currentTime: 0
+                currentTime: 0,
+                lastUpdatedTime: ''
             },
             partyId: props.route.params.partyId,
             party: {
                 joinId: '',
                 partyName: '',
                 condition: '',
-                playlist: props.route.params.playlistId
+                playlist: props.route.params.playlist
             },
             userId: props.route.params.userId,
             isHost: props.route.params.isHost,
@@ -35,28 +37,36 @@ export class PartyView extends React.Component {
         this.db = firebase.firestore();
     }
 
+    fixCurrentTimeDeviation = (videoTime, lastUpdatedTime) => {
+        const currentTime = new Date();
+        const delta = (currentTime - lastUpdatedTime.toDate()) / 1000;
+
+        return parseInt(videoTime) + delta;
+    }
+
     bindPartyChangesFromDB = async () => {
         try {
             this.dbbindingResponse = await this.db.collection('party').doc(this.state.partyId).onSnapshot(snapshot => {
                 const data = snapshot.data();
+                const { joinId, name:partyName, condition, playlist, activeVideoId:id } = data;
+
+                // If party is playing - fix deviation from last updated to current time
+                const currentTime = condition === 'play' ? 
+                    this.fixCurrentTimeDeviation(data.currentTime, data.lastUpdatedTime) :  data.currentTime ;
+                
                 this.setState({
                     party: {
-                        joinId: data.joinId,
-                        partyName: data.name,
-                        condition: data.condition,
-                        playlist: data.playlist,
+                        joinId,
+                        partyName,
+                        condition,
+                        playlist,
                     },
                     activeVideo: {
-                        id: data.activeVideoId,
-                        currentTime: data.currentTime
+                        id,
+                        currentTime
                     }
                 });
-
-                // use it to update currentTime on Db when new user joins party
-
-                // if (activeUsers.length !== this.state.activeUsers.length && this.state.isHost) {
-                //     await this.updateCurrentTimeInDB();
-                // }
+                
                 this.updateHost(data.activeUsers);
             })
 
@@ -80,7 +90,7 @@ export class PartyView extends React.Component {
     async componentDidMount() {
         try {
             // bind party continues updates from DB to this component
-            await this.bindPartyChangesFromDB()
+            await this.bindPartyChangesFromDB();
         } catch (error) {
             console.log(error);
         }
@@ -92,25 +102,26 @@ export class PartyView extends React.Component {
     }
 
     updateCurrentTimeInDB = async (currentTime) => {
-        await this.db.collection('party').doc(this.state.partyId).update({ currentTime: currentTime });
         this.setState({
             isActionMaker: false
-        })
+        });
+        await this.db.collection('party').doc(this.state.partyId).update({ currentTime });
     }
 
     onPressPlayPause = async () => {
         try {
-            const newCondition = this.state.party.condition === 'play' ? 'pause' : 'play'
-            await this.db.collection('party').doc(this.state.partyId).update({ condition: newCondition })
-            const updatedParty = this.state.party
-            updatedParty.condition = newCondition
+            const newCondition = this.state.party.condition === 'play' ? 'pause' : 'play';
             this.setState({
-                party: updatedParty,
                 isActionMaker: true
-            })
+            });
+
+            await this.db.collection('party').doc(this.state.partyId).update({ 
+                condition: newCondition,
+                lastUpdatedTime: new Date()
+            });
         }
         catch (error) {
-            console.log(error)
+            console.log(error);
         }
     }
 
@@ -181,7 +192,7 @@ export class PartyView extends React.Component {
                 <Player onPressPlayPause={this.onPressPlayPause} condition={this.state.party.condition}></Player>
 
                 <Playlist
-                    playlistId={this.state.party.playlist}
+                    playlist={this.state.party.playlist}
                     loadVideoToPlayer={this.loadVideoToPlayer}
                     navigation={this.props.navigation}
                 />
