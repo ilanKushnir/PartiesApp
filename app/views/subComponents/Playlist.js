@@ -99,7 +99,6 @@ export default class Playlist extends React.Component {
                 batch.set(trackReference, track);
                 track.id = trackReference.id;
                 console.log('on batch, track uid', trackReference.id);
-                
             });
 
             await batch.commit();

@@ -48,7 +48,6 @@ export default class SetPartyView extends React.Component {
                     const { id:playlistId } = playlistResponse;
                     const playlist = await db.doc(`/playlist/${playlistId}`);   // playlist Reference on DB
 
-
                     const currentTime = new Date();
                     const response = await db.collection('party').add({
                         joinId,

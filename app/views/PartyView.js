@@ -114,7 +114,7 @@ export class PartyView extends React.Component {
             this.setState({
                 isActionMaker: true
             });
-
+          
             await this.db.collection('party').doc(this.state.partyId).update({ 
                 condition: newCondition,
                 lastUpdatedTime: new Date()
