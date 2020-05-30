@@ -5,8 +5,19 @@ import firebase from '../../../firebase.js';
 import { StackActions } from '@react-navigation/native';
 import { styles } from '../../styles/styles.js';
 import { Button } from 'react-native';
+<<<<<<< HEAD
 import { MaterialCommunityIcons, Foundation } from 'react-native-vector-icons';
 import DraggableFlatList, { RenderItemInfo, OnMoveEndInfo } from 'react-native-draggable-flatlist'
+||||||| merged common ancestors
+
+
+=======
+import { SwipeableFlatList } from 'react-native-swipeable-flat-list';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import DraggableFlatList from 'react-native-draggable-flatlist'
+
+
+>>>>>>> e42cbfec93a9f19141dfd715633b1f626caabf91
 
 
 export default class Playlist extends React.Component {
@@ -93,6 +104,25 @@ export default class Playlist extends React.Component {
 
     }
 
+    onRemoveFromPlaylist = async (trackId) => {
+        try {
+            const batch = this.db.batch();  //  batch perform ATOMIC action on DB
+            console.log(`removing track with id: ${trackId}`);
+            const remainingTracks = this.state.tracks.filter((track) => {
+                return track.id !== trackId
+            });
+            console.log(remainingTracks);
+            this.setState({
+                tracks: remainingTracks
+            }, () =>
+                this.onUpdatePlaylist()
+            );
+        }
+        catch (error) {
+            console.log(error)
+        }
+
+    }
 
     onAddToPlaylist = async (tracksRaw) => {    // can handle both single track or array of tracks
         // handle single track case
@@ -113,6 +143,12 @@ export default class Playlist extends React.Component {
                 batch.set(trackReference, track);
                 track.id = trackReference.id;
                 console.log('on batch, track uid', trackReference.id);
+<<<<<<< HEAD
+||||||| merged common ancestors
+                
+=======
+
+>>>>>>> e42cbfec93a9f19141dfd715633b1f626caabf91
             });
 
             await batch.commit();
@@ -142,11 +178,30 @@ export default class Playlist extends React.Component {
         }
     }
 
+<<<<<<< HEAD
 
 
 
+||||||| merged common ancestors
+=======
+    renderItem = ({ item, drag }) => (
+        <TrackItem
+            style={{ height: 48 }}
+            key={item.id}
+            id={item.videoId}
+            title={item.title}
+            imageSrc={item.image}
+            item={item}
+            togglingMode={false}
+            onClickFunc={this.props.loadVideoToPlayer}
+            onLongPress={drag}
+        />
+    )
+
+>>>>>>> e42cbfec93a9f19141dfd715633b1f626caabf91
     render() {
         return (
+<<<<<<< HEAD
             <View style={{ flex: 3, paddingTop: 0 }}>
                 <View style={{ flexDirection: "row" }}>
                     <Button
@@ -168,10 +223,37 @@ export default class Playlist extends React.Component {
                     ></Button>
                 </View>
 
+||||||| merged common ancestors
+            <View style={{ flex: 3, paddingTop: 30 }}>
+
+
+                <Button
+                    onPress={() => {
+                        this.props.navigation.navigate('Add To Playlist', {
+                            addTracksArrayToPlaylistFunc: this.onAddToPlaylist
+                        })
+                    }}
+                    title="Add Tracks To Playlist"
+                    color="#d2691e"
+                ></Button>
+=======
+            <View style={{ flex: 3, paddingTop: 30 }}>
+                <Button
+                    onPress={() => {
+                        this.props.navigation.navigate('Add To Playlist', {
+                            addTracksArrayToPlaylistFunc: this.onAddToPlaylist
+                        })
+                    }}
+                    title="Add Tracks To Playlist"
+                    color="#d2691e"
+                ></Button>
+>>>>>>> e42cbfec93a9f19141dfd715633b1f626caabf91
 
                 {this.state.listLoaded && (
-                    <FlatList
+
+                    <DraggableFlatList
                         data={this.state.tracks}
+<<<<<<< HEAD
                         renderItem={({ item }) =>
                             <TrackItem
                                 key={item.id}
@@ -185,7 +267,32 @@ export default class Playlist extends React.Component {
                                 deleteTrack={this.deleteTrackFromPlaylist}
                             />
                         }
+||||||| merged common ancestors
+                        renderItem={({ item }) =>
+                            <TrackItem
+                                key={item.id}
+                                id={item.videoId}
+                                title={item.title}
+                                imageSrc={item.image}
+                                item={item}
+                                togglingMode={false}
+                                onClickFunc={this.props.loadVideoToPlayer}
+                            />
+                        }
+=======
+>>>>>>> e42cbfec93a9f19141dfd715633b1f626caabf91
                         keyExtractor={item => item.id}
+                        bounceFirstRowOnMount={false}
+                        onDragEnd={({ data }) =>
+                            this.setState({
+                                tracks: data
+                            }, () =>
+                                this.onUpdatePlaylist()
+                            )
+                        }
+
+                        renderItem={this.renderItem}
+
                     />
                 )}
 
@@ -196,3 +303,36 @@ export default class Playlist extends React.Component {
         )
     }
 }
+
+  // renderLeft={({ item }) => (
+                    //     <MaterialCommunityIcons
+                    //         style={{
+                    //             width: 60,
+                    //             height: 60,
+                    //             position: "relative",
+                    //             top: 5,
+                    //             left: 15,
+
+                    //         }}
+                    //         onPress={() => this.onRemoveFromPlaylist(item.id)}
+                    //         name="delete"
+                    //         size={40}
+                    //         color="#ff0000"
+                    //     />
+                    // )}
+                    // renderRight={({ item }) => (
+                    //     <MaterialCommunityIcons
+                    //         style={{
+                    //             width: 60,
+                    //             height: 60,
+                    //             position: "relative",
+                    //             top: 5,
+                    //             left: 15,
+
+                    //         }}
+                    //         onPress={() => Alert.alert('Noice')}
+                    //         name="heart-outline"
+                    //         size={40}
+                    //         color="#ff0000"
+                    //     />
+                    // )}

@@ -27,10 +27,12 @@ export default class TrackItem extends React.Component {
 
     render() {
         return (
-            <TouchableOpacity onPress={() => {
+            <TouchableOpacity 
+            onPress={() => {
                 this.props.onClickFunc(this.props.item)
                 this.toggleItemSelection()
-            }}>
+            }}
+                onLongPress={this.props.onLongPress}>
 
                 <View style={this.state.selected ? styles.trackItemSelected : styles.trackItem}>
                     <Image

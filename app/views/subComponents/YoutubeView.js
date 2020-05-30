@@ -49,7 +49,7 @@ export default class YoutubeView extends React.Component {
                 }
 
                 function onPlayerStateChange(event) {
-                    if(${this.props.isActionMaker } && event.data == YT.PlayerState.PAUSED) {
+                    if(${this.props.isActionMaker} && event.data == YT.PlayerState.PAUSED) {
                         window.ReactNativeWebView.postMessage(player.getCurrentTime());
                     } 
                 }
@@ -67,7 +67,6 @@ export default class YoutubeView extends React.Component {
         }, 2000);
 
         return (
-
             <WebView
                 pointerEvents="none"
                 javascriptEnabled={true}
