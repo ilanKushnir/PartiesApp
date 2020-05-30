@@ -13,7 +13,6 @@ export default class TrackItem extends React.Component {
         this.state = {
             togglingMode: props.togglingMode || false,
             selected: false,
-            editableMode: props.editableMode
         };
     }
 
@@ -27,12 +26,16 @@ export default class TrackItem extends React.Component {
 
     render() {
         return (
-            <TouchableOpacity 
-            onPress={() => {
-                this.props.onClickFunc(this.props.item)
-                this.toggleItemSelection()
-            }}
-                onLongPress={this.props.onLongPress}>
+            <TouchableOpacity
+                onPress={() => {
+                    this.props.onClickFunc(this.props.item)
+                    this.toggleItemSelection()
+                }}
+                onLongPress={() => {
+                    if (this.props.editableMode) {
+                        this.props.onLongPress()
+                    }
+                }}>
 
                 <View style={this.state.selected ? styles.trackItemSelected : styles.trackItem}>
                     <Image
