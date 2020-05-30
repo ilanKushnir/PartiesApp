@@ -22,6 +22,9 @@ export default class Playlist extends React.Component {
     }
 
     getPlaylistId = async () => {
+        if (typeof this.state.playlist === "string") {
+            return this.state.playlist;
+        }
         const playlist = await this.state.playlist.get();
         return playlist.id;
     }
