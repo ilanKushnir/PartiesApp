@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Text, View, Alert, TouchableOpacity, Button, Clipboard } from 'react-native';
 import TrackItem from './subComponents/TrackItem';
@@ -39,7 +40,6 @@ export class PartyView extends React.Component {
     fixCurrentTimeDeviation = (videoTime, lastUpdatedTime) => {
         const currentTime = new Date();
         const delta = (currentTime - lastUpdatedTime.toDate()) / 1000;
-        console.log('Delta since actual Play:', delta, 'seconds');
 
         return parseInt(videoTime) + delta;
     }
@@ -90,7 +90,7 @@ export class PartyView extends React.Component {
     async componentDidMount() {
         try {
             // bind party continues updates from DB to this component
-            await this.bindPartyChangesFromDB()
+            await this.bindPartyChangesFromDB();
         } catch (error) {
             console.log(error);
         }
@@ -102,24 +102,22 @@ export class PartyView extends React.Component {
     }
 
     updateCurrentTimeInDB = async (currentTime) => {
-        await this.db.collection('party').doc(this.state.partyId).update({ currentTime });
         this.setState({
             isActionMaker: false
-        })
+        });
+        await this.db.collection('party').doc(this.state.partyId).update({ currentTime });
     }
 
     onPressPlayPause = async () => {
         try {
             const newCondition = this.state.party.condition === 'play' ? 'pause' : 'play';
+            this.setState({
+                isActionMaker: true
+            });
+
             await this.db.collection('party').doc(this.state.partyId).update({
                 condition: newCondition,
                 lastUpdatedTime: new Date()
-            });
-            const updatedParty = this.state.party;
-            updatedParty.condition = newCondition;
-            this.setState({
-                party: updatedParty,
-                isActionMaker: true
             });
         }
         catch (error) {

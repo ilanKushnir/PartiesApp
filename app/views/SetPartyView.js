@@ -15,6 +15,11 @@ export default class SetPartyView extends React.Component {
          }
     }
 
+    getPlaylistId = async (playlist) => {
+        const playlistResponse = await playlist.get();
+        return playlistResponse.id;
+    }
+
     getAttributes = (isNewParty) => {
         const db = firebase.firestore();
         let message, inputPlaceholder, buttonText, handleSetParty;
@@ -57,13 +62,11 @@ export default class SetPartyView extends React.Component {
                     });
                     
                     const partyId = response.id;
-                    Alert.alert(`Successfully created ${partyName} party. Use id ${joinId} to join`);
                     this.props.navigation.navigate('Party View', {
                         userId,
                         partyId,
                         isHost: true,
-                        playlist,
-                        lastUpdatedTime: currentTime
+                        playlist: playlistId
                     });
                     } catch(error) {
                         console.log(`Error starting new party ${error}`);
@@ -111,17 +114,15 @@ export default class SetPartyView extends React.Component {
                     const partyId = party.id
                     const data = party.data();
                     const { name, activeUsers, playlist, lastUpdatedTime } = data;
+                    const playlistId = await this.getPlaylistId(playlist);
                     
                     const userId = activeUsers[activeUsers.length - 1] + 1;
                     await db.collection('party').doc(partyId).update({ activeUsers: [...activeUsers, userId] });
-
-                    Alert.alert(`Connected to Party ${name} succesfully`);
                     this.props.navigation.navigate('Party View', {
                         userId,
                         partyId,
                         isHost:false,
-                        playlist,
-                        lastUpdatedTime
+                        playlist: playlistId
                     });
                 } catch (e) {
                     console.log('Error join existing party', e)
@@ -131,7 +132,6 @@ export default class SetPartyView extends React.Component {
         }
         return { message, inputPlaceholder, buttonText, handleSetParty };
     }
-
     render() {
         const { message, inputPlaceholder, buttonText, handleSetParty } = this.getAttributes(this.state.isNewParty);
         return (
