@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, TouchableOpacity, Image, Text } from 'react-native';
 import { styles } from '../../styles/styles.js'
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 
 export default class TrackItem extends React.Component {
     static navigationOptions = {
@@ -41,7 +42,13 @@ export default class TrackItem extends React.Component {
                     </Text>
 
                     {this.props.editableMode && (
-                        <Text style={{ flex: 3, color: 'red', textAlignVertical: 'center' }}>[Edit BTNs]</Text>
+                        <MaterialCommunityIcons
+                            onPress={() => this.props.deleteTrack(this.props.item)}
+                            name="delete"
+                            size={30}
+                            color="#ff4d4d"
+                        >
+                        </MaterialCommunityIcons>
                     )}
 
                 </View>

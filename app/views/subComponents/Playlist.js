@@ -28,6 +28,13 @@ export default class Playlist extends React.Component {
         }));
     }
 
+    deleteTrackFromPlaylist = (item) => {
+        const id = item.id
+        const updatedTracks = this.state.tracks.filter(track => track.id !== id)
+
+        this.setState({ tracks: updatedTracks })
+    }
+
     getPlaylistId = async () => {
         const playlist = await this.state.playlist.get();
         return playlist.id;
@@ -172,6 +179,7 @@ export default class Playlist extends React.Component {
                                 togglingMode={false}
                                 onClickFunc={this.props.loadVideoToPlayer}
                                 editableMode={this.state.editMode}
+                                deleteTrack={this.deleteTrackFromPlaylist}
                             />
                         }
                         keyExtractor={item => item.id}
