@@ -58,21 +58,19 @@ export const styles = StyleSheet.create({
   trackItem: {
     flexDirection: 'row',
     alignContent: 'center',
-    padding: 10,
-    marginBottom: 10,
-    marginHorizontal: 10,
-    backgroundColor: 'skyblue',
-    borderColor: 'powderblue',
-    borderWidth: 3
+    borderTopWidth: 1,
+    borderTopColor: '#6C7A89',
+    paddingVertical: 10,
+    marginHorizontal: 5,
+    backgroundColor: '#ECF0F1',
   },
   trackItemSelected: {
     flexDirection: 'row',
     alignContent: 'center',
-    padding: 10,
-    marginBottom: 10,
-    marginHorizontal: 10,
-    backgroundColor: 'green',
-    borderColor: 'green',
-    borderWidth: 3
+    borderTopWidth: 1,
+    borderTopColor: '#6C7A89',
+    paddingVertical: 10,
+    marginHorizontal: 5,
+    backgroundColor: '#95A5A6',
   }
 });

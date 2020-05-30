@@ -5,8 +5,8 @@ import firebase from '../../../firebase.js';
 import { StackActions } from '@react-navigation/native';
 import { styles } from '../../styles/styles.js';
 import { Button } from 'react-native';
-import {MaterialCommunityIcons,Foundation} from 'react-native-vector-icons';
-
+import { MaterialCommunityIcons, Foundation } from 'react-native-vector-icons';
+import DraggableFlatList, { RenderItemInfo, OnMoveEndInfo } from 'react-native-draggable-flatlist'
 
 
 export default class Playlist extends React.Component {
@@ -15,10 +15,24 @@ export default class Playlist extends React.Component {
         this.state = {
             listLoaded: false,
             playlist: this.props.playlist,
+            editMode: false,
             tracks: []
         };
 
         this.db = firebase.firestore();
+    }
+
+    toggleEditMode() {
+        this.setState(prevState => ({
+            editMode: !prevState.editMode
+        }));
+    }
+
+    deleteTrackFromPlaylist = (item) => {
+        const id = item.id
+        const updatedTracks = this.state.tracks.filter(track => track.id !== id)
+
+        this.setState({ tracks: updatedTracks })
     }
 
     getPlaylistId = async () => {
@@ -27,7 +41,7 @@ export default class Playlist extends React.Component {
     }
 
     bindPlaylistChangesFromDB = async () => {
-        try {            
+        try {
             const DBbindingResponse = await this.db.collection('playlist').doc(this.state.playlistId).onSnapshot(snapshot => {
                 let tracks = [];
                 const playlistData = snapshot.data();
@@ -103,7 +117,7 @@ export default class Playlist extends React.Component {
             this.setState({
                 tracks: this.state.tracks.concat(tracks)
             });
-            
+
             await this.onUpdatePlaylist();
         }
         catch (error) {
@@ -125,18 +139,32 @@ export default class Playlist extends React.Component {
         }
     }
 
+
+
+
     render() {
         return (
-            <View style={{ flex: 3, paddingTop: 30 }}>
-                <Button
-                    onPress={() => {
-                        this.props.navigation.navigate('Add To Playlist', {
-                            addTracksArrayToPlaylistFunc: this.onAddToPlaylist
-                        })
-                    }}
-                    title="Add Tracks To Playlist"
-                    color="#d2691e"
-                ></Button>
+            <View style={{ flex: 3, paddingTop: 0 }}>
+                <View style={{ flexDirection: "row" }}>
+                    <Button
+                        onPress={() => {
+                            this.toggleEditMode()
+                        }}
+                        title={this.state.editMode ? "Done" : "Edit"}
+                        color={this.state.editMode ? "#87211c" : "#d2691e"}
+                    ></Button>
+
+                    <Button
+                        onPress={() => {
+                            this.props.navigation.navigate('Add To Playlist', {
+                                addTracksArrayToPlaylistFunc: this.onAddToPlaylist
+                            })
+                        }}
+                        title="Add Tracks"
+                        color="#d2691e"
+                    ></Button>
+                </View>
+
 
                 {this.state.listLoaded && (
                     <FlatList
@@ -150,6 +178,8 @@ export default class Playlist extends React.Component {
                                 item={item}
                                 togglingMode={false}
                                 onClickFunc={this.props.loadVideoToPlayer}
+                                editableMode={this.state.editMode}
+                                deleteTrack={this.deleteTrackFromPlaylist}
                             />
                         }
                         keyExtractor={item => item.id}
