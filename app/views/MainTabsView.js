@@ -6,13 +6,15 @@ import { HomeTab } from '../tabs/HomeTab.js';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 import PartyTimeTab from '../tabs/PartyTimeTab.js'
 import AddToPlaylistView from './AddToPlaylistView.js'
+import { PartyView } from './PartyView.js'
+import SetPartyView from './SetPartyView.js'
 
 const Stack = createStackNavigator();
 const Tab = createMaterialBottomTabNavigator();
 
 // async login (userName) {
 //     console.log('on login');
-    
+
 //     userName = "Kushhhh";
 //     const db = firebase.firestore();
 
@@ -43,7 +45,7 @@ const Tab = createMaterialBottomTabNavigator();
 //     }
 //   }
 
-export default class MainTabsView extends React.Component {
+export class MainTabsView extends React.Component {
     constructor(props) {
         super(props);
         console.log(props);
@@ -143,9 +145,13 @@ export default class MainTabsView extends React.Component {
         )
     }
 
+
     render() {
-        return(
-            <View>{this.createBottomTabs()}</View>
+        return (
+            <View>
+                {this.createBottomTabs()}
+            </View>
         )
     }
 }
+
