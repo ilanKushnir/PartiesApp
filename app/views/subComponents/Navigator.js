@@ -5,7 +5,7 @@ import SetPartyView from '../SetPartyView.js'
 import { NavigationContainer } from '@react-navigation/native'
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs'
 import { createStackNavigator } from '@react-navigation/stack'
-import HomeTab from '../../tabs/HomeTab.js'
+import { HomeTab } from '../../tabs/HomeTab.js'
 import TopPlaylistsTab from '../../tabs/TopPlaylistsTab.js'
 import HistoryTab from '../../tabs/HistoryTab.js'
 import { BackButtonHandler } from './AndroidBackHandler.js'
@@ -16,6 +16,8 @@ import { LoginView } from '../LogjnView.js'
 import MainTabsView from '../MainTabsView.js'
 
 const Stack = createStackNavigator();
+const Tab = createMaterialBottomTabNavigator();
+
 
 export default class Navigator extends React.Component {
 
@@ -102,7 +104,7 @@ export default class Navigator extends React.Component {
         return (
             <NavigationContainer>
                 {/* <BackButtonHandler/>  */}
-                {this.createMainStack()}
+                {this.createBottomTabs()}
             </NavigationContainer>
         )
     }
