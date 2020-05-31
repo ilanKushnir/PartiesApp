@@ -45,3 +45,5 @@ expo install react-native-gesture-handler react-native-reanimated react-native-s
 
 then: 
 npm install @react-navigation/stack @react-navigation/bottom-tabs @react-navigation/drawer
+
+npm install --save react-native-swipeout

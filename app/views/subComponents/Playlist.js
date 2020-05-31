@@ -5,9 +5,9 @@ import firebase from '../../../firebase.js';
 import { StackActions } from '@react-navigation/native';
 import { styles } from '../../styles/styles.js';
 import { Button } from 'react-native';
-import {MaterialCommunityIcons,Foundation} from 'react-native-vector-icons';
-
-
+import { SwipeableFlatList } from 'react-native-swipeable-flat-list';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import DraggableFlatList from 'react-native-draggable-flatlist'
 
 export default class Playlist extends React.Component {
     constructor(props) {
@@ -15,10 +15,26 @@ export default class Playlist extends React.Component {
         this.state = {
             listLoaded: false,
             playlist: this.props.playlist,
+            editMode: false,
             tracks: []
         };
 
         this.db = firebase.firestore();
+    }
+
+
+
+    toggleEditMode = () => {
+        this.setState(prevState => ({
+            editMode: !prevState.editMode
+        }));
+    }
+
+    deleteTrackFromPlaylist = (item) => {
+        const id = item.id
+        const updatedTracks = this.state.tracks.filter(track => track.id !== id)
+
+        this.setState({ tracks: updatedTracks })
     }
 
     getPlaylistId = async () => {
@@ -30,7 +46,7 @@ export default class Playlist extends React.Component {
     }
 
     bindPlaylistChangesFromDB = async () => {
-        try {            
+        try {
             const DBbindingResponse = await this.db.collection('playlist').doc(this.state.playlistId).onSnapshot(snapshot => {
                 let tracks = [];
                 const playlistData = snapshot.data();
@@ -79,6 +95,25 @@ export default class Playlist extends React.Component {
 
     }
 
+    onRemoveFromPlaylist = async (trackId) => {
+        try {
+            const batch = this.db.batch();  //  batch perform ATOMIC action on DB
+            console.log(`removing track with id: ${trackId}`);
+            const remainingTracks = this.state.tracks.filter((track) => {
+                return track.id !== trackId
+            });
+            console.log(remainingTracks);
+            this.setState({
+                tracks: remainingTracks
+            }, () =>
+                this.onUpdatePlaylist()
+            );
+        }
+        catch (error) {
+            console.log(error)
+        }
+
+    }
 
     onAddToPlaylist = async (tracksRaw) => {    // can handle both single track or array of tracks
         // handle single track case
@@ -106,7 +141,7 @@ export default class Playlist extends React.Component {
             this.setState({
                 tracks: this.state.tracks.concat(tracks)
             });
-            
+
             await this.onUpdatePlaylist();
         }
         catch (error) {
@@ -128,24 +163,46 @@ export default class Playlist extends React.Component {
         }
     }
 
+
+
     render() {
         return (
-            <View style={{ flex: 3, paddingTop: 30 }}>
-                <Button
-                    onPress={() => {
-                        this.props.navigation.navigate('Add To Playlist', {
-                            addTracksArrayToPlaylistFunc: this.onAddToPlaylist
-                        })
-                    }}
-                    title="Add Tracks To Playlist"
-                    color="#d2691e"
-                ></Button>
+            <View style={{ flex: 3, paddingTop: 0 }}>
+                <View style={{ flexDirection: "row" }}>
+                    <Button
+                        onPress={() => {
+                            this.toggleEditMode()
+                        }}
+                        title={this.state.editMode ? "Done" : "Edit"}
+                        color={this.state.editMode ? "#87211c" : "#d2691e"}
+                    ></Button>
+
+                    <Button
+                        onPress={() => {
+                            this.props.navigation.navigate('Add To Playlist', {
+                                addTracksArrayToPlaylistFunc: this.onAddToPlaylist
+                            })
+                        }}
+                        title="Add Tracks"
+                        color="#d2691e"
+                    ></Button>
+                </View>
 
                 {this.state.listLoaded && (
-                    <FlatList
+                    <DraggableFlatList
                         data={this.state.tracks}
-                        renderItem={({ item }) =>
+                        keyExtractor={item => item.id}
+                        bounceFirstRowOnMount={false}
+                        onDragEnd={({ data }) =>
+                            this.setState({
+                                tracks: data
+                            }, () =>
+                                this.onUpdatePlaylist()
+                            )
+                        }
+                        renderItem={({ item, drag }) => (
                             <TrackItem
+                                style={{ height: 48 }}
                                 key={item.id}
                                 id={item.videoId}
                                 title={item.title}
@@ -153,9 +210,11 @@ export default class Playlist extends React.Component {
                                 item={item}
                                 togglingMode={false}
                                 onClickFunc={this.props.loadVideoToPlayer}
+                                onLongPress={drag}
+                                editableMode={this.state.editMode}
+                                deleteTrack={this.deleteTrackFromPlaylist}
                             />
-                        }
-                        keyExtractor={item => item.id}
+                        )}
                     />
                 )}
 

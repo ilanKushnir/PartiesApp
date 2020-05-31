@@ -48,12 +48,12 @@ export class PartyView extends React.Component {
         try {
             this.dbbindingResponse = await this.db.collection('party').doc(this.state.partyId).onSnapshot(snapshot => {
                 const data = snapshot.data();
-                const { joinId, name:partyName, condition, playlist, activeVideoId:id } = data;
+                const { joinId, name: partyName, condition, playlist, activeVideoId: id } = data;
 
                 // If party is playing - fix deviation from last updated to current time
-                const currentTime = condition === 'play' ? 
-                    this.fixCurrentTimeDeviation(data.currentTime, data.lastUpdatedTime) :  data.currentTime ;
-                
+                const currentTime = condition === 'play' ?
+                    this.fixCurrentTimeDeviation(data.currentTime, data.lastUpdatedTime) : data.currentTime;
+
                 this.setState({
                     party: {
                         joinId,
@@ -66,7 +66,7 @@ export class PartyView extends React.Component {
                         currentTime
                     }
                 });
-                
+
                 this.updateHost(data.activeUsers);
             })
 
@@ -114,8 +114,8 @@ export class PartyView extends React.Component {
             this.setState({
                 isActionMaker: true
             });
-          
-            await this.db.collection('party').doc(this.state.partyId).update({ 
+
+            await this.db.collection('party').doc(this.state.partyId).update({
                 condition: newCondition,
                 lastUpdatedTime: new Date()
             });
@@ -176,10 +176,10 @@ export class PartyView extends React.Component {
                         <Text style={styles.partyId}>{`ID: ${this.state.party.joinId}`}</Text>
                     </TouchableOpacity>
                     <Text style={styles.partyName}>{this.state.party.partyName}</Text>
-                    <Button title="Leave" onPress={this.onPressLeaveParty} color="#ff0000"/>
+                    <Button title="Leave" onPress={this.onPressLeaveParty} color="#ff0000" />
                 </View>
 
-                <View style={{ flex: 3 }}>
+                <View style={{ flex: 2 }}>
                     <YoutubeView
                         activeVideo={this.state.activeVideo}
                         condition={this.state.party.condition}
@@ -192,6 +192,7 @@ export class PartyView extends React.Component {
                 <Player onPressPlayPause={this.onPressPlayPause} condition={this.state.party.condition}></Player>
 
                 <Playlist
+
                     playlist={this.state.party.playlist}
                     loadVideoToPlayer={this.loadVideoToPlayer}
                     navigation={this.props.navigation}

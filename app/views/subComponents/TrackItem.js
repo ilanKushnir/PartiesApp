@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, TouchableOpacity, Image, Text } from 'react-native';
 import { styles } from '../../styles/styles.js'
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 
 export default class TrackItem extends React.Component {
     static navigationOptions = {
@@ -11,7 +12,7 @@ export default class TrackItem extends React.Component {
         super(props);
         this.state = {
             togglingMode: props.togglingMode || false,
-            selected: false
+            selected: false,
         };
     }
 
@@ -25,19 +26,36 @@ export default class TrackItem extends React.Component {
 
     render() {
         return (
-            <TouchableOpacity onPress={() => {
-                this.props.onClickFunc(this.props.item)
-                this.toggleItemSelection()
-            }}>
+            <TouchableOpacity
+                onPress={() => {
+                    this.props.onClickFunc(this.props.item)
+                    this.toggleItemSelection()
+                }}
+                onLongPress={() => {
+                    if (this.props.editableMode) {
+                        this.props.onLongPress()
+                    }
+                }}>
 
                 <View style={this.state.selected ? styles.trackItemSelected : styles.trackItem}>
                     <Image
-                        style={{ width: 35, height: 35, marginRight: 10 }}
+                        style={{ flex: 1, width: 20, height: 35, marginRight: 10 }}
                         source={{ uri: this.props.imageSrc }}
                     />
-                    <Text>
+                    <Text style={{ flex: 6 }}>
                         {this.props.title}
                     </Text>
+
+                    {this.props.editableMode && (
+                        <MaterialCommunityIcons
+                            onPress={() => this.props.deleteTrack(this.props.item)}
+                            name="delete"
+                            size={30}
+                            color="#ff4d4d"
+                        >
+                        </MaterialCommunityIcons>
+                    )}
+
                 </View>
             </TouchableOpacity>
         )

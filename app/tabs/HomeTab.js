@@ -12,6 +12,8 @@ export class HomeTab extends React.Component {
     return (
       <View style={styles.center}>
         <Text style={styles.title}>Home</Text>
+        <Text>user stats</Text>
+         <Text>user's top playlists</Text>
         <Button title="Back To Login" onPress={() => this.props.navigation.dispatch(StackActions.popToTop())}></Button>
       </View>
     )
