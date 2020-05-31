@@ -12,9 +12,10 @@ import { BackButtonHandler } from './AndroidBackHandler.js'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 import PartyTimeTab from '../../tabs/PartyTimeTab.js'
 import AddToPlaylistView from '../AddToPlaylistView.js'
+import { LoginView } from '../LogjnView.js'
+import MainTabsView from '../MainTabsView.js'
 
 const Stack = createStackNavigator();
-const Tab = createMaterialBottomTabNavigator();
 
 export default class Navigator extends React.Component {
 
@@ -101,7 +102,7 @@ export default class Navigator extends React.Component {
         return (
             <NavigationContainer>
                 {/* <BackButtonHandler/>  */}
-                {this.createBottomTabs()}
+                {this.createMainStack()}
             </NavigationContainer>
         )
     }
