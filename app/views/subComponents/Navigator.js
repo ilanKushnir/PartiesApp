@@ -21,7 +21,20 @@ const Tab = createMaterialBottomTabNavigator();
 
 export default class Navigator extends React.Component {
 
-    createBottomTabs = () => {
+    createMainAppStack = () => {
+        return <Stack.Navigator
+            screenOptions={{
+                gestureEnabled: false
+            }}
+            headerMode='none'
+        >
+            <Stack.Screen name="Login" component={LoginView}/>
+            <Stack.Screen name="Bottom Tabs" component={this.createBottomTabs}/>
+        </Stack.Navigator>
+    }
+
+    createBottomTabs = (navigation) => {
+
         return <Tab.Navigator
             initialRouteName="Home"
             barStyle={{ backgroundColor: '#ff6347' }}
@@ -29,6 +42,7 @@ export default class Navigator extends React.Component {
             <Tab.Screen
                 name="Home Tab"
                 component={HomeTab}
+                initialParams={{username: navigation.route.params.username}}
                 options={{
                     tabBarLabel: 'Home',
                     tabBarIcon: ({ color }) => (
@@ -104,7 +118,7 @@ export default class Navigator extends React.Component {
         return (
             <NavigationContainer>
                 {/* <BackButtonHandler/>  */}
-                {this.createBottomTabs()}
+                {this.createMainAppStack()}
             </NavigationContainer>
         )
     }
