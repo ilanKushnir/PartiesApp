@@ -16,7 +16,8 @@ export default class Playlist extends React.Component {
             listLoaded: false,
             playlist: this.props.playlist,
             editMode: false,
-            tracks: []
+            tracks: [],
+            activeVideoIndex: 0
         };
 
         this.db = firebase.firestore();
@@ -150,6 +151,26 @@ export default class Playlist extends React.Component {
 
     }
 
+    loadVideoToPlayer = async (index) => {
+        const videoId = this.state.tracks[index].videoId;
+        this.setState({
+            activeVideoIndex: index
+        })
+        this.props.loadVideoToPlayer(videoId);
+    }
+
+    loadNextVideoToPlayer = () => {
+        if(this.state.activeVideoIndex < this.state.tracks.length - 1) {
+            this.loadVideoToPlayer(this.state.activeVideoIndex + 1);
+        }
+    }
+
+    loadPrevVideoToPlayer = () => {
+        if(this.state.activeVideoIndex > 0) {
+            this.loadVideoToPlayer(this.state.activeVideoIndex - 1);
+        }
+    }
+
     async componentDidMount() {
         try {
             const playlistId = await this.getPlaylistId();
@@ -200,7 +221,7 @@ export default class Playlist extends React.Component {
                                 this.onUpdatePlaylist()
                             )
                         }
-                        renderItem={({ item, drag }) => (
+                        renderItem={({ item, index, drag }) => (
                             <TrackItem
                                 style={{ height: 48 }}
                                 key={item.id}
@@ -209,7 +230,7 @@ export default class Playlist extends React.Component {
                                 imageSrc={item.image}
                                 item={item}
                                 togglingMode={false}
-                                onClickFunc={this.props.loadVideoToPlayer}
+                                onClickFunc={() => this.loadVideoToPlayer(index)}
                                 onLongPress={drag}
                                 editableMode={this.state.editMode}
                                 deleteTrack={this.deleteTrackFromPlaylist}

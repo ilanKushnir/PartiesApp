@@ -6,8 +6,12 @@ export default class YoutubeView extends React.Component {
         super(props);
     }
 
-    currentTimeHandler = (currentTime) => {
-        this.props.updateCurrentTimeInDB(currentTime);
+    onMessageHandler = (data) => {
+        if(data === "ended") {
+            this.props.loadNextVideoToPlayer();
+        } else {
+            this.props.updateCurrentTimeInDB(data);
+        }
     }
 
     render() {
@@ -49,9 +53,11 @@ export default class YoutubeView extends React.Component {
                 }
 
                 function onPlayerStateChange(event) {
-                    if(${this.props.isActionMaker} && event.data == YT.PlayerState.PAUSED) {
+                    if(${this.props.isActionMaker} && event.data === YT.PlayerState.PAUSED) {
                         window.ReactNativeWebView.postMessage(player.getCurrentTime());
-                    } 
+                    } else if(event.data === YT.PlayerState.ENDED) {
+                        window.ReactNativeWebView.postMessage("ended");
+                    }
                 }
 
                </script>
@@ -75,7 +81,7 @@ export default class YoutubeView extends React.Component {
                 ref={r => (this.webref = r)}
                 originWhitelist={['*']}
                 allowsInlineMediaPlayback={true}
-                onMessage={event => this.currentTimeHandler(event.nativeEvent.data)}
+                onMessage={event => this.onMessageHandler(event.nativeEvent.data)}
                 mediaPlaybackRequiresUserAction={false}
             />
 
