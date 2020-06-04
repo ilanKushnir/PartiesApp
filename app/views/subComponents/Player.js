@@ -9,6 +9,7 @@ export default class Player extends React.Component {
         return (
             <View style={styles.rowPlayer}>
                 <MaterialCommunityIcons
+                    onPress={this.props.loadPrevVideoToPlayer}
                     name="skip-previous"
                     size={40}
                     color="#fa8072"
@@ -20,6 +21,7 @@ export default class Player extends React.Component {
                     color="#ff6347"
                 />
                 <MaterialCommunityIcons
+                    onPress={this.props.loadNextVideoToPlayer}
                     name="skip-next"
                     size={40}
                     color="#fa8072"

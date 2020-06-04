@@ -96,9 +96,16 @@ export class PartyView extends React.Component {
         }
     }
 
-    loadVideoToPlayer = async (item) => {
-        const id = item.videoId
-        await this.db.collection('party').doc(this.state.partyId).update({ activeVideoId: id, currentTime: 0 });
+    loadNextVideoToPlayer = () => {
+        this.playlistChildComponent.loadNextVideoToPlayer();
+    }
+
+    loadPrevVideoToPlayer = () => {
+        this.playlistChildComponent.loadPrevVideoToPlayer();
+    }
+
+    loadVideoToPlayer = async (videoId) => {
+        await this.db.collection('party').doc(this.state.partyId).update({ activeVideoId: videoId, currentTime: 0 });
     }
 
     updateCurrentTimeInDB = async (currentTime) => {
@@ -186,13 +193,19 @@ export class PartyView extends React.Component {
                         updateCurrentTimeInDB={this.updateCurrentTimeInDB}
                         isHost={this.state.isHost}
                         isActionMaker={this.state.isActionMaker}
+                        loadNextVideoToPlayer={this.loadNextVideoToPlayer}
                     />
                 </View>
 
-                <Player onPressPlayPause={this.onPressPlayPause} condition={this.state.party.condition}></Player>
+                <Player 
+                    onPressPlayPause={this.onPressPlayPause}
+                    condition={this.state.party.condition}
+                    loadNextVideoToPlayer={this.loadNextVideoToPlayer}
+                    loadPrevVideoToPlayer={this.loadPrevVideoToPlayer}
+                ></Player>
 
                 <Playlist
-
+                    ref={ref => this.playlistChildComponent = ref}
                     playlist={this.state.party.playlist}
                     loadVideoToPlayer={this.loadVideoToPlayer}
                     navigation={this.props.navigation}
