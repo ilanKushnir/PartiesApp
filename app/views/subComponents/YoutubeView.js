@@ -34,8 +34,6 @@ export default class YoutubeView extends React.Component {
 
     render() {
 
-        console.log(this.props);
-
         const html = `
             <!DOCTYPE html>
             <html>
@@ -78,7 +76,6 @@ export default class YoutubeView extends React.Component {
             </body>
             </html>`;
 
-
         let playerState = this.props.condition === 'play' ? playVideo : pauseVideo;
 
         setTimeout(() => {
@@ -88,7 +85,7 @@ export default class YoutubeView extends React.Component {
 
         return (
             <View style={{ flex: 1 }}>
-                <WebView
+                <WebView 
                     pointerEvents="none"
                     javascriptEnabled={true}
                     useWebKit={true}

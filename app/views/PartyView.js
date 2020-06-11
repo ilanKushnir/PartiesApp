@@ -199,9 +199,8 @@ export class PartyView extends React.Component {
                     <Button title="Leave" onPress={this.onPressLeaveParty} color="#ff0000" />
                 </View>
 
-                <View style={{ flex: 9 }}>
+                <View style={{ flex: 5 }}>
                     <YoutubeView
-                        ref={ref => this.youtubeViewComponent = ref}
                         activeVideo={this.state.activeVideo}
                         condition={this.state.party.condition}
                         isHost={this.state.isHost}
