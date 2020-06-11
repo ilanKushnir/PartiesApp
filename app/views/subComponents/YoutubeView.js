@@ -1,5 +1,12 @@
 import React from 'react';
+import { View } from 'react-native';
 import { WebView } from 'react-native-webview';
+import { MaterialCommunityIcons } from 'react-native-vector-icons';
+import { styles } from '../../styles/styles.js';
+
+const playVideo = 'player.playVideo();'
+const pauseVideo = 'player.pauseVideo();'
+const getCurrentTime = 'window.ReactNativeWebView.postMessage(player.getCurrentTime());'
 
 export default class YoutubeView extends React.Component {
     constructor(props) {
@@ -7,14 +14,27 @@ export default class YoutubeView extends React.Component {
     }
 
     onMessageHandler = (data) => {
-        if(data === "ended") {
+        if (data === "ended") {
             this.props.loadNextVideoToPlayer();
         } else {
-            this.props.updateCurrentTimeInDB(data);
+            this.props.updatePaused(data);
+        }
+    }
+
+    onPressPlayPause = () => {
+        const newCondition = this.props.condition === 'play' ? 'pause' : 'play';
+        const playerAction = newCondition === 'play' ? playVideo : pauseVideo;
+        this.webref.injectJavaScript(playerAction);
+        if (newCondition === 'pause') {
+            this.webref.injectJavaScript(getCurrentTime);
+        } else {
+            this.props.updatePlayed();
         }
     }
 
     render() {
+
+        console.log(this.props);
 
         const html = `
             <!DOCTYPE html>
@@ -42,20 +62,14 @@ export default class YoutubeView extends React.Component {
                         },
                         videoId: '${this.props.activeVideo.id}',
                         events: {
-                            'onReady': onPlayerReady,
+                            
                             'onStateChange': onPlayerStateChange
                         }
                     });
                 }
-                
-                function onPlayerReady(event) {
-                    event.target.seekTo(${this.props.activeVideo.currentTime});
-                }
 
                 function onPlayerStateChange(event) {
-                    if(${this.props.isActionMaker} && event.data === YT.PlayerState.PAUSED) {
-                        window.ReactNativeWebView.postMessage(player.getCurrentTime());
-                    } else if(event.data === YT.PlayerState.ENDED) {
+                    } else if(${this.props.isHost} && event.data === YT.PlayerState.ENDED) {
                         window.ReactNativeWebView.postMessage("ended");
                     }
                 }
@@ -65,26 +79,60 @@ export default class YoutubeView extends React.Component {
             </html>`;
 
 
-        let playerState = this.props.condition === 'play' ?
-            `player.playVideo();` : `player.pauseVideo();`;
+        let playerState = this.props.condition === 'play' ? playVideo : pauseVideo;
 
         setTimeout(() => {
+            this.webref.injectJavaScript(`player.seekTo(${this.props.activeVideo.currentTime});`);
             this.webref.injectJavaScript(playerState);
-        }, 2000);
+        }, 1500);
 
         return (
-            <WebView
-                pointerEvents="none"
-                javascriptEnabled={true}
-                useWebKit={true}
-                source={{ html }}
-                ref={r => (this.webref = r)}
-                originWhitelist={['*']}
-                allowsInlineMediaPlayback={true}
-                onMessage={event => this.onMessageHandler(event.nativeEvent.data)}
-                mediaPlaybackRequiresUserAction={false}
-            />
-
+            <View style={{ flex: 1 }}>
+                <WebView
+                    pointerEvents="none"
+                    javascriptEnabled={true}
+                    useWebKit={true}
+                    source={{ html }}
+                    ref={r => (this.webref = r)}
+                    originWhitelist={['*']}
+                    allowsInlineMediaPlayback={true}
+                    onMessage={event => this.onMessageHandler(event.nativeEvent.data)}
+                    mediaPlaybackRequiresUserAction={false}
+                />
+                <View style={styles.rowPlayer}>
+                    <MaterialCommunityIcons
+                        onPress={this.props.loadPrevVideoToPlayer}
+                        name="skip-previous"
+                        size={40}
+                        color="#fa8072"
+                    />
+                    <MaterialCommunityIcons
+                        onPress={this.onPressPlayPause}
+                        name={this.props.condition === 'play' ? "pause-circle" : "play-circle"}
+                        size={70}
+                        color="#ff6347"
+                    />
+                    <MaterialCommunityIcons
+                        onPress={this.props.loadNextVideoToPlayer}
+                        name="skip-next"
+                        size={40}
+                        color="#fa8072"
+                    />
+                </View>
+            </View>
         )
     }
 }
+
+// 'onReady': onPlayerReady,
+// function onPlayerReady(event) {
+//     event.target.seekTo(${this.props.activeVideo.currentTime});
+// }
+
+// function onPlayerStateChange(event) {
+//     if(${this.props.isActionMaker} && event.data === YT.PlayerState.PAUSED) {
+//         window.ReactNativeWebView.postMessage(player.getCurrentTime());
+//     } else if(${this.props.isHost} && event.data === YT.PlayerState.ENDED) {
+//         window.ReactNativeWebView.postMessage("ended");
+//     }
+// }

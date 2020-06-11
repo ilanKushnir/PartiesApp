@@ -108,22 +108,18 @@ export class PartyView extends React.Component {
         await this.db.collection('party').doc(this.state.partyId).update({ activeVideoId: videoId, currentTime: 0 });
     }
 
-    updateCurrentTimeInDB = async (currentTime) => {
-        this.setState({
-            isActionMaker: false
-        });
-        await this.db.collection('party').doc(this.state.partyId).update({ currentTime });
+    updatePausedAndCurrentTimeInDB = async (currentTime) => {
+        await this.db.collection('party').doc(this.state.partyId).update({ 
+            currentTime: currentTime,
+            condition: 'pause',
+            lastUpdatedTime: new Date()
+         });
     }
 
-    onPressPlayPause = async () => {
+    updatePlayedInDB = async () => {
         try {
-            const newCondition = this.state.party.condition === 'play' ? 'pause' : 'play';
-            this.setState({
-                isActionMaker: true
-            });
-
             await this.db.collection('party').doc(this.state.partyId).update({
-                condition: newCondition,
+                condition: 'play',
                 lastUpdatedTime: new Date()
             });
         }
@@ -131,6 +127,23 @@ export class PartyView extends React.Component {
             console.log(error);
         }
     }
+
+    // onPressPlayPause = async () => {
+    //     try {
+    //         const newCondition = this.state.party.condition === 'play' ? 'pause' : 'play';
+    //         this.setState({
+    //             isActionMaker: true
+    //         });
+
+    //         await this.db.collection('party').doc(this.state.partyId).update({
+    //             condition: newCondition,
+    //             lastUpdatedTime: new Date()
+    //         });
+    //     }
+    //     catch (error) {
+    //         console.log(error);
+    //     }
+    // }
 
     onPressLeaveParty = () => {
         Alert.alert(
@@ -186,23 +199,26 @@ export class PartyView extends React.Component {
                     <Button title="Leave" onPress={this.onPressLeaveParty} color="#ff0000" />
                 </View>
 
-                <View style={{ flex: 2 }}>
+                <View style={{ flex: 9 }}>
                     <YoutubeView
+                        ref={ref => this.youtubeViewComponent = ref}
                         activeVideo={this.state.activeVideo}
                         condition={this.state.party.condition}
-                        updateCurrentTimeInDB={this.updateCurrentTimeInDB}
                         isHost={this.state.isHost}
                         isActionMaker={this.state.isActionMaker}
+                        updatePaused={this.updatePausedAndCurrentTimeInDB}
+                        updatePlayed={this.updatePlayedInDB}
                         loadNextVideoToPlayer={this.loadNextVideoToPlayer}
+                        loadPrevVideoToPlayer={this.loadPrevVideoToPlayer}
                     />
                 </View>
 
-                <Player 
+                {/* <Player 
                     onPressPlayPause={this.onPressPlayPause}
                     condition={this.state.party.condition}
                     loadNextVideoToPlayer={this.loadNextVideoToPlayer}
                     loadPrevVideoToPlayer={this.loadPrevVideoToPlayer}
-                ></Player>
+                ></Player> */}
 
                 <Playlist
                     ref={ref => this.playlistChildComponent = ref}
