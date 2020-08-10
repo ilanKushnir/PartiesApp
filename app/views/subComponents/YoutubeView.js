@@ -3,6 +3,7 @@ import { View } from 'react-native';
 import { WebView } from 'react-native-webview';
 import { MaterialCommunityIcons } from 'react-native-vector-icons';
 import { styles } from '../../styles/styles.js';
+import Player from './Player.js';
 
 const playVideo = 'player.playVideo();'
 const pauseVideo = 'player.pauseVideo();'
@@ -85,7 +86,7 @@ export default class YoutubeView extends React.Component {
 
         return (
             <View style={{ flex: 1 }}>
-                <WebView 
+                <WebView style={{ flex: 1 }}
                     pointerEvents="none"
                     javascriptEnabled={true}
                     useWebKit={true}
@@ -96,26 +97,11 @@ export default class YoutubeView extends React.Component {
                     onMessage={event => this.onMessageHandler(event.nativeEvent.data)}
                     mediaPlaybackRequiresUserAction={false}
                 />
-                <View style={styles.rowPlayer}>
-                    <MaterialCommunityIcons
-                        onPress={this.props.loadPrevVideoToPlayer}
-                        name="skip-previous"
-                        size={40}
-                        color="#fa8072"
-                    />
-                    <MaterialCommunityIcons
-                        onPress={this.onPressPlayPause}
-                        name={this.props.condition === 'play' ? "pause-circle" : "play-circle"}
-                        size={70}
-                        color="#ff6347"
-                    />
-                    <MaterialCommunityIcons
-                        onPress={this.props.loadNextVideoToPlayer}
-                        name="skip-next"
-                        size={40}
-                        color="#fa8072"
-                    />
-                </View>
+                <Player
+                    loadPrevVideoToPlayer={this.props.loadPrevVideoToPlayer}
+                    loadNextVideoToPlayer={this.props.loadNextVideoToPlayer}
+                    onPressPlayPause={this.onPressPlayPause}
+                />
             </View>
         )
     }
