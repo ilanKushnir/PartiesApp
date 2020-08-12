@@ -79,12 +79,7 @@ export default class YoutubeView extends React.Component {
             </body>
             </html>`;
 
-        // let playerState = this.props.condition === 'play' ? playVideo : pauseVideo;
-
-        // setTimeout(() => {
-        //     this.webref.injectJavaScript(`player.seekTo(${this.props.activeVideo.currentTime});`);
-        //     this.webref.injectJavaScript(playerState);
-        // }, 1500);
+        let onLoadEndScript = this.props.condition === 'play' ? playVideo : pauseVideo;
 
         return (
             <View style={{ flex: 1 }}>
@@ -98,11 +93,13 @@ export default class YoutubeView extends React.Component {
                     allowsInlineMediaPlayback={true}
                     onMessage={event => this.onMessageHandler(event.nativeEvent.data)}
                     mediaPlaybackRequiresUserAction={false}
+                    onLoadEnd={() => this.webref.injectJavaScript(onLoadEndScript)}
                 />
-                <Player
+                <Player style={styles.rowPlayer}
                     loadPrevVideoToPlayer={this.props.loadPrevVideoToPlayer}
                     loadNextVideoToPlayer={this.props.loadNextVideoToPlayer}
                     onPressPlayPause={this.onPressPlayPause}
+                    condition={this.props.condition}
                 />
             </View>
         )
@@ -121,3 +118,9 @@ export default class YoutubeView extends React.Component {
 //         window.ReactNativeWebView.postMessage("ended");
 //     }
 // }
+
+
+// setTimeout(() => {
+//     this.webref.injectJavaScript(`player.seekTo(${this.props.activeVideo.currentTime});`);
+//     this.webref.injectJavaScript(playerState);
+// }, 1500);

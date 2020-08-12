@@ -188,23 +188,24 @@ export class PartyView extends React.Component {
         }
     }
 
+    onCopyID = () => {
+        Clipboard.setString(`${this.state.party.joinId}`);
+        Alert.alert("Party ID copied to clipboard");
+    }
 
     render() {
         return (
 
             <View style={{ flex: 1 }}>
                 <View style={styles.rowHeader}>
-                    <TouchableOpacity onPress={() => {
-                        Clipboard.setString(`${this.state.party.joinId}`);
-                        Alert.alert("Party id copied to clipboard");
-                    }}>
+                    <TouchableOpacity onPress={this.onCopyID}>
                         <Text style={styles.partyId}>{`ID: ${this.state.party.joinId}`}</Text>
                     </TouchableOpacity>
                     <Text style={styles.partyName}>{this.state.party.partyName}</Text>
                     <Button title="Leave" onPress={this.onPressLeaveParty} color="#ff0000" />
                 </View>
 
-                <View style={{ flex: 5 }}>
+                <View style={{ flex: 7 }}>
                     <YoutubeView
                         activeVideo={this.state.activeVideo}
                         condition={this.state.party.condition}

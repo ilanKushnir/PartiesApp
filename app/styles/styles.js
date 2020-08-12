@@ -47,7 +47,7 @@ export const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginHorizontal: 70
+    marginHorizontal: 70,
   },
   column: {
     flexDirection: 'column',
