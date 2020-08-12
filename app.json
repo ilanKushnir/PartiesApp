@@ -2,6 +2,7 @@
   "expo": {
     "name": "parties-app",
     "slug": "parties-app",
+    "scheme": "parties-app",
     "platforms": [
       "ios",
       "android",

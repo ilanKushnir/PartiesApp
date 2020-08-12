@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Text, View, Alert, TouchableOpacity, Button, Clipboard } from 'react-native';
+import { Text, View, Alert, TouchableOpacity, Button, Clipboard, Share } from 'react-native';
 import TrackItem from './subComponents/TrackItem';
 import YoutubeView from './subComponents/YoutubeView';
 import firebase from '../../firebase';
@@ -8,6 +8,8 @@ import { styles } from '../styles/styles.js'
 import { StackActions } from '@react-navigation/native'
 import Playlist from './subComponents/Playlist.js'
 import Player from './subComponents/Player.js'
+import * as Linking from 'expo-linking';
+
 
 export class PartyView extends React.Component {
     static navigationOptions = {
@@ -188,17 +190,43 @@ export class PartyView extends React.Component {
         }
     }
 
-    onCopyID = () => {
-        Clipboard.setString(`${this.state.party.joinId}`);
-        Alert.alert("Party ID copied to clipboard");
-    }
+    onIdPress = async () => {
+        let redirectUrl = Linking.makeUrl('parties-app-dev', { partyId: `${this.state.party.joinId}` });
+        console.log(redirectUrl);
+        try {
+          const result = await Share.share({
+            message:
+`My Party ID is: ${this.state.party.joinId}
+
+Join the Party NOW!
+${redirectUrl}`,
+          });
+    
+          if (result.action === Share.sharedAction) {
+            if (result.activityType) {
+                Alert.alert("Invitation Sent!");
+            } else {
+                Alert.alert("Invitation Sent!");
+            }
+          } else if (result.action === Share.dismissedAction) {
+            Alert.alert("No one invited");
+          }
+        } catch (error) {
+          alert(error.message);
+        }
+    };
+    
+    // onIdPress = () => {
+    //     Clipboard.setString(`${this.state.party.joinId}`);
+    //     Alert.alert("Party ID copied to clipboard");
+    // }
 
     render() {
         return (
 
             <View style={{ flex: 1 }}>
                 <View style={styles.rowHeader}>
-                    <TouchableOpacity onPress={this.onCopyID}>
+                    <TouchableOpacity onPress={this.onIdPress}>
                         <Text style={styles.partyId}>{`ID: ${this.state.party.joinId}`}</Text>
                     </TouchableOpacity>
                     <Text style={styles.partyName}>{this.state.party.partyName}</Text>
