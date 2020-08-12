@@ -63,7 +63,7 @@ export default class YoutubeView extends React.Component {
                         },
                         videoId: '${this.props.activeVideo.id}',
                         events: {
-                            
+
                             'onStateChange': onPlayerStateChange
                         }
                     });
@@ -81,6 +81,11 @@ export default class YoutubeView extends React.Component {
 
         let onLoadEndScript = this.props.condition === 'play' ? playVideo : pauseVideo;
 
+        setTimeout(() => {
+            this.webref.injectJavaScript(`player.seekTo(${this.props.activeVideo.currentTime});`);
+            this.webref.injectJavaScript(onLoadEndScript);
+        }, 500);
+
         return (
             <View style={{ flex: 1 }}>
                 <WebView style={{ flex: 1 }}
@@ -93,7 +98,9 @@ export default class YoutubeView extends React.Component {
                     allowsInlineMediaPlayback={true}
                     onMessage={event => this.onMessageHandler(event.nativeEvent.data)}
                     mediaPlaybackRequiresUserAction={false}
-                    onLoadEnd={() => this.webref.injectJavaScript(onLoadEndScript)}
+                    onLoadEnd={() => {
+                        this.webref.injectJavaScript(`player.seekTo(${this.props.activeVideo.currentTime});`);
+                        this.webref.injectJavaScript(onLoadEndScript);}}
                 />
                 <Player style={styles.rowPlayer}
                     loadPrevVideoToPlayer={this.props.loadPrevVideoToPlayer}
@@ -119,8 +126,3 @@ export default class YoutubeView extends React.Component {
 //     }
 // }
 
-
-// setTimeout(() => {
-//     this.webref.injectJavaScript(`player.seekTo(${this.props.activeVideo.currentTime});`);
-//     this.webref.injectJavaScript(playerState);
-// }, 1500);
