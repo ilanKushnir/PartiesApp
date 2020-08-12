@@ -8,6 +8,8 @@ import { styles } from '../styles/styles.js'
 import { StackActions } from '@react-navigation/native'
 import Playlist from './subComponents/Playlist.js'
 import Player from './subComponents/Player.js'
+import * as Linking from 'expo-linking';
+
 
 export class PartyView extends React.Component {
     static navigationOptions = {
@@ -189,11 +191,15 @@ export class PartyView extends React.Component {
     }
 
     onIdPress = async () => {
+        let redirectUrl = Linking.makeUrl('parties-app-dev', { partyId: `${this.state.party.joinId}` });
+        console.log(redirectUrl);
         try {
           const result = await Share.share({
             message:
-              `My Party ID is: ${this.state.party.joinId}
-              Open the app and join the PARTY!`,
+`My Party ID is: ${this.state.party.joinId}
+
+Join the Party NOW!
+${redirectUrl}`,
           });
     
           if (result.action === Share.sharedAction) {
