@@ -80,7 +80,7 @@ export class PartyView extends React.Component {
     updateHost = (activeUsers) => {
         const isHost = activeUsers[0] === this.state.userId;
         if (isHost && !this.state.isHost) {
-            Alert.alert(`You are now ${this.state.party.partyName} new host!`)
+            Alert.alert(`You are now ${this.state.party.partyName} host!`)
         }
         this.setState({
             isHost
@@ -109,11 +109,16 @@ export class PartyView extends React.Component {
     }
 
     updatePausedAndCurrentTimeInDB = async (currentTime) => {
-        await this.db.collection('party').doc(this.state.partyId).update({ 
-            currentTime: currentTime,
-            condition: 'pause',
-            lastUpdatedTime: new Date()
-         });
+        try {
+            await this.db.collection('party').doc(this.state.partyId).update({ 
+                currentTime: currentTime,
+                condition: 'pause',
+                lastUpdatedTime: new Date()
+             });
+        }
+        catch (error) {
+            console.log(error);
+        }
     }
 
     updatePlayedInDB = async () => {
@@ -211,13 +216,6 @@ export class PartyView extends React.Component {
                         loadPrevVideoToPlayer={this.loadPrevVideoToPlayer}
                     />
                 </View>
-
-                {/* <Player 
-                    onPressPlayPause={this.onPressPlayPause}
-                    condition={this.state.party.condition}
-                    loadNextVideoToPlayer={this.loadNextVideoToPlayer}
-                    loadPrevVideoToPlayer={this.loadPrevVideoToPlayer}
-                ></Player> */}
 
                 <Playlist
                     ref={ref => this.playlistChildComponent = ref}

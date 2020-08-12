@@ -35,6 +35,8 @@ export default class YoutubeView extends React.Component {
 
     render() {
 
+        console.log('render youtubeView');
+
         const html = `
             <!DOCTYPE html>
             <html>
@@ -68,7 +70,7 @@ export default class YoutubeView extends React.Component {
                 }
 
                 function onPlayerStateChange(event) {
-                    } else if(${this.props.isHost} && event.data === YT.PlayerState.ENDED) {
+                    if(${this.props.isHost} && event.data === YT.PlayerState.ENDED) {
                         window.ReactNativeWebView.postMessage("ended");
                     }
                 }
@@ -77,12 +79,12 @@ export default class YoutubeView extends React.Component {
             </body>
             </html>`;
 
-        let playerState = this.props.condition === 'play' ? playVideo : pauseVideo;
+        // let playerState = this.props.condition === 'play' ? playVideo : pauseVideo;
 
-        setTimeout(() => {
-            this.webref.injectJavaScript(`player.seekTo(${this.props.activeVideo.currentTime});`);
-            this.webref.injectJavaScript(playerState);
-        }, 1500);
+        // setTimeout(() => {
+        //     this.webref.injectJavaScript(`player.seekTo(${this.props.activeVideo.currentTime});`);
+        //     this.webref.injectJavaScript(playerState);
+        // }, 1500);
 
         return (
             <View style={{ flex: 1 }}>
