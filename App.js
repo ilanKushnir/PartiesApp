@@ -12,7 +12,7 @@ export default class App extends React.Component {
     let urlStr = url.url;
     const paramsArr = urlStr.split("=");
     console.log(paramsArr);
-    if(paramsArr.length > 0) {
+    if(paramsArr.length > 1) {
       const invitedPartyId = paramsArr[paramsArr.length-1];
       alert(`Invited to party ID: ${invitedPartyId} - handle redirection`);
       
