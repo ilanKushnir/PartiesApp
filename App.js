@@ -6,48 +6,34 @@ import * as Linking from 'expo-linking';
 
 
 export default class App extends React.Component {
-  constructor(props) {
-    super(props);
+  constructor() {
+    super();
     this.state = {
       url: ''
     }
   }
-  // _handleUrl = (url) => {
-  //   this.setState({ url });
-  //   let urlStr = url.url;
-  //   const paramsArr = urlStr.split("=");
-  //   console.log(paramsArr);
-  //   if(paramsArr.length > 1) {
-  //     const invitedPartyId = paramsArr[paramsArr.length-1];
-  //     alert(`Invited to party ID: ${invitedPartyId} - handle redirection`);
-      
-      
-  //     // Add here navigation redirection to join party 'invitedPartyId'
-
-  //   }
-  // };
-
 
   componentDidMount() {
     Linking.getInitialURL()
       .then(url => {
-        this.setState({ url });
-        if(typeof(url) === Object){
-          //this._handleUrl( url );
+        if(url) {
+          this.navigatorChildComponent._handleUrl( url );
         }
       })
       .catch(error => console.error(error));
-    // Linking.addEventListener('url', this._handleUrl);
+     Linking.addEventListener('url', this.navigatorChildComponent._handleUrl);
   }
   
   componentWillUnmount() {
-    //Linking.removeEventListener('url', this._handleUrl);
+    Linking.removeEventListener('url', this.navigatorChildComponent._handleUrl);
   }
   
 
   render() {
     return(
-      <Navigator url={this.state.url}/>
+      <Navigator
+        ref={ref => this.navigatorChildComponent = ref}
+      />
     )
   }
 }

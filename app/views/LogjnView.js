@@ -41,6 +41,15 @@ export class LoginView extends React.Component {
         super(props);
     }
 
+    onPressLogin = () => {
+        Keyboard.dismiss();
+        console.log(this.props.route.params);
+        //this.props.navigation.navigate("Bottom Tabs", {username: this.state.inputValue});
+        // if(this.props)
+        // this.props.navigation.navigate("Bottom Tabs", {username: this.state.inputValue});
+        
+    }
+
     render() {
         return(
             <View style={styles.center}>
@@ -49,10 +58,7 @@ export class LoginView extends React.Component {
                             onChangeText={inputValue => this.setState({inputValue})}>
                 </TextInput>
                 <Button
-                    onPress={() => {
-                        Keyboard.dismiss();
-                        this.props.navigation.navigate("Bottom Tabs", {username: this.state.inputValue});
-                    }}
+                    onPress={this.onPressLogin}
                     title="Login"
                 ></Button>
             </View>
