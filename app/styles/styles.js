@@ -45,9 +45,10 @@ export const styles = StyleSheet.create({
   rowPlayer: {
     flexDirection: 'row',
     flex: 1,
-    justifyContent: 'space-between',
+    justifyContent: 'center',
     alignItems: 'center',
-    marginHorizontal: 70,
+    position: "relative",
+    alignSelf: 'stretch'
   },
   column: {
     flexDirection: 'column',
