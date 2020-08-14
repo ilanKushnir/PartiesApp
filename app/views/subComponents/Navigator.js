@@ -20,6 +20,29 @@ const Tab = createMaterialBottomTabNavigator();
 
 export default class Navigator extends React.Component {
 
+    _handleUrl = (url) => {
+        // this.setState({ url });
+        let urlStr = url.url;
+        const paramsArr = urlStr.split("=");
+        console.log(paramsArr);
+        if(paramsArr.length > 1) {
+          const invitedPartyId = paramsArr[paramsArr.length-1];
+          alert(`Invited to party ID: ${invitedPartyId} - handle redirection`);
+          
+          this.state.navigation.navigate('Party View');
+          // Add here navigation redirection to join party 'invitedPartyId'
+    
+        }
+    };
+
+    UNSAFE_componentWillReceiveProps() {
+        //this._handleUrl(this.props.url);
+        console.log(this.props);
+        if(this.props.url) {
+            console.log('got url');
+        }
+    }
+
     createMainAppStack = () => {
         return <Stack.Navigator
             screenOptions={{

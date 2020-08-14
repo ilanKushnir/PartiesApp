@@ -135,23 +135,6 @@ export class PartyView extends React.Component {
         }
     }
 
-    // onPressPlayPause = async () => {
-    //     try {
-    //         const newCondition = this.state.party.condition === 'play' ? 'pause' : 'play';
-    //         this.setState({
-    //             isActionMaker: true
-    //         });
-
-    //         await this.db.collection('party').doc(this.state.partyId).update({
-    //             condition: newCondition,
-    //             lastUpdatedTime: new Date()
-    //         });
-    //     }
-    //     catch (error) {
-    //         console.log(error);
-    //     }
-    // }
-
     onPressLeaveParty = () => {
         Alert.alert(
             'Leaving so soon?',
