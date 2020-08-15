@@ -7,7 +7,6 @@ import firebase from '../../firebase';
 import { styles } from '../styles/styles.js'
 import { StackActions } from '@react-navigation/native'
 import Playlist from './subComponents/Playlist.js'
-import Player from './subComponents/Player.js'
 import * as Linking from 'expo-linking';
 
 
@@ -33,7 +32,7 @@ export class PartyView extends React.Component {
             },
             userId: props.route.params.userId,
             isHost: props.route.params.isHost,
-            isActionMaker: false
+            isInvited: props.route.params.isInvited
         };
         this.loadVideoToPlayer = this.loadVideoToPlayer.bind(this);
         this.db = firebase.firestore();
@@ -135,23 +134,6 @@ export class PartyView extends React.Component {
         }
     }
 
-    // onPressPlayPause = async () => {
-    //     try {
-    //         const newCondition = this.state.party.condition === 'play' ? 'pause' : 'play';
-    //         this.setState({
-    //             isActionMaker: true
-    //         });
-
-    //         await this.db.collection('party').doc(this.state.partyId).update({
-    //             condition: newCondition,
-    //             lastUpdatedTime: new Date()
-    //         });
-    //     }
-    //     catch (error) {
-    //         console.log(error);
-    //     }
-    // }
-
     onPressLeaveParty = () => {
         Alert.alert(
             'Leaving so soon?',
@@ -170,7 +152,11 @@ export class PartyView extends React.Component {
     }
 
     leaveParty = async () => {
-        this.props.navigation.dispatch(StackActions.popToTop());
+        if (this.state.isInvited) {
+            this.props.navigation.dispatch(StackActions.pop());
+        } else {
+            this.props.navigation.dispatch(StackActions.popToTop());
+        }
 
         try {
             const party = await this.db.collection('party').doc(this.state.partyId).get();
@@ -215,11 +201,6 @@ ${redirectUrl}`,
             alert(error.message);
         }
     };
-
-    // onIdPress = () => {
-    //     Clipboard.setString(`${this.state.party.joinId}`);
-    //     Alert.alert("Party ID copied to clipboard");
-    // }
 
     render() {
         return (
