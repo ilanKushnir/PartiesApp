@@ -205,8 +205,8 @@ ${redirectUrl}`,
     render() {
         return (
 
-            <View style={{ flex: 1 }}>
-                <View style={styles.rowHeader}>
+            <View style={{ flex: 1 ,         backgroundColor: '#ECF0F1',}}>
+                <View style={{...styles.rowHeader, flex: 0.5, position: 'relative', top: 10}}>
                     <TouchableOpacity onPress={this.onIdPress}>
                         <Text style={styles.partyId}>{`ID: ${this.state.party.joinId}`}</Text>
                     </TouchableOpacity>
@@ -214,8 +214,8 @@ ${redirectUrl}`,
                     <Button title="Leave" onPress={this.onPressLeaveParty} color="#ff0000" />
                 </View>
 
-                <View style={{ flex: 7 }}>
-                    <YoutubeView
+                <View style={{ flex:2.2, backgroundColor:'#000000'}}>
+                    <YoutubeView style={{ backgroundColor:'#000000'}}
                         activeVideo={this.state.activeVideo}
                         condition={this.state.party.condition}
                         isHost={this.state.isHost}
@@ -226,13 +226,14 @@ ${redirectUrl}`,
                         loadPrevVideoToPlayer={this.loadPrevVideoToPlayer}
                     />
                 </View>
-
-                <Playlist
-                    ref={ref => this.playlistChildComponent = ref}
-                    playlist={this.state.party.playlist}
-                    loadVideoToPlayer={this.loadVideoToPlayer}
-                    navigation={this.props.navigation}
-                />
+                <View style={{ flex: 2}}>
+                    <Playlist
+                        ref={ref => this.playlistChildComponent = ref}
+                        playlist={this.state.party.playlist}
+                        loadVideoToPlayer={this.loadVideoToPlayer}
+                        navigation={this.props.navigation}
+                    />
+                </View>
             </View>
         )
     }

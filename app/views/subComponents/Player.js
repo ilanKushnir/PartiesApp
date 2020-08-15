@@ -14,7 +14,7 @@ export default class Player extends React.Component {
                     size={40}
                     color="#fa8072"
                 />
-                <MaterialCommunityIcons
+                <MaterialCommunityIcons style={{marginHorizontal: 25}}
                     onPress={this.props.onPressPlayPause}
                     name={this.props.condition === 'play' ? "pause-circle" : "play-circle"}
                     size={70}
