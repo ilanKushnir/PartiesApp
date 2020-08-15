@@ -2,6 +2,7 @@ import React from 'react'
 import { StyleSheet, Text, View, TextInput, Button } from 'react-native'
 import Navigator from './app/views/subComponents/Navigator.js'
 window.addEventListener = x => x;   //  mock eventListener to satisfy Firestore
+console.ignoredYellowBox = ['Warning:'];
 import * as Linking from 'expo-linking';
 
 

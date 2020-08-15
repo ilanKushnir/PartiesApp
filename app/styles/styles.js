@@ -28,6 +28,10 @@ export const styles = StyleSheet.create({
     width: 200,
     height: 50
   },
+  loginButton: {
+    width: 200,
+    height: 50
+  },
   row: {
     flexDirection: 'row',
     flex: 1,
