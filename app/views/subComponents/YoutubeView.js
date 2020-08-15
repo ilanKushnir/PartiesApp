@@ -35,8 +35,6 @@ export default class YoutubeView extends React.Component {
 
     render() {
 
-        console.log('render youtubeView');
-
         const html = `
             <!DOCTYPE html>
             <html>
@@ -88,7 +86,8 @@ export default class YoutubeView extends React.Component {
 
         return (
             <View style={{ flex: 1 }}>
-                <WebView style={{ flex: 1 }}
+                <View pointerEvents="none" style={{flex:3.1,    backgroundColor: '#000000',}}>
+                <WebView style={{ flex: 1,    backgroundColor:'#000000' }}
                     pointerEvents="none"
                     javascriptEnabled={true}
                     useWebKit={true}
@@ -102,7 +101,9 @@ export default class YoutubeView extends React.Component {
                         this.webref.injectJavaScript(`player.seekTo(${this.props.activeVideo.currentTime});`);
                         this.webref.injectJavaScript(onLoadEndScript);}}
                 />
-                <Player style={styles.rowPlayer}
+                </View>
+                <Player style={styles.rowPlayer
+}
                     loadPrevVideoToPlayer={this.props.loadPrevVideoToPlayer}
                     loadNextVideoToPlayer={this.props.loadNextVideoToPlayer}
                     onPressPlayPause={this.onPressPlayPause}

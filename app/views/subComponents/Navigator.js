@@ -1,10 +1,9 @@
 import React from 'react'
-import { StyleSheet, Text, View, TextInput, Button } from 'react-native'
+import { NavigationContainer } from '@react-navigation/native'
+import { createStackNavigator } from '@react-navigation/stack'
 import { PartyView } from '../PartyView.js'
 import SetPartyView from '../SetPartyView.js'
-import { NavigationContainer } from '@react-navigation/native'
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs'
-import { createStackNavigator } from '@react-navigation/stack'
 import { HomeTab } from '../../tabs/HomeTab.js'
 import TopPlaylistsTab from '../../tabs/TopPlaylistsTab.js'
 import HistoryTab from '../../tabs/HistoryTab.js'
@@ -13,27 +12,26 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import PartyTimeTab from '../../tabs/PartyTimeTab.js'
 import AddToPlaylistView from '../AddToPlaylistView.js'
 import { LoginView } from '../LogjnView.js'
-import MainTabsView from '../MainTabsView.js'
 
 const Stack = createStackNavigator();
 const Tab = createMaterialBottomTabNavigator();
 
 export default class Navigator extends React.Component {
 
-    createMainAppStack = () => {
+    createMainAppStack = (navigation) => {
         return <Stack.Navigator
             screenOptions={{
                 gestureEnabled: false
             }}
             headerMode='none'
         >
-            <Stack.Screen name="Login" component={LoginView}/>
+            <Stack.Screen name="Login" component={LoginView} />
             <Stack.Screen name="Bottom Tabs" component={this.createBottomTabs}/>
+            <Stack.Screen name="Party View" component={PartyView}/>
         </Stack.Navigator>
     }
 
     createBottomTabs = (navigation) => {
-
         return <Tab.Navigator
             initialRouteName="Home"
             barStyle={{ backgroundColor: '#ff6347' }}

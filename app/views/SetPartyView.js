@@ -66,7 +66,8 @@ export default class SetPartyView extends React.Component {
                         userId,
                         partyId,
                         isHost: true,
-                        playlist: playlistId
+                        playlist: playlistId,
+                        isInvited: false
                     });
                     } catch(error) {
                         console.log(`Error starting new party ${error}`);
@@ -118,11 +119,13 @@ export default class SetPartyView extends React.Component {
                     
                     const userId = activeUsers[activeUsers.length - 1] + 1;
                     await db.collection('party').doc(partyId).update({ activeUsers: [...activeUsers, userId] });
+                    Alert.alert(`Joining Party ${name}`);
                     this.props.navigation.navigate('Party View', {
                         userId,
                         partyId,
                         isHost:false,
-                        playlist: playlistId
+                        playlist: playlistId,
+                        isInvited: false
                     });
                 } catch (e) {
                     console.log('Error join existing party', e)

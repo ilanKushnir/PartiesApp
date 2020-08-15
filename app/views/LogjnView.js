@@ -3,25 +3,32 @@ import { View, Text, TextInput, Button, TouchableOpacity, Keyboard, Alert, Image
 import { styles } from "../styles/styles.js";
 import * as Google from 'expo-google-app-auth';
 import AsyncStorage from '@react-native-community/async-storage';
-import firebase from '../../firebase'
-
-const IOS_CLIENT_ID = '22817374367-gqqgkjaur5fhjn8egj4d4liq83fhi8sa.apps.googleusercontent.com';
-const ANDROID_CLIENT_ID = '22817374367-blt4tbifsjft1f76mn0rehdnmu7lvsir.apps.googleusercontent.com';
-
+import firebase from '../../firebase';
+import * as Linking from 'expo-linking';
 
 export class LoginView extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            remmemberLogin: false
+            invitedPartyId: ''
         }
-        this.db = firebase.firestore();
 
+        this.db = firebase.firestore();
         this.login = this.login.bind(this);
         this.signInWithGoogle = this.signInWithGoogle.bind(this);
     }
 
     componentDidMount = async () => {
+        try {
+            const url = await Linking.getInitialURL()
+            if (url) {
+                this._handleUrl(url);
+            }
+            Linking.addEventListener('url', this._handleUrl);
+        } catch (error) {
+            console.error(error)
+        }
+
         const userID = await this.getLoginFromDevice();
         if(userID) {
             console.log('Trying login to last user from device storage');
@@ -36,8 +43,15 @@ export class LoginView extends React.Component {
                 Alert.alert('Success login recent user', userName);
                 
                 this.props.navigation.navigate("Bottom Tabs", { username: userName });
+                if (this.state.invitedPartyId) {
+                    this.autoJoinInvitedParty(this.state.invitedPartyId);
+                }
             }
         }
+    }
+
+    componentWillUnmount() {
+        Linking.removeEventListener('url', this._handleUrl);
     }
 
     saveLoginToDevice = async (userID) => {
@@ -89,6 +103,9 @@ export class LoginView extends React.Component {
 
             await this.saveLoginToDevice(id);
             this.props.navigation.navigate("Bottom Tabs", { username: userName });
+            if (this.state.invitedPartyId) {
+                this.autoJoinInvitedParty(this.state.invitedPartyId);
+            }
         } catch (error) {
             console.log('Error login in to ', userName);
             Alert.alert(`Error login in to ${userName}`);
@@ -96,6 +113,9 @@ export class LoginView extends React.Component {
     }
 
     signInWithGoogle = async () => {
+        const IOS_CLIENT_ID = '22817374367-gqqgkjaur5fhjn8egj4d4liq83fhi8sa.apps.googleusercontent.com';
+        const ANDROID_CLIENT_ID = '22817374367-blt4tbifsjft1f76mn0rehdnmu7lvsir.apps.googleusercontent.com';
+
         try {            
             const result = await Google.logInAsync({
                 // behavior: 'web',
@@ -104,8 +124,7 @@ export class LoginView extends React.Component {
                 scopes: ['profile', 'email'],
             });
 
-            console.log('on Google Signin, result', result);
-
+            // console.log('on Google Signin, result', result);
             if (result.type === 'success') {
                 const { id, name: userName, email, photoUrl } = result.user;
                 const googleID = `GOOGLE:${id}`;
@@ -122,6 +141,9 @@ export class LoginView extends React.Component {
 
                 await this.saveLoginToDevice(googleID);
                 this.props.navigation.navigate("Bottom Tabs", { username: userName });
+                if (this.state.invitedPartyId) {
+                    this.autoJoinInvitedParty(this.state.invitedPartyId);
+                }
             } else {
                 throw new Error();
             }
@@ -133,6 +155,48 @@ export class LoginView extends React.Component {
                 console.log('Error sign in to Google');
                 Alert.alert(`Error sign in to Google`);
             }
+        }
+    }
+
+    _handleUrl = (url) => {
+        const paramsArr = url.split("=");
+        if (paramsArr.length > 1) {
+            const invitedPartyId = paramsArr[paramsArr.length - 1];
+            this.setState({
+                invitedPartyId: invitedPartyId
+            });
+        }
+    };
+
+    getPlaylistId = async (playlist) => {
+        const playlistResponse = await playlist.get();
+        return playlistResponse.id;
+    }
+
+    async autoJoinInvitedParty(invitedPartyId) {
+        const db = firebase.firestore();
+        try {
+            const response = await db.collection('party').where('joinId', '==', parseInt(invitedPartyId)).limit(1).get();
+            const party = response.docs[0];
+            const partyId = party.id
+            const data = party.data();
+            const { activeUsers, playlist, name } = data;
+            const playlistId = await this.getPlaylistId(playlist);
+            const userId = activeUsers[activeUsers.length - 1] + 1;
+            Alert.alert(`Joining Party ${name}`);
+            await db.collection('party').doc(partyId).update({ activeUsers: [...activeUsers, userId] });
+            
+            this.props.navigation.navigate('Party View', {
+                partyId: partyId,
+                isHost: false,
+                userId,
+                playlist: playlistId,
+                isInvited: true
+            });
+        }
+        catch (e) {
+            console.log('Error join existing party', e)
+            Alert.alert(`Could not load party with Join Id ${invitedPartyId}`)
         }
     }
 
