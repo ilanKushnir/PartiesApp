@@ -7,7 +7,6 @@ import firebase from '../../firebase';
 import { styles } from '../styles/styles.js'
 import { StackActions } from '@react-navigation/native'
 import Playlist from './subComponents/Playlist.js'
-import Player from './subComponents/Player.js'
 import * as Linking from 'expo-linking';
 
 
@@ -33,7 +32,7 @@ export class PartyView extends React.Component {
             },
             userId: props.route.params.userId,
             isHost: props.route.params.isHost,
-            isActionMaker: false
+            isInvited: props.route.params.isInvited
         };
         this.loadVideoToPlayer = this.loadVideoToPlayer.bind(this);
         this.db = firebase.firestore();
@@ -112,11 +111,11 @@ export class PartyView extends React.Component {
 
     updatePausedAndCurrentTimeInDB = async (currentTime) => {
         try {
-            await this.db.collection('party').doc(this.state.partyId).update({ 
+            await this.db.collection('party').doc(this.state.partyId).update({
                 currentTime: currentTime,
                 condition: 'pause',
                 lastUpdatedTime: new Date()
-             });
+            });
         }
         catch (error) {
             console.log(error);
@@ -153,7 +152,11 @@ export class PartyView extends React.Component {
     }
 
     leaveParty = async () => {
-        this.props.navigation.dispatch(StackActions.popToTop());
+        if (this.state.isInvited) {
+            this.props.navigation.dispatch(StackActions.pop());
+        } else {
+            this.props.navigation.dispatch(StackActions.popToTop());
+        }
 
         try {
             const party = await this.db.collection('party').doc(this.state.partyId).get();
@@ -177,32 +180,27 @@ export class PartyView extends React.Component {
         let redirectUrl = Linking.makeUrl('parties-app-dev', { partyId: `${this.state.party.joinId}` });
         console.log(redirectUrl);
         try {
-          const result = await Share.share({
-            message:
-`My Party ID is: ${this.state.party.joinId}
+            const result = await Share.share({
+                message:
+                    `My Party ID is: ${this.state.party.joinId}
 
 Join the Party NOW!
 ${redirectUrl}`,
-          });
-    
-          if (result.action === Share.sharedAction) {
-            if (result.activityType) {
-                Alert.alert("Invitation Sent!");
-            } else {
-                Alert.alert("Invitation Sent!");
+            });
+
+            if (result.action === Share.sharedAction) {
+                if (result.activityType) {
+                    Alert.alert("Invitation Sent!");
+                } else {
+                    Alert.alert("Invitation Sent!");
+                }
+            } else if (result.action === Share.dismissedAction) {
+                Alert.alert("No one invited");
             }
-          } else if (result.action === Share.dismissedAction) {
-            Alert.alert("No one invited");
-          }
         } catch (error) {
-          alert(error.message);
+            alert(error.message);
         }
     };
-    
-    // onIdPress = () => {
-    //     Clipboard.setString(`${this.state.party.joinId}`);
-    //     Alert.alert("Party ID copied to clipboard");
-    // }
 
     render() {
         return (

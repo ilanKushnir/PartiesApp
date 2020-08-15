@@ -27,11 +27,11 @@ export default class Navigator extends React.Component {
         >
             <Stack.Screen name="Login" component={LoginView} />
             <Stack.Screen name="Bottom Tabs" component={this.createBottomTabs}/>
+            <Stack.Screen name="Party View" component={PartyView}/>
         </Stack.Navigator>
     }
 
     createBottomTabs = (navigation) => {
-
         return <Tab.Navigator
             initialRouteName="Home"
             barStyle={{ backgroundColor: '#ff6347' }}
