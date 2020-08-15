@@ -1,7 +1,6 @@
 import React from 'react'
 import { NavigationContainer } from '@react-navigation/native'
 import { createStackNavigator } from '@react-navigation/stack'
-
 import { PartyView } from '../PartyView.js'
 import SetPartyView from '../SetPartyView.js'
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs'
@@ -14,39 +13,19 @@ import PartyTimeTab from '../../tabs/PartyTimeTab.js'
 import AddToPlaylistView from '../AddToPlaylistView.js'
 import { LoginView } from '../LogjnView.js'
 
-
 const Stack = createStackNavigator();
 const Tab = createMaterialBottomTabNavigator();
 
 export default class Navigator extends React.Component {
 
-    constructor(props) {
-        super(props);
-        this.state = {
-            invitedPartyId: ''
-        }
-    }
-
-    _handleUrl = (url) => {
-        const paramsArr = url.split("=");
-        if(paramsArr.length > 1) {
-          const invitedPartyId = paramsArr[paramsArr.length-1];
-          this.setState({
-              invitedPartyId: invitedPartyId
-            });
-          alert(`Invited to party ID: ${invitedPartyId} - handle redirection`);
-        }
-    };
-
-    createMainAppStack = () => {
-        console.log(this.state.invitedPartyId);
+    createMainAppStack = (navigation) => {
         return <Stack.Navigator
             screenOptions={{
                 gestureEnabled: false
             }}
             headerMode='none'
         >
-            <Stack.Screen name="Login" component={LoginView} initialParams={{invitedPartyId: this.state.invitedPartyId}}/>
+            <Stack.Screen name="Login" component={LoginView} />
             <Stack.Screen name="Bottom Tabs" component={this.createBottomTabs}/>
         </Stack.Navigator>
     }

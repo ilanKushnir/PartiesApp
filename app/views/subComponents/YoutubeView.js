@@ -35,8 +35,6 @@ export default class YoutubeView extends React.Component {
 
     render() {
 
-        console.log('render youtubeView');
-
         const html = `
             <!DOCTYPE html>
             <html>
