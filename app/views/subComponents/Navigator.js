@@ -1,20 +1,23 @@
 import React from 'react'
-import { NavigationContainer } from '@react-navigation/native'
-import { createStackNavigator } from '@react-navigation/stack'
-import { PartyView } from '../PartyView.js'
-import SetPartyView from '../SetPartyView.js'
-import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs'
-import { HomeTab } from '../../tabs/HomeTab.js'
-import TopPlaylistsTab from '../../tabs/TopPlaylistsTab.js'
-import HistoryTab from '../../tabs/HistoryTab.js'
-import { BackButtonHandler } from './AndroidBackHandler.js'
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
-import PartyTimeTab from '../../tabs/PartyTimeTab.js'
-import AddToPlaylistView from '../AddToPlaylistView.js'
-import { LoginView } from '../LogjnView.js'
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
+import { createDrawerNavigator } from '@react-navigation/drawer';
+import { PartyView } from '../PartyView.js';
+import SetPartyView from '../SetPartyView.js';
+import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
+import { HomeTab } from '../../tabs/HomeTab.js';
+import TopPlaylistsTab from '../../tabs/TopPlaylistsTab.js';
+import HistoryTab from '../../tabs/HistoryTab.js';
+import { BackButtonHandler } from './AndroidBackHandler.js';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import PartyTimeTab from '../../tabs/PartyTimeTab.js';
+import AddToPlaylistView from '../AddToPlaylistView.js';
+import { LoginView } from '../LogjnView.js';
+import { ParticipantsView } from '../ParticipantsView.js';
 
 const Stack = createStackNavigator();
 const Tab = createMaterialBottomTabNavigator();
+const Drawer = createDrawerNavigator();
 
 export default class Navigator extends React.Component {
 
@@ -26,8 +29,8 @@ export default class Navigator extends React.Component {
             headerMode='none'
         >
             <Stack.Screen name="Login" component={LoginView} />
-            <Stack.Screen name="Bottom Tabs" component={this.createBottomTabs}/>
-            <Stack.Screen name="Party View" component={PartyView}/>
+            <Stack.Screen name="Bottom Tabs" component={this.createBottomTabs} />
+            <Stack.Screen name="Party View" component={PartyView} />
         </Stack.Navigator>
     }
 
@@ -39,7 +42,7 @@ export default class Navigator extends React.Component {
             <Tab.Screen
                 name="Home Tab"
                 component={HomeTab}
-                initialParams={{username: navigation.route.params.username}}
+                initialParams={{ username: navigation.route.params.username }}
                 options={{
                     tabBarLabel: 'Home',
                     tabBarIcon: ({ color }) => (
@@ -90,23 +93,34 @@ export default class Navigator extends React.Component {
                 }}
                 headerMode='none'
             >
-                <Stack.Screen
-                    name="Party Time"
-                    component={PartyTimeTab}
-                />
-                <Stack.Screen
-                    name="Set Party"
-                    component={SetPartyView}
-                />
-                <Stack.Screen
-                    name="Party View"
-                    component={PartyView}
-                />
-                <Stack.Screen
-                    name="Add To Playlist"
-                    component={AddToPlaylistView}
-                />
+                <Stack.Screen name="Party Time" component={PartyTimeTab}/>
+                <Stack.Screen name="Set Party" component={SetPartyView}/>
+                <Stack.Screen name="Party Drawer" component={this.createPartyViewDrawer}/>
+                {/* <Stack.Screen name="Party View" component={PartyView}/>
+                <Stack.Screen name="Add To Playlist" component={AddToPlaylistView}/> */}
             </Stack.Navigator >
+        )
+    }
+
+    createPartyViewDrawer = () => {
+        return (
+            <Drawer.Navigator 
+                openByDefault
+                drawerPosition="right"
+                drawerType="slide"
+            >
+                <Drawer.Screen name="Party View Stack" component={this.createPartyViewStack} />
+                <Drawer.Screen name="Participants View" component={ParticipantsView} />
+            </Drawer.Navigator>
+        );
+    }
+
+    createPartyViewStack = () => {
+        return (
+            <Stack.Navigator>
+                <Stack.Screen name="Party View" component={PartyView}/>
+                <Stack.Screen name="Add To Playlist" component={AddToPlaylistView}/>
+            </Stack.Navigator>
         )
     }
 
