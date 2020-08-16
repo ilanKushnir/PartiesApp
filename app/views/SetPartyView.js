@@ -62,7 +62,7 @@ export default class SetPartyView extends React.Component {
                     });
                     
                     const partyId = response.id;
-                    this.props.navigation.navigate('Party View', {
+                    this.props.navigation.navigate('Party Drawer', {
                         userId,
                         partyId,
                         isHost: true,

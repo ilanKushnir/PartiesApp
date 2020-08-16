@@ -1,7 +1,7 @@
 import React from 'react'
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-import { createDrawerNavigator } from '@react-navigation/drawer';
+import { createDrawerNavigator, DrawerContentScrollView, DrawerItemList } from '@react-navigation/drawer';
 import { PartyView } from '../PartyView.js';
 import SetPartyView from '../SetPartyView.js';
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
@@ -85,7 +85,7 @@ export default class Navigator extends React.Component {
         </Tab.Navigator>
     }
 
-    createPartyTabStack = () => {
+    createPartyTabStack = (navigation) => {
         return (
             <Stack.Navigator
                 screenOptions={{
@@ -93,33 +93,53 @@ export default class Navigator extends React.Component {
                 }}
                 headerMode='none'
             >
-                <Stack.Screen name="Party Time" component={PartyTimeTab}/>
-                <Stack.Screen name="Set Party" component={SetPartyView}/>
-                <Stack.Screen name="Party Drawer" component={this.createPartyViewDrawer}/>
+                <Stack.Screen name="Party Time" component={PartyTimeTab} />
+                <Stack.Screen name="Set Party" component={SetPartyView} />
+                <Stack.Screen name="Party Drawer" component={this.createPartyViewDrawer}
+                />
                 {/* <Stack.Screen name="Party View" component={PartyView}/>
                 <Stack.Screen name="Add To Playlist" component={AddToPlaylistView}/> */}
             </Stack.Navigator >
         )
     }
 
-    createPartyViewDrawer = () => {
+    createPartyViewDrawer = (navigation) => {
         return (
-            <Drawer.Navigator 
-                openByDefault
-                drawerPosition="right"
-                drawerType="slide"
+            <Drawer.Navigator
+                drawerPosition="left"
+                drawerType="front"
+                drawerStyle={{ width: 160 }}
             >
-                <Drawer.Screen name="Party View Stack" component={this.createPartyViewStack} />
-                <Drawer.Screen name="Participants View" component={ParticipantsView} />
+                <Drawer.Screen name="Party View Stack" component={this.createPartyViewStack}
+                    initialParams={{
+                        userId: navigation.route.params.userId,
+                        partyId: navigation.route.params.partyId,
+                        isHost: navigation.route.params.isHost,
+                        playlist: navigation.route.params.playlist,
+                        isInvited: navigation.route.params.isInvited
+                    }}
+                    options={{ drawerLabel: 'Party' }}
+                />
+                <Drawer.Screen name="Participants View" component={ParticipantsView}
+                    options={{ drawerLabel: 'Participants' }}
+                />
             </Drawer.Navigator>
         );
     }
 
-    createPartyViewStack = () => {
+    createPartyViewStack = (navigation) => {
         return (
-            <Stack.Navigator>
-                <Stack.Screen name="Party View" component={PartyView}/>
-                <Stack.Screen name="Add To Playlist" component={AddToPlaylistView}/>
+            <Stack.Navigator headerMode='none'>
+                <Stack.Screen name="Party View" component={PartyView}
+                    initialParams={{
+                        userId: navigation.route.params.userId,
+                        partyId: navigation.route.params.partyId,
+                        isHost: navigation.route.params.isHost,
+                        playlist: navigation.route.params.playlist,
+                        isInvited: navigation.route.params.isInvited
+                    }}
+                />
+                <Stack.Screen name="Add To Playlist" component={AddToPlaylistView} />
             </Stack.Navigator>
         )
     }
@@ -129,7 +149,7 @@ export default class Navigator extends React.Component {
         return (
             <NavigationContainer>
                 {/* <BackButtonHandler/>  */}
-                {this.createPartyViewDrawer()}
+                {this.createMainAppStack()}
             </NavigationContainer>
         )
     }

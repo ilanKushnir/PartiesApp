@@ -12,7 +12,7 @@
     "@react-navigation/bottom-tabs": "^5.2.6",
     "@react-navigation/drawer": "^5.9.0",
     "@react-navigation/material-bottom-tabs": "^5.1.8",
-    "@react-navigation/native": "^5.1.5",
+    "@react-navigation/native": "^5.7.3",
     "@react-navigation/stack": "^5.2.10",
     "expo": "^37.0.7",
     "expo-linking": "^1.0.3",
