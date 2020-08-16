@@ -129,7 +129,7 @@ export default class Navigator extends React.Component {
         return (
             <NavigationContainer>
                 {/* <BackButtonHandler/>  */}
-                {this.createMainAppStack()}
+                {this.createPartyViewDrawer()}
             </NavigationContainer>
         )
     }
