@@ -209,7 +209,7 @@ ${redirectUrl}`,
                 <View style={{...styles.rowHeader, flex: 0.5, position: 'relative', top: 10}}>
                     <MaterialCommunityIcons 
                         onPress={() => this.props.navigation.openDrawer()}
-                        name="dots-horizontal"
+                        name="menu"
                         size={30}
                         color="#696969"
                     />
@@ -225,9 +225,9 @@ ${redirectUrl}`,
                     <Text style={styles.partyName}>{this.state.party.partyName}</Text>
                     <MaterialCommunityIcons 
                         onPress={this.onPressLeaveParty}
-                        color="#ff0000"
+                        name="logout"
                         size={30}
-                        name="account-arrow-right"
+                        color="#ff0000"
                     />
                     {/* <Button title="Leave" onPress={this.onPressLeaveParty} color="#ff0000" /> */}
                 </View>

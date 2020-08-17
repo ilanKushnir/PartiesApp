@@ -108,7 +108,7 @@ export default class Navigator extends React.Component {
             <Drawer.Navigator
                 drawerPosition="left"
                 drawerType="front"
-                drawerStyle={{ width: 160 }}
+                drawerStyle={{ width: 180 }}
             >
                 <Drawer.Screen name="Party View Stack" component={this.createPartyViewStack}
                     initialParams={{
@@ -118,10 +118,26 @@ export default class Navigator extends React.Component {
                         playlist: navigation.route.params.playlist,
                         isInvited: navigation.route.params.isInvited
                     }}
-                    options={{ drawerLabel: 'Party' }}
+                    options={{
+                        drawerLabel: 'Party',
+                        drawerIcon: ({ size }) => (
+                            <MaterialCommunityIcons
+                                name="music-box-outline"
+                                size={size}
+                            />
+                        )
+                    }}
                 />
                 <Drawer.Screen name="Participants View" component={ParticipantsView}
-                    options={{ drawerLabel: 'Participants' }}
+                    options={{
+                        drawerLabel: 'Participants',
+                        drawerIcon: ({ size }) => (
+                            <MaterialCommunityIcons
+                                name="account-multiple"
+                                size={size}
+                            />
+                        )
+                    }}
                 />
             </Drawer.Navigator>
         );
