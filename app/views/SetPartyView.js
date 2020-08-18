@@ -62,7 +62,7 @@ export default class SetPartyView extends React.Component {
                     });
                     
                     const partyId = response.id;
-                    this.props.navigation.navigate('Party View', {
+                    this.props.navigation.navigate('Party Drawer', {
                         userId,
                         partyId,
                         isHost: true,
@@ -120,7 +120,7 @@ export default class SetPartyView extends React.Component {
                     const userId = activeUsers[activeUsers.length - 1] + 1;
                     await db.collection('party').doc(partyId).update({ activeUsers: [...activeUsers, userId] });
                     Alert.alert(`Joining Party ${name}`);
-                    this.props.navigation.navigate('Party View', {
+                    this.props.navigation.navigate('Party Drawer', {
                         userId,
                         partyId,
                         isHost:false,

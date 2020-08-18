@@ -4,11 +4,11 @@ import { Text, View, Alert, TouchableOpacity, Button, Clipboard, Share } from 'r
 import TrackItem from './subComponents/TrackItem';
 import YoutubeView from './subComponents/YoutubeView';
 import firebase from '../../firebase';
-import { styles } from '../styles/styles.js'
-import { StackActions } from '@react-navigation/native'
-import Playlist from './subComponents/Playlist.js'
+import { styles } from '../styles/styles.js';
+import { StackActions } from '@react-navigation/native';
+import Playlist from './subComponents/Playlist.js';
 import * as Linking from 'expo-linking';
-
+import { MaterialCommunityIcons,Ionicons } from 'react-native-vector-icons';
 
 export class PartyView extends React.Component {
     static navigationOptions = {
@@ -205,13 +205,31 @@ ${redirectUrl}`,
     render() {
         return (
 
-            <View style={{ flex: 1 ,         backgroundColor: '#ECF0F1',}}>
+            <View style={{ flex: 1 , backgroundColor: '#ECF0F1',}}>
                 <View style={{...styles.rowHeader, flex: 0.5, position: 'relative', top: 10}}>
-                    <TouchableOpacity onPress={this.onIdPress}>
+                    <MaterialCommunityIcons 
+                        onPress={() => this.props.navigation.openDrawer()}
+                        name="menu"
+                        size={30}
+                        color="#696969"
+                    />
+                    <MaterialCommunityIcons 
+                        onPress={this.onIdPress}
+                        name="share-variant"
+                        size={25}
+                        color="#696969"
+                    />
+                    {/* <TouchableOpacity onPress={this.onIdPress}>
                         <Text style={styles.partyId}>{`ID: ${this.state.party.joinId}`}</Text>
-                    </TouchableOpacity>
+                    </TouchableOpacity> */}
                     <Text style={styles.partyName}>{this.state.party.partyName}</Text>
-                    <Button title="Leave" onPress={this.onPressLeaveParty} color="#ff0000" />
+                    <MaterialCommunityIcons 
+                        onPress={this.onPressLeaveParty}
+                        name="logout"
+                        size={30}
+                        color="#ff0000"
+                    />
+                    {/* <Button title="Leave" onPress={this.onPressLeaveParty} color="#ff0000" /> */}
                 </View>
 
                 <View style={{ flex:2.2, backgroundColor:'#000000'}}>
