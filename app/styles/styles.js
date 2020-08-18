@@ -31,9 +31,8 @@ export const styles = StyleSheet.create({
   row: {
     flexDirection: 'row',
     flex: 1,
-    justifyContent: 'center',
     alignItems: 'center',
-    justifyContent: 'space-evenly',
+    justifyContent: 'space-around',
   },
   rowHeader: {
     flexDirection: 'row',
