@@ -159,9 +159,12 @@ export class LoginView extends React.Component {
     }
 
     _handleUrl = (url) => {
-        const paramsArr = url.split("=");
+        const urlStr = (typeof(url) === 'object')? url.url : url;
+        console.log('invited FULL URL: ', urlStr);
+        const paramsArr = urlStr.split('=');
         if (paramsArr.length > 1) {
             const invitedPartyId = paramsArr[paramsArr.length - 1];
+            console.log('invited PARTY_ID: ', invitedPartyId);
             this.setState({
                 invitedPartyId: invitedPartyId
             });
@@ -174,6 +177,7 @@ export class LoginView extends React.Component {
     }
 
     async autoJoinInvitedParty(invitedPartyId) {
+        console.log('auto joining party by URL')
         const db = firebase.firestore();
         try {
             const response = await db.collection('party').where('joinId', '==', parseInt(invitedPartyId)).limit(1).get();
