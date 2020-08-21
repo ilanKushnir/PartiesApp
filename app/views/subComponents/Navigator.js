@@ -14,8 +14,8 @@ import { Ionicons } from '@expo/vector-icons';
 import PartyTimeTab from '../../tabs/PartyTimeTab.js';
 import AddToPlaylistView from '../AddToPlaylistView.js';
 import { LoginView } from '../LogjnView.js';
-import { ParticipantsView } from '../ParticipantsView.js';
 import { SettingsView } from '../SettingsView.js';
+import { ParticipantsView } from '../ParticipantsView.js';
 
 const Stack = createStackNavigator();
 const Tab = createMaterialBottomTabNavigator();
@@ -44,7 +44,7 @@ export default class Navigator extends React.Component {
             <Tab.Screen
                 name="Home Tab"
                 component={HomeTab}
-                initialParams={{ username: navigation.route.params.username }}
+                initialParams={{ loggedInUser: navigation.route.params.loggedInUser }}
                 options={{
                     tabBarLabel: 'Home',
                     tabBarIcon: ({ color }) => (
@@ -71,6 +71,7 @@ export default class Navigator extends React.Component {
             />
             <Tab.Screen
                 name="Party Time Tab"
+                initialParams={{ loggedInUser: navigation.route.params.loggedInUser }}
                 component={this.PartyTabStack}
                 options={{
                     tabBarLabel: 'Party Time',
@@ -96,7 +97,10 @@ export default class Navigator extends React.Component {
                 headerMode='none'
             >
                 <Stack.Screen name="Party Time" component={PartyTimeTab} />
-                <Stack.Screen name="Set Party" component={SetPartyView} />
+                <Stack.Screen name="Set Party"
+                    initialParams={{ loggedInUser: navigation.route.params.loggedInUser }}
+                    component={SetPartyView}
+                />
                 <Stack.Screen name="Party Drawer" component={this.PartyViewDrawer}
                 />
                 {/* <Stack.Screen name="Party View" component={PartyView}/>
@@ -114,11 +118,13 @@ export default class Navigator extends React.Component {
             >
                 <Drawer.Screen name="Party View Stack" component={this.PartyViewStack}
                     initialParams={{
+                        loggedInUser: navigation.route.params.loggedInUser,
                         userId: navigation.route.params.userId,
                         partyId: navigation.route.params.partyId,
                         isHost: navigation.route.params.isHost,
                         playlist: navigation.route.params.playlist,
-                        isInvited: navigation.route.params.isInvited
+                        isInvited: navigation.route.params.isInvited,
+
                     }}
                     options={{
                         drawerLabel: 'Party',
@@ -131,6 +137,11 @@ export default class Navigator extends React.Component {
                     }}
                 />
                 <Drawer.Screen name="Participants View" component={ParticipantsView}
+                    initialParams={{
+                        participants: navigation.route.params.participants,
+                        loggedInUser: navigation.route.params.loggedInUser,
+
+                    }}
                     options={{
                         drawerLabel: 'Participants',
                         drawerIcon: ({ size }) => (
@@ -165,7 +176,8 @@ export default class Navigator extends React.Component {
                         partyId: navigation.route.params.partyId,
                         isHost: navigation.route.params.isHost,
                         playlist: navigation.route.params.playlist,
-                        isInvited: navigation.route.params.isInvited
+                        isInvited: navigation.route.params.isInvited,
+                        loggedInUser: navigation.route.params.loggedInUser
                     }}
                 />
                 <Stack.Screen name="Add To Playlist" component={AddToPlaylistView} />

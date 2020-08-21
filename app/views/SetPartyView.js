@@ -1,18 +1,24 @@
 import React from 'react';
-import { StyleSheet, Text, View, TextInput, Alert, TouchableOpacity, Button, Keyboard} from 'react-native';
+import { StyleSheet, Text, View, TextInput, Alert, TouchableOpacity, Button, Keyboard } from 'react-native';
 import PartyView from './PartyView'
 import firebase from '../../firebase'
 import DB_TABLES from '../../assets/utils'
 import { styles } from '../styles/styles.js'
 import { StackActions } from '@react-navigation/native'
+import DropDownPicker from 'react-native-dropdown-picker';
+import Icon from 'react-native-vector-icons/Feather';
+
+const userPermissions = { HOST: 'HOST',DJ: 'DJ', GUEST: 'GUEST' };
+
 
 export default class SetPartyView extends React.Component {
     constructor(props) {
         super(props)
-        this.state = { 
+        this.state = {
             isNewParty: props.route.params.isNewParty,
-            inputValue: ''
-         }
+            inputValue: '',
+            loggedInUser: props.route.params.loggedInUser
+        }
     }
 
     getPlaylistId = async (playlist) => {
@@ -23,30 +29,33 @@ export default class SetPartyView extends React.Component {
     getAttributes = (isNewParty) => {
         const db = firebase.firestore();
         let message, inputPlaceholder, buttonText, handleSetParty;
-        if(isNewParty){
+        if (isNewParty) {
             [message, inputPlaceholder, buttonText] = [
-                'Please enter a name for your party', 
-                'Party name', 
+                'Please enter a name for your party',
+                'Party name',
                 'Start new party'
             ];
             handleSetParty = async (partyName) => {
                 try {
                     const lastCreatedParty = await db.collection('party').orderBy('creationTime', 'desc').limit(1).get();
                     let joinId;
-                    if(lastCreatedParty.docs[0]) {
+                    if (lastCreatedParty.docs[0]) {
                         const partyData = lastCreatedParty.docs[0].data();
                         joinId = partyData.joinId;
                         joinId++;
                     } else {
                         joinId = 100;
                     }
-                    const userId = 1;
-
                     const playlistResponse = await db.collection('playlist').add({
                         tracks: []
                     });
-                    const { id:playlistId } = playlistResponse;
+                    const { id: playlistId } = playlistResponse;
                     const playlist = await db.doc(`/playlist/${playlistId}`);   // playlist Reference on DB
+
+                    const loggedInUser = this.state.loggedInUser;
+                    loggedInUser.permission = userPermissions.HOST;
+                    
+                    const participants = [ loggedInUser ];
 
                     const currentTime = new Date();
                     const response = await db.collection('party').add({
@@ -58,22 +67,23 @@ export default class SetPartyView extends React.Component {
                         activeVideoId: '',
                         currentTime: 0,
                         lastUpdatedTime: currentTime,
-                        activeUsers: [ userId ]
+                        participants
                     });
-                    
+
                     const partyId = response.id;
                     this.props.navigation.navigate('Party Drawer', {
-                        userId,
                         partyId,
                         isHost: true,
                         playlist: playlistId,
-                        isInvited: false
+                        isInvited: false,
+                        participants,
+                        loggedInUser
                     });
-                    } catch(error) {
-                        console.log(`Error starting new party ${error}`);
-                        Alert.alert(`Error starting new party`);
-                    }
-                };
+                } catch (error) {
+                    console.log(`Error starting new party ${error}`);
+                    Alert.alert(`Error starting new party`);
+                }
+            };
         } else {    // join to existing party
             [message, inputPlaceholder, buttonText] = [
                 'Please enter Party ID',
@@ -82,50 +92,26 @@ export default class SetPartyView extends React.Component {
             ];
             handleSetParty = async (joinId) => {
                 try {
-                    /////// TRANSACTION USE
-                    // const response = await db.collection('party').where('joinId', '==', parseInt(joinId)).limit(1);
-                    // // const partyRef = response.docs[0];
-                    // let name, activeUsers, playlist, userId;
-
-                    // const transaction = db.runTransaction(transaction => {
-                    //     return transaction.get(response)
-                    //       .then(party => {
-                    //         const partyId = party.id
-                    //         const data = party.data();
-                    //         name = data.name;
-                    //         activeUsers = data.activeUsers;
-                    //         playlist = data.activeVideoId;
-                            
-                    //         userId = activeUsers[activeUsers.length - 1] + 1;
-                    //         transaction.update(partyRef, { activeUsers: [...activeUsers, userId] });
-                    //       });
-                    //   }).then(result => {
-                    //     Alert.alert(`Connected to Party ${name} succesfully`);
-                    //     this.props.navigation.navigate('Party View', {
-                    //         userId,
-                    //         partyId,
-                    //         isHost:false,
-                    //         playlist
-                    //     });
-                    //     console.log('Transaction success!');
-                    //   })
-
                     const response = await db.collection('party').where('joinId', '==', parseInt(joinId)).limit(1).get();
                     const party = response.docs[0];
                     const partyId = party.id
                     const data = party.data();
-                    const { name, activeUsers, playlist, lastUpdatedTime } = data;
+                    const { name, participants, playlist, lastUpdatedTime } = data;
                     const playlistId = await this.getPlaylistId(playlist);
-                    
-                    const userId = activeUsers[activeUsers.length - 1] + 1;
-                    await db.collection('party').doc(partyId).update({ activeUsers: [...activeUsers, userId] });
+
+                    const loggedInUser = this.state.loggedInUser;
+                    loggedInUser.permission = userPermissions.DJ;       /////////////// determined by party mode
+
+                    participants.push(loggedInUser)
+                    await db.collection('party').doc(partyId).update({participants});
                     Alert.alert(`Joining Party ${name}`);
                     this.props.navigation.navigate('Party Drawer', {
-                        userId,
                         partyId,
-                        isHost:false,
+                        isHost: false,
                         playlist: playlistId,
-                        isInvited: false
+                        isInvited: false,
+                        participants,
+                        loggedInUser
                     });
                 } catch (e) {
                     console.log('Error join existing party', e)
@@ -140,21 +126,47 @@ export default class SetPartyView extends React.Component {
         return (
             <View style={styles.center}>
                 <Text style={styles.title}>{message}</Text>
-                <TextInput style={styles.input} placeholder={inputPlaceholder} 
-                            onChangeText={inputValue => this.setState({inputValue})}>
+                <TextInput style={styles.input} placeholder={inputPlaceholder}
+                    onChangeText={inputValue => this.setState({ inputValue })}>
                 </TextInput>
-                <Button
-                    onPress={() => {
-                        Keyboard.dismiss();
-                        handleSetParty(this.state.inputValue);
-                    }}
-                    title={buttonText}
-                ></Button>
-                <Button
-                    onPress={() => this.props.navigation.dispatch(StackActions.popToTop())}
-                    title="Cancel"
-                    color="#d2691e"
-                ></Button>
+
+                <View>
+                    <Button
+                        style={{ marginBottom: 30 }}
+                        disabled={this.state.isNewParty && this.state.partyMode === undefined}
+                        onPress={() => {
+                            Keyboard.dismiss();
+                            handleSetParty(this.state.inputValue);
+                        }}
+                        title={buttonText}
+                    ></Button>
+                    <Button
+                        onPress={() => this.props.navigation.dispatch(StackActions.popToTop())}
+                        title="Cancel"
+                        color="#d2691e"
+                    ></Button>
+                </View>
+                {this.state.isNewParty &&
+                    <View >
+                        <DropDownPicker
+                            items={[
+                                { label: 'View Only', value: 'viewOnly', icon: () => <Icon name="music" size={18} color="#900" /> },
+                                { label: 'Friendly', value: 'friendly', icon: () => <Icon name="music" size={18} color="#900" /> },
+                            ]}
+                            placeholder="Select Party Mode "
+
+                            containerStyle={{ height: 40, width: 180, marginTop: 10, marginBottom: 10 }}
+                            style={{ backgroundColor: '#fafafa' }}
+                            itemStyle={{
+                                justifyContent: 'flex-start',
+                            }}
+                            dropDownStyle={{ backgroundColor: '#fafafa' }}
+                            onChangeItem={item => {
+                                this.setState({ partyMode: item.value });
+                                console.log(item.value);
+                            }} />
+                    </View>
+                }
             </View>
         );
     }

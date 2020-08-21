@@ -1,31 +1,55 @@
 import React from 'react';
-import { View, Text } from 'react-native';
+import { FlatList, SafeAreaView, StatusBar, StyleSheet, Text, TouchableOpacity } from "react-native";
+import { slide as Menu } from 'react-burger-menu'
+import { Button } from 'react-native-paper';
+import { View } from 'react-native';
 import { styles } from '../styles/styles.js'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
+
 export class ParticipantsView extends React.Component {
+    constructor(props) {
+        super(props);
+        console.log(this.props.route.params.participants);
+    }
 
-  render() {
-    return (
-      <View style={{ flex: 1 }}>
-        <View style={styles.row}>
-          <View style={{ position: 'relative', left: 10 }} >
-            <MaterialCommunityIcons
-              onPress={() => this.props.navigation.openDrawer()}
-              name="menu"
-              size={30}
-              color="#696969"
-            />
-          </View>
-          <View style={{ ...styles.center }}>
-            <Text style={styles.title}>Participants</Text>
-          </View>
-        </View>
-        <View style={{ ...styles.center, flex: 4 }}>
-          <Text>Participants</Text>
-        </View>
-      </View>
-    )
-  }
+    changePermission(participantName, newPermission) {
+    }
+
+    renderParticipantItem = ({ item }) => {
+        console.log('render psrticipant', item);
+        return (
+            <View>
+                <View style={{ flexDirection: 'row' }}>
+                    <Text>{item.name} </Text>
+                </View>
+                {/* <Menu
+                    customCrossIcon={
+                        <MaterialCommunityIcons
+                            name="menu"
+                            size={30}
+                            color="#ff4d4d"
+                        >
+                        </MaterialCommunityIcons>
+                    }>
+                    <Button disabled={item.Permission === 'Host'} onPress={this.changePermission(item.name, 'Host')} id="makeHost" Text={'Make Host'} />
+                    <Button disabled={item.Permission === 'DJ'} onPress={this.changePermission(item.name, 'DJ')} id="makeDJ" Text={'Make DJ'} />
+                    <Button disabled={item.Permission === 'Guest'} onPress={this.changePermission(item.name, 'Guest')} id="makeGuest" Text={'Make Guest'} />
+                </Menu> */}
+            </View>
+
+        );
+    };
+
+    render() {
+        return (
+            <SafeAreaView>
+                <FlatList
+                    data={this.props.route.params.participants}
+                    renderItem={this.renderParticipantItem}
+                    keyExtractor={(item) => item.id}
+                />
+            </SafeAreaView>
+        );
+    }
 }
-

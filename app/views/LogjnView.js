@@ -20,7 +20,7 @@ export class LoginView extends React.Component {
 
     componentDidMount = async () => {
         try {
-            const url = await Linking.getInitialURL()
+            const url = await Linking.getInitialURL();
             if (url) {
                 this._handleUrl(url);
             }
@@ -42,10 +42,11 @@ export class LoginView extends React.Component {
                 console.log('succeded login to ', userName);
                 Alert.alert('Success login recent user', userName);
                 
-                this.props.navigation.navigate("Bottom Tabs", { username: userName });
+                const loggedInUser = { name: userName, id: userID };
                 if (this.state.invitedPartyId) {
-                    this.autoJoinInvitedParty(this.state.invitedPartyId);
+                    this.autoJoinInvitedParty(this.state.invitedPartyId, loggedInUser);
                 }
+                this.props.navigation.navigate("Bottom Tabs", { loggedInUser });
             }
         }
     }
@@ -102,10 +103,11 @@ export class LoginView extends React.Component {
             }
 
             await this.saveLoginToDevice(id);
-            this.props.navigation.navigate("Bottom Tabs", { username: userName });
+            const loggedInUser = { name: userName, id};
             if (this.state.invitedPartyId) {
-                this.autoJoinInvitedParty(this.state.invitedPartyId);
+                this.autoJoinInvitedParty(this.state.invitedPartyId, loggedInUser);
             }
+            this.props.navigation.navigate("Bottom Tabs", { loggedInUser });
         } catch (error) {
             console.log('Error login in to ', userName);
             Alert.alert(`Error login in to ${userName}`);
@@ -140,10 +142,11 @@ export class LoginView extends React.Component {
                 }
 
                 await this.saveLoginToDevice(googleID);
-                this.props.navigation.navigate("Bottom Tabs", { username: userName });
+                const loggedInUser = { name: userName, id: googleID }
                 if (this.state.invitedPartyId) {
-                    this.autoJoinInvitedParty(this.state.invitedPartyId);
+                    this.autoJoinInvitedParty(this.state.invitedPartyId, loggedInUser);
                 }
+                this.props.navigation.navigate("Bottom Tabs", { loggedInUser });
             } else {
                 throw new Error();
             }
@@ -176,26 +179,28 @@ export class LoginView extends React.Component {
         return playlistResponse.id;
     }
 
-    async autoJoinInvitedParty(invitedPartyId) {
-        console.log('auto joining party by URL')
+    async autoJoinInvitedParty(invitedPartyId, loggedInUser) {
         const db = firebase.firestore();
         try {
             const response = await db.collection('party').where('joinId', '==', parseInt(invitedPartyId)).limit(1).get();
             const party = response.docs[0];
             const partyId = party.id
             const data = party.data();
-            const { activeUsers, playlist, name } = data;
+            const { participants, playlist, name } = data;
             const playlistId = await this.getPlaylistId(playlist);
-            const userId = activeUsers[activeUsers.length - 1] + 1;
+            // const userId = participants[participants.length - 1] + 1;
+            participants.push(loggedInUser);
             Alert.alert(`Joining Party ${name}`);
-            await db.collection('party').doc(partyId).update({ activeUsers: [...activeUsers, userId] });
+            await db.collection('party').doc(partyId).update({ participants});
             
             this.props.navigation.navigate('Party View', {
                 partyId: partyId,
                 isHost: false,
                 userId,
                 playlist: playlistId,
-                isInvited: true
+                isInvited: true,
+                participants,
+                loggedInUser
             });
         }
         catch (e) {
