@@ -162,9 +162,12 @@ export class LoginView extends React.Component {
     }
 
     _handleUrl = (url) => {
-        const paramsArr = url.split("=");
+        const urlStr = (typeof(url) === 'object')? url.url : url;
+        console.log('invited FULL URL: ', urlStr);
+        const paramsArr = urlStr.split('=');
         if (paramsArr.length > 1) {
             const invitedPartyId = paramsArr[paramsArr.length - 1];
+            console.log('invited PARTY_ID: ', invitedPartyId);
             this.setState({
                 invitedPartyId: invitedPartyId
             });

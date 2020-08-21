@@ -30,7 +30,7 @@ export default class AddToPlaylistView extends React.Component {
         try {
             var searchString = this.state.searchValue.split(' ').join('+');
             // fetch videos from youtube
-            const response = await fetch(`https://www.googleapis.com/youtube/v3/search?part=snippet&q=${this.state.searchValue}&type=video&key=AIzaSyBA1MCrElZzexam8ythKLd4TvkhVYtxbos`)
+            const response = await fetch(`https://www.googleapis.com/youtube/v3/search?part=snippet&q=${this.state.searchValue}&type=video&videoLicense=creativeCommon&key=AIzaSyBA1MCrElZzexam8ythKLd4TvkhVYtxbos`)
             const responseJson = await response.json()
             // console.log(responseJson)
             this.setState({
