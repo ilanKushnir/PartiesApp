@@ -4,12 +4,14 @@ import { Text, View, Alert, TouchableOpacity, Button, Clipboard, Share } from 'r
 import TrackItem from './subComponents/TrackItem';
 import YoutubeView from './subComponents/YoutubeView';
 import firebase from '../../firebase';
-import { styles } from '../styles/styles.js'
-import { StackActions } from '@react-navigation/native'
-import Playlist from './subComponents/Playlist.js'
-import Player from './subComponents/Player.js'
+import { styles } from '../styles/styles.js';
+import { StackActions } from '@react-navigation/native';
+import Playlist from './subComponents/Playlist.js';
 import * as Linking from 'expo-linking';
 import { IconButton } from 'react-native-paper';
+import { MaterialCommunityIcons, Ionicons } from 'react-native-vector-icons';
+
+const userPermissions = { HOST: 'HOST',DJ: 'DJ', GUEST: 'GUEST' };
 
 
 export class PartyView extends React.Component {
@@ -34,7 +36,8 @@ export class PartyView extends React.Component {
             },
             userId: props.route.params.userId,
             isHost: props.route.params.isHost,
-            isActionMaker: false
+            isInvited: props.route.params.isInvited,
+            loggedInUser: props.route.params.loggedInUser
         };
         this.loadVideoToPlayer = this.loadVideoToPlayer.bind(this);
         this.db = firebase.firestore();
@@ -69,8 +72,6 @@ export class PartyView extends React.Component {
                         currentTime
                     }
                 });
-
-                this.updateHost(data.activeUsers);
             })
 
             // TODO - when distructing component --> call DBbindingResponse() to unbind it from DB
@@ -80,14 +81,22 @@ export class PartyView extends React.Component {
         }
     }
 
-    updateHost = (activeUsers) => {
-        const isHost = activeUsers[0] === this.state.userId;
-        if (isHost && !this.state.isHost) {
-            Alert.alert(`You are now ${this.state.party.partyName} host!`)
+    updateHost = (participants) => {
+        const hosts = participants.filter(user => user.permission === userPermissions.HOST);
+        if(hosts.length) return participants;
+
+        if(this.state.loggedInUser.permission === userPermissions.HOST) {
+            for(let i = 0; i < participants.length; i++) {
+                if(participants[i].permission === userPermissions.DJ) {
+                    participants[i].permission = userPermissions.HOST;
+                    return participants
+                }
+            }
+
+            participants[0].permission = userPermissions.HOST;
         }
-        this.setState({
-            isHost
-        })
+        
+        return participants;
     }
 
     async componentDidMount() {
@@ -136,23 +145,6 @@ export class PartyView extends React.Component {
         }
     }
 
-    // onPressPlayPause = async () => {
-    //     try {
-    //         const newCondition = this.state.party.condition === 'play' ? 'pause' : 'play';
-    //         this.setState({
-    //             isActionMaker: true
-    //         });
-
-    //         await this.db.collection('party').doc(this.state.partyId).update({
-    //             condition: newCondition,
-    //             lastUpdatedTime: new Date()
-    //         });
-    //     }
-    //     catch (error) {
-    //         console.log(error);
-    //     }
-    // }
-
     onPressLeaveParty = () => {
         Alert.alert(
             'Leaving so soon?',
@@ -171,19 +163,25 @@ export class PartyView extends React.Component {
     }
 
     leaveParty = async () => {
-        this.props.navigation.dispatch(StackActions.popToTop());
+        if (this.state.isInvited) {
+            this.props.navigation.dispatch(StackActions.pop());
+        } else {
+            this.props.navigation.dispatch(StackActions.popToTop());
+        }
 
         try {
             const party = await this.db.collection('party').doc(this.state.partyId).get();
-            let { activeUsers } = party.data();
+            let { participants } = party.data();
 
             this.dbbindingResponse();           // unbind party changes from DB for this component
-            if (activeUsers.length === 1) {     // if last user - delete party
+            if (participants.length === 1) {     // if last user - delete party
                 const response = await this.db.collection('party').doc(this.state.partyId).delete();
                 Alert.alert(`Party ${this.state.party.partyName} is closed for no active users`);
             } else {    // update active users
-                activeUsers = activeUsers.filter(userId => userId !== this.state.userId);
-                await this.db.collection('party').doc(this.state.partyId).update({ activeUsers });
+                participants = participants.filter(user => user.id !== this.state.loggedInUser.id);
+                participants = this.updateHost(participants);
+
+                await this.db.collection('party').doc(this.state.partyId).update({ participants });
             }
         } catch (error) {
             console.log(`Error on leave party ${error}`);
@@ -217,27 +215,40 @@ ${redirectUrl}`,
         }
     };
 
-    // onIdPress = () => {
-    //     Clipboard.setString(`${this.state.party.joinId}`);
-    //     Alert.alert("Party ID copied to clipboard");
-    // }
-
     render() {
         return (
 
-            <View style={{ flex: 1 ,         backgroundColor: '#ECF0F1',}}>
-                <View style={{...styles.rowHeader, flex: 0.5, position: 'relative', top: 10}}>
-                   <IconButton  
-                   icon='share-variant'
-                   onPress={this.onIdPress}
-                   />
-                   
+            <View style={{ flex: 1, backgroundColor: '#ECF0F1', }}>
+                <View style={{ ...styles.rowHeader, flex: 0.5, position: 'relative', top: 10 }}>
+
+                    <MaterialCommunityIcons
+                        onPress={() => this.props.navigation.openDrawer()}
+                        name="menu"
+                        size={30}
+                        color="#696969"
+                    />
+                    <MaterialCommunityIcons
+                        onPress={this.onIdPress}
+                        name="share-variant"
+                        size={25}
+                        color="#696969"
+                    />
+                    {/* <TouchableOpacity onPress={this.onIdPress}>
+                        <Text style={styles.partyId}>{`ID: ${this.state.party.joinId}`}</Text>
+                    </TouchableOpacity> */}
+
                     <Text style={styles.partyName}>{this.state.party.partyName}</Text>
-                    <Button title="Leave" onPress={this.onPressLeaveParty} color="#ff0000" />
+                    <MaterialCommunityIcons
+                        onPress={this.onPressLeaveParty}
+                        name="logout"
+                        size={30}
+                        color="#ff0000"
+                    />
+                    {/* <Button title="Leave" onPress={this.onPressLeaveParty} color="#ff0000" /> */}
                 </View>
 
-                <View style={{ flex:2.2, backgroundColor:'#000000'}}>
-                    <YoutubeView style={{ backgroundColor:'#000000'}}
+                <View style={{ flex: 2.2, backgroundColor: '#000000' }}>
+                    <YoutubeView style={{ backgroundColor: '#000000' }}
                         activeVideo={this.state.activeVideo}
                         condition={this.state.party.condition}
                         isHost={this.state.isHost}
@@ -248,7 +259,7 @@ ${redirectUrl}`,
                         loadPrevVideoToPlayer={this.loadPrevVideoToPlayer}
                     />
                 </View>
-                <View style={{ flex: 2}}>
+                <View style={{ flex: 2 }}>
                     <Playlist
                         ref={ref => this.playlistChildComponent = ref}
                         playlist={this.state.party.playlist}

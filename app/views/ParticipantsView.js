@@ -2,22 +2,28 @@ import React from 'react';
 import { FlatList, SafeAreaView, StatusBar, StyleSheet, Text, TouchableOpacity } from "react-native";
 import { slide as Menu } from 'react-burger-menu'
 import { Button } from 'react-native-paper';
+import { View } from 'react-native';
+import { styles } from '../styles/styles.js'
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
-export default class ParticipantsView extends React.Component {
+
+export class ParticipantsView extends React.Component {
     constructor(props) {
         super(props);
+        console.log(this.props.route.params.participants);
     }
-
 
     changePermission(participantName, newPermission) {
-        this.props.participants;
     }
 
-    renderParticipantItem = ({ participantItem }) => {
+    renderParticipantItem = ({ item }) => {
+        console.log('render psrticipant', item);
         return (
             <View>
-                <View Text={participantItem.name} style={{ flexDirection: 'row' }}> </View>
-                <Menu
+                <View style={{ flexDirection: 'row' }}>
+                    <Text>{item.name} </Text>
+                </View>
+                {/* <Menu
                     customCrossIcon={
                         <MaterialCommunityIcons
                             name="menu"
@@ -26,10 +32,10 @@ export default class ParticipantsView extends React.Component {
                         >
                         </MaterialCommunityIcons>
                     }>
-                    <Button disabled={participantItem.Permission === 'Host'} onPress={this.changePermission(participantItem.name, 'Host')} id="makeHost" Text={'Make Host'} />
-                    <Button disabled={participantItem.Permission === 'DJ'} onPress={this.changePermission(participantItem.name, 'DJ')} id="makeDJ" Text={'Make DJ'} />
-                    <Button disabled={participantItem.Permission === 'Guest'} onPress={this.changePermission(participantItem.name, 'Guest')} id="makeGuest" Text={'Make Guest'} />
-                </Menu>
+                    <Button disabled={item.Permission === 'Host'} onPress={this.changePermission(item.name, 'Host')} id="makeHost" Text={'Make Host'} />
+                    <Button disabled={item.Permission === 'DJ'} onPress={this.changePermission(item.name, 'DJ')} id="makeDJ" Text={'Make DJ'} />
+                    <Button disabled={item.Permission === 'Guest'} onPress={this.changePermission(item.name, 'Guest')} id="makeGuest" Text={'Make Guest'} />
+                </Menu> */}
             </View>
 
         );
@@ -39,10 +45,9 @@ export default class ParticipantsView extends React.Component {
         return (
             <SafeAreaView>
                 <FlatList
-                    data={this.props.participants}
-                    renderItem={renderParticipantItem}
+                    data={this.props.route.params.participants}
+                    renderItem={this.renderParticipantItem}
                     keyExtractor={(item) => item.id}
-                    extraData={selectedId}
                 />
             </SafeAreaView>
         );
