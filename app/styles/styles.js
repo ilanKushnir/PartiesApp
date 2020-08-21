@@ -11,8 +11,9 @@ export const styles = StyleSheet.create({
     marginBottom: 16
   },
   partyId: {
-    fontSize: 17,
-    padding: 10
+    height: 25,
+    // fontSize: 20,
+    // padding: 10
   },
   partyName: {
     fontSize: 25,
@@ -40,7 +41,7 @@ export const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'space-between',
-    marginHorizontal: 10
+    marginHorizontal: 10,
   },
   rowPlayer: {
     flexDirection: 'row',

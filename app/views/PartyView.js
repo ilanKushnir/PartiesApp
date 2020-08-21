@@ -9,6 +9,7 @@ import { StackActions } from '@react-navigation/native'
 import Playlist from './subComponents/Playlist.js'
 import Player from './subComponents/Player.js'
 import * as Linking from 'expo-linking';
+import { IconButton } from 'react-native-paper';
 
 
 export class PartyView extends React.Component {
@@ -226,9 +227,11 @@ ${redirectUrl}`,
 
             <View style={{ flex: 1 ,         backgroundColor: '#ECF0F1',}}>
                 <View style={{...styles.rowHeader, flex: 0.5, position: 'relative', top: 10}}>
-                    <TouchableOpacity onPress={this.onIdPress}>
-                        <Text style={styles.partyId}>{`ID: ${this.state.party.joinId}`}</Text>
-                    </TouchableOpacity>
+                   <IconButton  
+                   icon='share-variant'
+                   onPress={this.onIdPress}
+                   />
+                   
                     <Text style={styles.partyName}>{this.state.party.partyName}</Text>
                     <Button title="Leave" onPress={this.onPressLeaveParty} color="#ff0000" />
                 </View>
