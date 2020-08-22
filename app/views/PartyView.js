@@ -10,9 +10,7 @@ import Playlist from './subComponents/Playlist.js';
 import * as Linking from 'expo-linking';
 import { IconButton } from 'react-native-paper';
 import { MaterialCommunityIcons, Ionicons } from 'react-native-vector-icons';
-
-const userPermissions = { HOST: 'HOST',DJ: 'DJ', GUEST: 'GUEST' };
-
+import { DB_TABLES, USER_PERMISSION } from '../../assets/utils'; 
 
 export class PartyView extends React.Component {
     static navigationOptions = {
@@ -29,6 +27,7 @@ export class PartyView extends React.Component {
             },
             partyId: props.route.params.partyId,
             party: {
+                participants: props.route.params.participants,
                 joinId: '',
                 partyName: '',
                 condition: '',
@@ -53,16 +52,19 @@ export class PartyView extends React.Component {
 
     bindPartyChangesFromDB = async () => {
         try {
-            this.dbbindingResponse = await this.db.collection('party').doc(this.state.partyId).onSnapshot(snapshot => {
+            this.dbbindingResponse = await this.db.collection(DB_TABLES.PARTY).doc(this.state.partyId).onSnapshot(snapshot => {
                 const data = snapshot.data();
-                const { joinId, name: partyName, condition, playlist, activeVideoId: id } = data;
+                const { joinId, name: partyName, condition, playlist, activeVideoId: id, participants } = data;
 
                 // If party is playing - fix deviation from last updated to current time
                 const currentTime = condition === 'play' ?
                     this.fixCurrentTimeDeviation(data.currentTime, data.lastUpdatedTime) : data.currentTime;
+                const loggedInUser = this.handleLoggedInUser(participants);
 
                 this.setState({
+                    loggedInUser,
                     party: {
+                        participants,
                         joinId,
                         partyName,
                         condition,
@@ -74,29 +76,57 @@ export class PartyView extends React.Component {
                     }
                 });
             })
-
-            // TODO - when distructing component --> call DBbindingResponse() to unbind it from DB
         } catch (error) {
             console.log('bindParty changes From DB error', error)
             Alert.alert(`Error getting updates from party #${this.state.party.joinId}`);
         }
     }
 
-    updateHost = (participants) => {
-        const hosts = participants.filter(user => user.permission === userPermissions.HOST);
-        if(hosts.length) return participants;
+    handleLoggedInUser = participants => {
+        const user = this.state.loggedInUser.id ? this.state.loggedInUser : this.state.loggedInUser[0];
+        const { id, permission: oldPermission } = user;        
+        const myUserOnDB = participants.find(user => user.id === id);
 
-        if(this.state.loggedInUser.permission === userPermissions.HOST) {
-            for(let i = 0; i < participants.length; i++) {
-                if(participants[i].permission === userPermissions.DJ) {
-                    participants[i].permission = userPermissions.HOST;
-                    return participants;
+        if (participants.length && !myUserOnDB) {  // loggedInUser has been kicked
+            if (this.state.isInvited) {
+                this.props.navigation.dispatch(StackActions.pop());
+            } else {
+                this.props.navigation.dispatch(StackActions.popToTop());
+            }
+            Alert.alert(`You have been kicked from party ${this.state.party.partyName}. It has been a pleasure`)
+
+            return;
+        }
+
+        const { permission: newPermission } = myUserOnDB;
+
+        if (oldPermission !== newPermission) {
+            const downgraded =
+                (oldPermission === USER_PERMISSION.HOST) ||
+                (oldPermission === USER_PERMISSION.DJ && newPermission === USER_PERMISSION.GUEST);
+
+            const updateCase = downgraded ? 'downgraded' : 'promoted';
+            Alert.alert(`You have been ${updateCase} to ${newPermission}`);
+        }
+
+        return myUserOnDB || user;
+    }
+
+    updateHost = participants => {
+        const hosts = participants.filter(user => user.permission === USER_PERMISSION.HOST);
+        if (hosts.length) return participants;
+
+        if (this.state.loggedInUser.permission === USER_PERMISSION.HOST) {
+            for (let i = 0; i < participants.length; i++) {
+                if (participants[i].permission === USER_PERMISSION.DJ) {
+                    participants[i].permission = USER_PERMISSION.HOST;
+                    return participants
                 }
             }
 
-            participants[0].permission = userPermissions.HOST;
+            participants[0].permission = USER_PERMISSION.HOST;
         }
-        
+
         return participants;
     }
 
@@ -118,12 +148,12 @@ export class PartyView extends React.Component {
     }
 
     loadVideoToPlayer = async (videoId) => {
-        await this.db.collection('party').doc(this.state.partyId).update({ activeVideoId: videoId, currentTime: 0 });
+        await this.db.collection(DB_TABLES.PARTY).doc(this.state.partyId).update({ activeVideoId: videoId, currentTime: 0 });
     }
 
     updatePausedAndCurrentTimeInDB = async (currentTime) => {
         try {
-            await this.db.collection('party').doc(this.state.partyId).update({
+            await this.db.collection(DB_TABLES.PARTY).doc(this.state.partyId).update({
                 currentTime: currentTime,
                 condition: 'pause',
                 lastUpdatedTime: new Date()
@@ -136,7 +166,7 @@ export class PartyView extends React.Component {
 
     updatePlayedInDB = async () => {
         try {
-            await this.db.collection('party').doc(this.state.partyId).update({
+            await this.db.collection(DB_TABLES.PARTY).doc(this.state.partyId).update({
                 condition: 'play',
                 lastUpdatedTime: new Date()
             });
@@ -171,18 +201,18 @@ export class PartyView extends React.Component {
         }
 
         try {
-            const party = await this.db.collection('party').doc(this.state.partyId).get();
+            const party = await this.db.collection(DB_TABLES.PARTY).doc(this.state.partyId).get();
             let { participants } = party.data();
 
             this.dbbindingResponse();           // unbind party changes from DB for this component
             if (participants.length === 1) {     // if last user - delete party
-                const response = await this.db.collection('party').doc(this.state.partyId).delete();
+                const response = await this.db.collection(DB_TABLES.PARTY).doc(this.state.partyId).delete();
                 Alert.alert(`Party ${this.state.party.partyName} is closed for no active users`);
             } else {    // update active users
                 participants = participants.filter(user => user.id !== this.state.loggedInUser.id);
                 participants = this.updateHost(participants);
 
-                await this.db.collection('party').doc(this.state.partyId).update({ participants });
+                await this.db.collection(DB_TABLES.PARTY).doc(this.state.partyId).update({ participants });
             }
         } catch (error) {
             console.log(`Error on leave party ${error}`);

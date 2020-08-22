@@ -6,7 +6,7 @@ import { PartyView } from '../PartyView.js';
 import SetPartyView from '../SetPartyView.js';
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
 import { HomeTab } from '../../tabs/HomeTab.js';
-import TopPlaylistsTab from '../../tabs/TopPlaylistsTab.js';
+import { PublicPartiesTab } from '../../tabs/PublicPartiesTab.js';
 import HistoryTab from '../../tabs/HistoryTab.js';
 import { BackButtonHandler } from './AndroidBackHandler.js';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -30,13 +30,15 @@ export default class Navigator extends React.Component {
             }}
             headerMode='none'
         >
-            <Stack.Screen name="Login" component={LoginView} />
+            <Stack.Screen name="Login" component={LoginView} 
+                initialParams={{ logout: navigation?.route?.params?.logout || false}}
+            />
             <Stack.Screen name="Bottom Tabs" component={this.BottomTabs} />
             <Stack.Screen name="Party View" component={PartyView} />
         </Stack.Navigator>
     }
 
-    BottomTabs = (navigation) => {
+    BottomTabs = (navigation) => {        
         return <Tab.Navigator
             initialRouteName="Home"
             barStyle={{ backgroundColor: '#ff6347' }}
@@ -52,10 +54,10 @@ export default class Navigator extends React.Component {
                 }}
             />
             <Tab.Screen
-                name="Top Playlists Tab"
-                component={TopPlaylistsTab}
+                name="Public Parties Tab"
+                component={PublicPartiesTab}
                 options={{
-                    tabBarLabel: 'Top Playlists',
+                    tabBarLabel: 'Public Parties',
                     tabBarIcon: ({ color }) => (
                         <MaterialCommunityIcons name="playlist-music" color={color} size={25} />),
                 }}
@@ -197,3 +199,16 @@ export default class Navigator extends React.Component {
         )
     }
 }
+
+
+
+
+
+/* 
+Use this to fix error:
+1. "Unable to resolve module ./components/Checkbox from node_modules\react-native-paper\lib\module\index.js"
+2. Unable to resolve "./NavigationNativeContainer" from "node_modules/@react-navigation/native/src/index.tsx"
+
+npx react-native start --reset-cache
+npm install
+*/
