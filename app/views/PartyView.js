@@ -33,7 +33,9 @@ export class PartyView extends React.Component {
                 condition: '',
                 playlist: props.route.params.playlist
             },
-            isHost: props.route.params.isHost,
+            userId: props.route.params.userId,
+            isDJ: props.route.params.loggedInUser.permission === userPermissions.HOST || 
+                props.route.params.loggedInUser.permission === userPermissions.DJ,
             isInvited: props.route.params.isInvited,
             loggedInUser: props.route.params.loggedInUser
         };
@@ -262,9 +264,6 @@ ${redirectUrl}`,
                         size={25}
                         color="#696969"
                     />
-                    {/* <TouchableOpacity onPress={this.onIdPress}>
-                        <Text style={styles.partyId}>{`ID: ${this.state.party.joinId}`}</Text>
-                    </TouchableOpacity> */}
 
                     <Text style={styles.partyName}>{this.state.party.partyName}</Text>
                     <MaterialCommunityIcons
@@ -273,14 +272,13 @@ ${redirectUrl}`,
                         size={30}
                         color="#ff0000"
                     />
-                    {/* <Button title="Leave" onPress={this.onPressLeaveParty} color="#ff0000" /> */}
                 </View>
 
                 <View style={{ flex: 2.2, backgroundColor: '#000000' }}>
                     <YoutubeView style={{ backgroundColor: '#000000' }}
                         activeVideo={this.state.activeVideo}
                         condition={this.state.party.condition}
-                        isHost={this.state.isHost}
+                        isDJ={this.state.isDJ}
                         isActionMaker={this.state.isActionMaker}
                         updatePaused={this.updatePausedAndCurrentTimeInDB}
                         updatePlayed={this.updatePlayedInDB}
@@ -294,6 +292,7 @@ ${redirectUrl}`,
                         playlist={this.state.party.playlist}
                         loadVideoToPlayer={this.loadVideoToPlayer}
                         navigation={this.props.navigation}
+                        isDJ={this.state.isDJ}
                     />
                 </View>
             </View>

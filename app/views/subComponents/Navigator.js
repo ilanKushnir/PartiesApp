@@ -105,8 +105,6 @@ export default class Navigator extends React.Component {
                 />
                 <Stack.Screen name="Party Drawer" component={this.PartyViewDrawer}
                 />
-                {/* <Stack.Screen name="Party View" component={PartyView}/>
-                <Stack.Screen name="Add To Playlist" component={AddToPlaylistView}/> */}
             </Stack.Navigator >
         )
     }
@@ -155,9 +153,13 @@ export default class Navigator extends React.Component {
                     }}
                 />
                 <Drawer.Screen name="Settings View" component={SettingsView}
+                    initialParams={{
+                        isHost: navigation.route.params.loggedInUser.permission === "HOST",
+                        partyId: navigation.route.params.partyId,
+                    }}
                     options={{
                         drawerLabel: 'Settings',
-                        drawerIcon: ({ size }) => (
+                        drawerIcon: ({ size }) => ( 
                             <Ionicons
                                 name="ios-settings"
                                 size={size}
