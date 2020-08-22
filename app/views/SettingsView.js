@@ -23,7 +23,6 @@ export class SettingsView extends React.Component {
                     </View>
                 </View>
                 <View style={{...styles.center,flex:4,justifyContent:'space-between'}}>
-                    <Text>Settings Go Here</Text>
                     <SettingsComponent/>
                 </View>
             </View>

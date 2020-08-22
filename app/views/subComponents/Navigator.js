@@ -103,8 +103,6 @@ export default class Navigator extends React.Component {
                 />
                 <Stack.Screen name="Party Drawer" component={this.PartyViewDrawer}
                 />
-                {/* <Stack.Screen name="Party View" component={PartyView}/>
-                <Stack.Screen name="Add To Playlist" component={AddToPlaylistView}/> */}
             </Stack.Navigator >
         )
     }

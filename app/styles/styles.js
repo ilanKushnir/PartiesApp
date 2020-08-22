@@ -37,7 +37,7 @@ export const styles = StyleSheet.create({
     flexDirection: 'row',
     flex: 1,
     alignItems: 'center',
-    justifyContent: 'space-between',
+    justifyContent: 'space-evenly',
   },
   rowHeader: {
     flexDirection: 'row',
@@ -79,6 +79,9 @@ export const styles = StyleSheet.create({
     backgroundColor: '#95A5A6',
   },
   publicSwitch: {
-    marginHorizontal: 10
+    marginHorizontal: 0
+  },
+  partyModePicker: {
+    marginVertical: 0
   }
 });

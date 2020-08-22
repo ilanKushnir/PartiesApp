@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, View, TextInput, Alert, TouchableOpacity, Button, Keyboard } from 'react-native';
+import { StyleSheet, Text, View, TextInput, Alert, TouchableOpacity, Button, Keyboard, Switch } from 'react-native';
 import PartyView from './PartyView'
 import firebase from '../../firebase'
 import DB_TABLES from '../../assets/utils'
@@ -7,9 +7,10 @@ import { styles } from '../styles/styles.js'
 import { StackActions } from '@react-navigation/native'
 import DropDownPicker from 'react-native-dropdown-picker';
 import Icon from 'react-native-vector-icons/Feather';
+import { SettingsComponent } from './subComponents/SettingsComponent';
 
-const userPermissions = { HOST: 'HOST',DJ: 'DJ', GUEST: 'GUEST' };
-
+const userPermissions = { HOST: 'HOST', DJ: 'DJ', GUEST: 'GUEST' };
+const partyModes = { VIEW_ONLY: 'VIEW ONLY', FRIENDLY: 'FRIENDLY'}
 
 export default class SetPartyView extends React.Component {
     constructor(props) {
@@ -17,7 +18,9 @@ export default class SetPartyView extends React.Component {
         this.state = {
             isNewParty: props.route.params.isNewParty,
             inputValue: '',
-            loggedInUser: props.route.params.loggedInUser
+            loggedInUser: props.route.params.loggedInUser,
+            isPublic: false,
+            partyMode: ''
         }
     }
 
@@ -54,9 +57,10 @@ export default class SetPartyView extends React.Component {
 
                     const loggedInUser = this.state.loggedInUser;
                     loggedInUser.permission = userPermissions.HOST;
-                    
-                    const participants = [ loggedInUser ];
 
+                    const participants = [loggedInUser];
+                    const isPublic = this.state.isPublic;
+                    const partyMode = this.state.partyMode;
                     const currentTime = new Date();
                     const response = await db.collection('party').add({
                         joinId,
@@ -67,7 +71,9 @@ export default class SetPartyView extends React.Component {
                         activeVideoId: '',
                         currentTime: 0,
                         lastUpdatedTime: currentTime,
-                        participants
+                        participants,
+                        isPublic,
+                        partyMode
                     });
 
                     const partyId = response.id;
@@ -103,7 +109,7 @@ export default class SetPartyView extends React.Component {
                     loggedInUser.permission = userPermissions.DJ;       /////////////// determined by party mode
 
                     participants.push(loggedInUser)
-                    await db.collection('party').doc(partyId).update({participants});
+                    await db.collection('party').doc(partyId).update({ participants });
                     Alert.alert(`Joining Party ${name}`);
                     this.props.navigation.navigate('Party Drawer', {
                         partyId,
@@ -121,16 +127,49 @@ export default class SetPartyView extends React.Component {
         }
         return { message, inputPlaceholder, buttonText, handleSetParty };
     }
+
     render() {
         const { message, inputPlaceholder, buttonText, handleSetParty } = this.getAttributes(this.state.isNewParty);
         return (
             <View style={styles.center}>
-                <Text style={styles.title}>{message}</Text>
-                <TextInput style={styles.input} placeholder={inputPlaceholder}
-                    onChangeText={inputValue => this.setState({ inputValue })}>
-                </TextInput>
+                <View style={{...styles.center,flex:0.2}}>
+                    <Text style={styles.title}>{message}</Text>
+                    <TextInput style={styles.input} placeholder={inputPlaceholder}
+                        onChangeText={inputValue => this.setState({ inputValue })}>
+                    </TextInput>
+                </View>
+                {this.state.isNewParty &&
+                    <View style={{ flex: 0.2 }}>
+                        <View style={{ ...styles.row, ...styles.publicSwitch }}>
+                            <Text>Public</Text>
+                            <Switch
+                                value={this.state.isPublic}
+                                onValueChange={(isPublic) => this.setState({ isPublic })}
+                                thumbColor={this.state.isPublic ? "#f4f3f4" : "#f4f3f4"}
+                                ios_backgroundColor="#3e3e3e"
+                                trackColor={{ false: "#767577", true: "#ff7752" }}
+                            />
+                        </View>
+                        <View style={styles.partyModePicker}>
+                            <DropDownPicker
+                                items={[
+                                    { label: 'View Only', value: partyModes.VIEW_ONLY, icon: () => <Icon name="music" size={18} color="#900" /> },
+                                    { label: 'Friendly', value: partyModes.FRIENDLY, icon: () => <Icon name="music" size={18} color="#900" /> },
+                                ]}
+                                placeholder="Select Party Mode "
 
-                <View>
+                                containerStyle={{ height: 40, width: 180, marginTop: 10, marginBottom: 10 }}
+                                style={{ backgroundColor: '#fafafa' }}
+                                itemStyle={{
+                                    justifyContent: 'flex-start',
+                                }}
+                                dropDownStyle={{ backgroundColor: '#fafafa' }}
+                                onChangeItem={item => this.setState({ partyMode: item.value })}
+                            />
+                        </View>
+                    </View>
+                }
+                <View style={{ flex: 0.25,position: 'absolute',bottom:50 }}>
                     <Button
                         style={{ marginBottom: 30 }}
                         disabled={this.state.isNewParty && this.state.partyMode === undefined}
@@ -146,27 +185,6 @@ export default class SetPartyView extends React.Component {
                         color="#d2691e"
                     ></Button>
                 </View>
-                {this.state.isNewParty &&
-                    <View >
-                        <DropDownPicker
-                            items={[
-                                { label: 'View Only', value: 'viewOnly', icon: () => <Icon name="music" size={18} color="#900" /> },
-                                { label: 'Friendly', value: 'friendly', icon: () => <Icon name="music" size={18} color="#900" /> },
-                            ]}
-                            placeholder="Select Party Mode "
-
-                            containerStyle={{ height: 40, width: 180, marginTop: 10, marginBottom: 10 }}
-                            style={{ backgroundColor: '#fafafa' }}
-                            itemStyle={{
-                                justifyContent: 'flex-start',
-                            }}
-                            dropDownStyle={{ backgroundColor: '#fafafa' }}
-                            onChangeItem={item => {
-                                this.setState({ partyMode: item.value });
-                                console.log(item.value);
-                            }} />
-                    </View>
-                }
             </View>
         );
     }
