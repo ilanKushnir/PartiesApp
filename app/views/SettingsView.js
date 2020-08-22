@@ -1,7 +1,8 @@
 import React from 'react';
 import { View, Text } from 'react-native';
-import { styles } from '../styles/styles.js'
+import { styles } from '../styles/styles.js';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import { SettingsComponent } from './subComponents/SettingsComponent.js';
 
 export class SettingsView extends React.Component {
 
@@ -21,8 +22,9 @@ export class SettingsView extends React.Component {
                         <Text style={styles.title}>Settings</Text>
                     </View>
                 </View>
-                <View style={{...styles.center,flex:4}}>
+                <View style={{...styles.center,flex:4,justifyContent:'space-between'}}>
                     <Text>Settings Go Here</Text>
+                    <SettingsComponent/>
                 </View>
             </View>
         )
