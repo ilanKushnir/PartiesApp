@@ -150,6 +150,8 @@ export default class Playlist extends React.Component {
             console.log(error)
         }
 
+        console.log(this.state.tracks);
+
     }
 
     loadVideoToPlayer = async (index) => {

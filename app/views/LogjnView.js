@@ -41,7 +41,6 @@ export class LoginView extends React.Component {
                 const data = user.data();
                 const { userName } = data;
                 console.log('succeded login to ', userName);
-
                 const loggedInUser = { name: userName, id: userID };
                 if (this.state.invitedPartyId) {
                     this.autoJoinInvitedParty(this.state.invitedPartyId, loggedInUser);

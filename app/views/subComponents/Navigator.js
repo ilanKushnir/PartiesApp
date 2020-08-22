@@ -6,7 +6,7 @@ import { PartyView } from '../PartyView.js';
 import SetPartyView from '../SetPartyView.js';
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
 import { HomeTab } from '../../tabs/HomeTab.js';
-import TopPlaylistsTab from '../../tabs/TopPlaylistsTab.js';
+import { PublicPartiesTab } from '../../tabs/PublicPartiesTab.js';
 import HistoryTab from '../../tabs/HistoryTab.js';
 import { BackButtonHandler } from './AndroidBackHandler.js';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -54,10 +54,10 @@ export default class Navigator extends React.Component {
                 }}
             />
             <Tab.Screen
-                name="Top Playlists Tab"
-                component={TopPlaylistsTab}
+                name="Public Parties Tab"
+                component={PublicPartiesTab}
                 options={{
-                    tabBarLabel: 'Top Playlists',
+                    tabBarLabel: 'Public Parties',
                     tabBarIcon: ({ color }) => (
                         <MaterialCommunityIcons name="playlist-music" color={color} size={25} />),
                 }}
