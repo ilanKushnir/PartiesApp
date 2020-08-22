@@ -195,3 +195,16 @@ export default class Navigator extends React.Component {
         )
     }
 }
+
+
+
+
+
+/* 
+Use this to fix error:
+1. "Unable to resolve module ./components/Checkbox from node_modules\react-native-paper\lib\module\index.js"
+2. Unable to resolve "./NavigationNativeContainer" from "node_modules/@react-navigation/native/src/index.tsx"
+
+npx react-native start --reset-cache
+npm install
+*/
