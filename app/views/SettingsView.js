@@ -6,8 +6,7 @@ import DropDownPicker from 'react-native-dropdown-picker';
 import Icon from 'react-native-vector-icons/Feather';
 import firebase from '../../firebase';
 
-const userPermissions = { HOST: 'HOST', DJ: 'DJ', GUEST: 'GUEST' };
-const partyModes = { VIEW_ONLY: 'VIEW ONLY', FRIENDLY: 'FRIENDLY' }
+import { DB_TABLES, USER_PERMISSION, PARTY_MODES } from '../../assets/utils'; 
 
 export class SettingsView extends React.Component {
     constructor(props) {
@@ -52,8 +51,8 @@ export class SettingsView extends React.Component {
 
     updatePermissions = (partyMode) => {
         let participants = this.state.participants.map(user => {
-            if (user.permission !== userPermissions.HOST) {
-                user.permission = partyMode === partyModes.VIEW_ONLY ? userPermissions.GUEST : userPermissions.DJ;
+            if (user.permission !== USER_PERMISSION.HOST) {
+                user.permission = partyMode === PARTY_MODES.VIEW_ONLY ? USER_PERMISSION.GUEST : USER_PERMISSION.DJ;
             }
             return user;
         });
@@ -102,8 +101,8 @@ export class SettingsView extends React.Component {
                     <View style={styles.partyModePicker}>
                         <DropDownPicker
                             items={[
-                                { label: 'View Only', value: partyModes.VIEW_ONLY, icon: () => <Icon name="music" size={18} color="#900" /> },
-                                { label: 'Friendly', value: partyModes.FRIENDLY, icon: () => <Icon name="music" size={18} color="#900" /> },
+                                { label: 'View Only', value: PARTY_MODES.VIEW_ONLY, icon: () => <Icon name="music" size={18} color="#900" /> },
+                                { label: 'Friendly', value: PARTY_MODES.FRIENDLY, icon: () => <Icon name="music" size={18} color="#900" /> },
                             ]}
                             placeholder="Select Party Mode "
 

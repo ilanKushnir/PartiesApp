@@ -8,8 +8,7 @@ import { styles } from '../styles/styles.js';
 import { StackActions } from '@react-navigation/native';
 import Playlist from './subComponents/Playlist.js';
 import * as Linking from 'expo-linking';
-import { IconButton } from 'react-native-paper';
-import { MaterialCommunityIcons, Ionicons } from 'react-native-vector-icons';
+import { MaterialCommunityIcons } from 'react-native-vector-icons';
 import { DB_TABLES, USER_PERMISSION } from '../../assets/utils'; 
 
 export class PartyView extends React.Component {
@@ -34,8 +33,8 @@ export class PartyView extends React.Component {
                 playlist: props.route.params.playlist
             },
             userId: props.route.params.userId,
-            isDJ: props.route.params.loggedInUser.permission === userPermissions.HOST || 
-                props.route.params.loggedInUser.permission === userPermissions.DJ,
+            isDJ: props.route.params.loggedInUser.permission === USER_PERMISSION.HOST || 
+                props.route.params.loggedInUser.permission === USER_PERMISSION.DJ,
             isInvited: props.route.params.isInvited,
             loggedInUser: props.route.params.loggedInUser
         };

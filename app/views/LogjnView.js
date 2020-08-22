@@ -189,7 +189,7 @@ export class LoginView extends React.Component {
             const data = party.data();
             const { participants, playlist, name } = data;
             const playlistId = await this.getPlaylistId(playlist);
-            // const userId = participants[participants.length - 1] + 1;
+            const userId = participants[participants.length - 1] + 1;
             participants.push(loggedInUser);
             Alert.alert(`Joining Party ${name}`);
             await db.collection(DB_TABLES.PARTY).doc(partyId).update({ participants});
