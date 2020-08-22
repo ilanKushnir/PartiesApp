@@ -27,6 +27,7 @@ export class SettingsComponent extends React.Component {
                         thumbColor={this.state.isPublic ? "#f4f3f4" : "#f4f3f4"}
                         ios_backgroundColor="#3e3e3e"
                         trackColor={{ false: "#767577", true: "#ff7752" }}
+                        disabled={!this.props.isHost}
                     />
                 </View>
                 <View style={styles.partyModePicker}>
@@ -44,6 +45,7 @@ export class SettingsComponent extends React.Component {
                         }}
                         dropDownStyle={{ backgroundColor: '#fafafa' }}
                         onChangeItem={item => this.setPartyMode(item.value)}
+                        disabled={!this.props.isHost}
                     />
                 </View>
             </View>

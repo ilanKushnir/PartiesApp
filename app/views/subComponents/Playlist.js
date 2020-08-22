@@ -196,6 +196,7 @@ export default class Playlist extends React.Component {
                         }}
                         title={this.state.editMode ? "Done" : "Edit"}
                         color={this.state.editMode ? "#87211c" : "#d2691e"}
+                        disabled={!this.props.isDJ}
                     ></Button>
 
                     <Button
@@ -206,6 +207,7 @@ export default class Playlist extends React.Component {
                         }}
                         title="Add Tracks"
                         color="#d2691e"
+                        disabled={!this.props.isDJ}
                     ></Button>
                 </View>
 

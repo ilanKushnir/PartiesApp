@@ -68,7 +68,7 @@ export default class YoutubeView extends React.Component {
                 }
 
                 function onPlayerStateChange(event) {
-                    if(${this.props.isHost} && event.data === YT.PlayerState.ENDED) {
+                    if(${this.props.isDJ} && event.data === YT.PlayerState.ENDED) {
                         window.ReactNativeWebView.postMessage("ended");
                     }
                 }
@@ -102,8 +102,8 @@ export default class YoutubeView extends React.Component {
                         this.webref.injectJavaScript(onLoadEndScript);}}
                 />
                 </View>
-                <Player style={styles.rowPlayer
-}
+                <Player style={styles.rowPlayer}
+                    isDJ={this.props.isDJ}
                     loadPrevVideoToPlayer={this.props.loadPrevVideoToPlayer}
                     loadNextVideoToPlayer={this.props.loadNextVideoToPlayer}
                     onPressPlayPause={this.onPressPlayPause}

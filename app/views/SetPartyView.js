@@ -102,11 +102,11 @@ export default class SetPartyView extends React.Component {
                     const party = response.docs[0];
                     const partyId = party.id
                     const data = party.data();
-                    const { name, participants, playlist, lastUpdatedTime } = data;
+                    const { name, participants, playlist, lastUpdatedTime, partyMode } = data;
                     const playlistId = await this.getPlaylistId(playlist);
 
                     const loggedInUser = this.state.loggedInUser;
-                    loggedInUser.permission = userPermissions.DJ;       /////////////// determined by party mode
+                    loggedInUser.permission = partyMode === partyModes.FRIENDLY ? userPermissions.DJ : userPermissions.GUEST;       /////////////// determined by party mode
 
                     participants.push(loggedInUser)
                     await db.collection('party').doc(partyId).update({ participants });
@@ -172,18 +172,18 @@ export default class SetPartyView extends React.Component {
                 <View style={{ flex: 0.25,position: 'absolute',bottom:50 }}>
                     <Button
                         style={{ marginBottom: 30 }}
-                        disabled={this.state.isNewParty && this.state.partyMode === undefined}
+                        disabled={this.state.isNewParty && this.state.partyMode === ''}
                         onPress={() => {
                             Keyboard.dismiss();
                             handleSetParty(this.state.inputValue);
                         }}
                         title={buttonText}
-                    ></Button>
+                    />
                     <Button
                         onPress={() => this.props.navigation.dispatch(StackActions.popToTop())}
                         title="Cancel"
                         color="#d2691e"
-                    ></Button>
+                    />
                 </View>
             </View>
         );

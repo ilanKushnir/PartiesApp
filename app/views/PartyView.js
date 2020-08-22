@@ -35,7 +35,8 @@ export class PartyView extends React.Component {
                 playlist: props.route.params.playlist
             },
             userId: props.route.params.userId,
-            isHost: props.route.params.isHost,
+            isDJ: props.route.params.loggedInUser.permission === userPermissions.HOST || 
+                props.route.params.loggedInUser.permission === userPermissions.DJ,
             isInvited: props.route.params.isInvited,
             loggedInUser: props.route.params.loggedInUser
         };
@@ -89,7 +90,7 @@ export class PartyView extends React.Component {
             for(let i = 0; i < participants.length; i++) {
                 if(participants[i].permission === userPermissions.DJ) {
                     participants[i].permission = userPermissions.HOST;
-                    return participants
+                    return participants;
                 }
             }
 
@@ -233,9 +234,6 @@ ${redirectUrl}`,
                         size={25}
                         color="#696969"
                     />
-                    {/* <TouchableOpacity onPress={this.onIdPress}>
-                        <Text style={styles.partyId}>{`ID: ${this.state.party.joinId}`}</Text>
-                    </TouchableOpacity> */}
 
                     <Text style={styles.partyName}>{this.state.party.partyName}</Text>
                     <MaterialCommunityIcons
@@ -244,14 +242,13 @@ ${redirectUrl}`,
                         size={30}
                         color="#ff0000"
                     />
-                    {/* <Button title="Leave" onPress={this.onPressLeaveParty} color="#ff0000" /> */}
                 </View>
 
                 <View style={{ flex: 2.2, backgroundColor: '#000000' }}>
                     <YoutubeView style={{ backgroundColor: '#000000' }}
                         activeVideo={this.state.activeVideo}
                         condition={this.state.party.condition}
-                        isHost={this.state.isHost}
+                        isDJ={this.state.isDJ}
                         isActionMaker={this.state.isActionMaker}
                         updatePaused={this.updatePausedAndCurrentTimeInDB}
                         updatePlayed={this.updatePlayedInDB}
@@ -265,6 +262,7 @@ ${redirectUrl}`,
                         playlist={this.state.party.playlist}
                         loadVideoToPlayer={this.loadVideoToPlayer}
                         navigation={this.props.navigation}
+                        isDJ={this.state.isDJ}
                     />
                 </View>
             </View>

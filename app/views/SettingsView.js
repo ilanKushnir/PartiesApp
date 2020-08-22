@@ -23,7 +23,7 @@ export class SettingsView extends React.Component {
                     </View>
                 </View>
                 <View style={{...styles.center,flex:4,justifyContent:'space-between'}}>
-                    <SettingsComponent/>
+                    <SettingsComponent isHost={this.props.isHost}/>
                 </View>
             </View>
         )

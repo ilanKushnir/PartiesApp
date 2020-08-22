@@ -9,22 +9,22 @@ export default class Player extends React.Component {
         return (
             <View style={styles.rowPlayer}>
                 <MaterialCommunityIcons
-                    onPress={this.props.loadPrevVideoToPlayer}
+                    onPress={this.props.isDJ ? this.props.loadPrevVideoToPlayer : () => {}}
                     name="skip-previous"
                     size={40}
-                    color="#fa8072"
+                    color={this.props.isDJ ? "#fa8072" : "#a9a9a9"}
                 />
                 <MaterialCommunityIcons style={{marginHorizontal: 25}}
-                    onPress={this.props.onPressPlayPause}
+                    onPress={this.props.isDJ ? this.props.onPressPlayPause : () => {}}
                     name={this.props.condition === 'play' ? "pause-circle" : "play-circle"}
                     size={70}
-                    color="#ff6347"
+                    color={this.props.isDJ ? "#ff6347" : "#a9a9a9"}
                 />
                 <MaterialCommunityIcons
-                    onPress={this.props.loadNextVideoToPlayer}
+                    onPress={this.props.isDJ ? this.props.loadNextVideoToPlayer : () => {}}
                     name="skip-next"
                     size={40}
-                    color="#fa8072"
+                    color={this.props.isDJ ? "#fa8072" : "#a9a9a9"}
                 />
             </View>
         )

@@ -151,9 +151,12 @@ export default class Navigator extends React.Component {
                     }}
                 />
                 <Drawer.Screen name="Settings View" component={SettingsView}
+                    initialParams={{
+                        isHost: navigation.route.params.loggedInUser.permission === 'HOST'
+                    }}
                     options={{
                         drawerLabel: 'Settings',
-                        drawerIcon: ({ size }) => (
+                        drawerIcon: ({ size }) => ( 
                             <Ionicons
                                 name="ios-settings"
                                 size={size}
