@@ -4,6 +4,7 @@ import { styles } from '../styles/styles.js'
 import { StackActions } from '@react-navigation/native';
 import firebase from '../../firebase.js';
 import PublicPartyItem from '../views/subComponents/PublicPartyItem';
+import { DB_TABLES } from '../../assets/utils'; 
 
 export class PublicPartiesTab extends React.Component {
   constructor(props) {
@@ -27,7 +28,7 @@ export class PublicPartiesTab extends React.Component {
   bindPartiesChangesFromDB = async() => {
     let updatePartiesArr = this.state.publicParties;
     try {
-      const observer = await this.db.collection('party').orderBy("creationTime", "desc").where("isPublic", "==", true).limit(100)
+      const observer = await this.db.collection(DB_TABLES.PARTY).orderBy("creationTime", "desc").where("isPublic", "==", true).limit(100)
       .onSnapshot(querySnapshot => {
 
         querySnapshot.docChanges().forEach(change => {

@@ -7,7 +7,8 @@ import { styles } from '../../styles/styles.js';
 import { Button } from 'react-native';
 import { SwipeableFlatList } from 'react-native-swipeable-flat-list';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import DraggableFlatList from 'react-native-draggable-flatlist'
+import DraggableFlatList from 'react-native-draggable-flatlist';
+import { DB_TABLES } from '../../../assets/utils'; 
 
 export default class Playlist extends React.Component {
     constructor(props) {
@@ -48,7 +49,7 @@ export default class Playlist extends React.Component {
 
     bindPlaylistChangesFromDB = async () => {
         try {
-            const DBbindingResponse = await this.db.collection('playlist').doc(this.state.playlistId).onSnapshot(snapshot => {
+            const DBbindingResponse = await this.db.collection(DB_TABLES.PLAYLIST).doc(this.state.playlistId).onSnapshot(snapshot => {
                 let tracks = [];
                 const playlistData = snapshot.data();
 
@@ -84,7 +85,7 @@ export default class Playlist extends React.Component {
             const trackReferencesOnDB = this.state.tracks.map(track => {
                 return this.db.doc(`/track/${track.id}`);
             });
-            await this.db.collection('playlist').doc(this.state.playlistId).set({
+            await this.db.collection(DB_TABLES.PLAYLIST).doc(this.state.playlistId).set({
                 tracks: trackReferencesOnDB
             });
 
@@ -131,7 +132,7 @@ export default class Playlist extends React.Component {
         try {
             const batch = this.db.batch();  //  batch perform ATOMIC action on DB
             tracks.forEach(track => {
-                const trackReference = this.db.collection('track').doc();
+                const trackReference = this.db.collection(DB_TABLES.TRACK).doc();
                 batch.set(trackReference, track);
                 track.id = trackReference.id;
                 console.log('on batch, track uid', trackReference.id);

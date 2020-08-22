@@ -30,13 +30,15 @@ export default class Navigator extends React.Component {
             }}
             headerMode='none'
         >
-            <Stack.Screen name="Login" component={LoginView} />
+            <Stack.Screen name="Login" component={LoginView} 
+                initialParams={{ logout: navigation?.route?.params?.logout || false}}
+            />
             <Stack.Screen name="Bottom Tabs" component={this.BottomTabs} />
             <Stack.Screen name="Party View" component={PartyView} />
         </Stack.Navigator>
     }
 
-    BottomTabs = (navigation) => {
+    BottomTabs = (navigation) => {        
         return <Tab.Navigator
             initialRouteName="Home"
             barStyle={{ backgroundColor: '#ff6347' }}
