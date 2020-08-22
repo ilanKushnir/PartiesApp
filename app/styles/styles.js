@@ -79,9 +79,9 @@ export const styles = StyleSheet.create({
     backgroundColor: '#95A5A6',
   },
   publicSwitch: {
-    marginHorizontal: 0
+    marginHorizontal: 10
   },
   partyModePicker: {
-    marginVertical: 0
+    marginHorizontal: 10
   }
 });

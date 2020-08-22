@@ -7,7 +7,6 @@ import { styles } from '../styles/styles.js'
 import { StackActions } from '@react-navigation/native'
 import DropDownPicker from 'react-native-dropdown-picker';
 import Icon from 'react-native-vector-icons/Feather';
-import { SettingsComponent } from './subComponents/SettingsComponent';
 
 const userPermissions = { HOST: 'HOST', DJ: 'DJ', GUEST: 'GUEST' };
 const partyModes = { VIEW_ONLY: 'VIEW ONLY', FRIENDLY: 'FRIENDLY'}

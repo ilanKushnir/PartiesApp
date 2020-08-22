@@ -152,7 +152,8 @@ export default class Navigator extends React.Component {
                 />
                 <Drawer.Screen name="Settings View" component={SettingsView}
                     initialParams={{
-                        isHost: navigation.route.params.loggedInUser.permission === 'HOST'
+                        isHost: navigation.route.params.loggedInUser.permission === "HOST",
+                        partyId: navigation.route.params.partyId,
                     }}
                     options={{
                         drawerLabel: 'Settings',
