@@ -6,6 +6,12 @@ export const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center'
   },
+  homePage: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#fff7e3'
+  },
   title: {
     fontSize: 24,
     marginBottom: 16
@@ -77,5 +83,23 @@ export const styles = StyleSheet.create({
     paddingVertical: 10,
     marginHorizontal: 5,
     backgroundColor: '#95A5A6',
+  },
+  partyItemPlayed: {
+    // flexDirection: 'row',
+    alignContent: 'center',
+    borderTopWidth: 1,
+    borderTopColor: '#6C7A89',
+    paddingVertical: 10,
+    marginHorizontal: 5,
+    backgroundColor: '#e7ffcf',
+  },
+  partyItemPaused: {
+    // flexDirection: 'row',
+    alignContent: 'center',
+    borderTopWidth: 1,
+    borderTopColor: '#6C7A89',
+    paddingVertical: 10,
+    marginHorizontal: 5,
+    backgroundColor: '#f5f5f5',
   }
 });
