@@ -2,13 +2,11 @@ import React from 'react';
 import { StyleSheet, Text, View, TextInput, Alert, TouchableOpacity, Button, Keyboard } from 'react-native';
 import PartyView from './PartyView'
 import firebase from '../../firebase'
-import DB_TABLES from '../../assets/utils'
 import { styles } from '../styles/styles.js'
 import { StackActions } from '@react-navigation/native'
 import DropDownPicker from 'react-native-dropdown-picker';
 import Icon from 'react-native-vector-icons/Feather';
-
-const userPermissions = { HOST: 'HOST',DJ: 'DJ', GUEST: 'GUEST' };
+import { DB_TABLES, USER_PERMISSION } from '../../assets/utils'; 
 
 
 export default class SetPartyView extends React.Component {
@@ -37,7 +35,7 @@ export default class SetPartyView extends React.Component {
             ];
             handleSetParty = async (partyName) => {
                 try {
-                    const lastCreatedParty = await db.collection('party').orderBy('creationTime', 'desc').limit(1).get();
+                    const lastCreatedParty = await db.collection(DB_TABLES.PARTY).orderBy('creationTime', 'desc').limit(1).get();
                     let joinId;
                     if (lastCreatedParty.docs[0]) {
                         const partyData = lastCreatedParty.docs[0].data();
@@ -46,19 +44,19 @@ export default class SetPartyView extends React.Component {
                     } else {
                         joinId = 100;
                     }
-                    const playlistResponse = await db.collection('playlist').add({
+                    const playlistResponse = await db.collection(DB_TABLES.PLAYLIST).add({
                         tracks: []
                     });
                     const { id: playlistId } = playlistResponse;
                     const playlist = await db.doc(`/playlist/${playlistId}`);   // playlist Reference on DB
 
                     const loggedInUser = this.state.loggedInUser;
-                    loggedInUser.permission = userPermissions.HOST;
+                    loggedInUser.permission = USER_PERMISSION.HOST;
                     
                     const participants = [ loggedInUser ];
 
                     const currentTime = new Date();
-                    const response = await db.collection('party').add({
+                    const response = await db.collection(DB_TABLES.PARTY).add({
                         joinId,
                         name: partyName || `Party #${joinId}`,
                         condition: 'pause',
@@ -92,7 +90,7 @@ export default class SetPartyView extends React.Component {
             ];
             handleSetParty = async (joinId) => {
                 try {
-                    const response = await db.collection('party').where('joinId', '==', parseInt(joinId)).limit(1).get();
+                    const response = await db.collection(DB_TABLES.PARTY).where('joinId', '==', parseInt(joinId)).limit(1).get();
                     const party = response.docs[0];
                     const partyId = party.id
                     const data = party.data();
@@ -100,10 +98,10 @@ export default class SetPartyView extends React.Component {
                     const playlistId = await this.getPlaylistId(playlist);
 
                     const loggedInUser = this.state.loggedInUser;
-                    loggedInUser.permission = userPermissions.DJ;       /////////////// determined by party mode
+                    loggedInUser.permission = USER_PERMISSION.DJ;       /////////////// determined by party mode
 
                     participants.push(loggedInUser)
-                    await db.collection('party').doc(partyId).update({participants});
+                    await db.collection(DB_TABLES.PARTY).doc(partyId).update({participants});
                     Alert.alert(`Joining Party ${name}`);
                     this.props.navigation.navigate('Party Drawer', {
                         partyId,

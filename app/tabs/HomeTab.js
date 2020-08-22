@@ -9,6 +9,7 @@ export class HomeTab extends React.Component {
     this.state = {
       loggedInUser: props.route.params.loggedInUser
     }
+    
   }
 
   render() {
@@ -17,7 +18,7 @@ export class HomeTab extends React.Component {
         <Text style={styles.title}>Welcome {this.state.loggedInUser.name}!</Text>
         <Text>user stats</Text>
         <Text>user's top playlists</Text>
-        <Button title="Back To Login" onPress={() => this.props.navigation.dispatch(StackActions.popToTop())}></Button>
+        <Button title="Log Out" onPress={() => this.props.navigation.navigate("Login", { logout: true })}></Button>
       </View>
     )
   }

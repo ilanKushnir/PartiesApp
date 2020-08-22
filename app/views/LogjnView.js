@@ -5,13 +5,14 @@ import * as Google from 'expo-google-app-auth';
 import AsyncStorage from '@react-native-community/async-storage';
 import firebase from '../../firebase';
 import * as Linking from 'expo-linking';
+import { DB_TABLES } from '../../assets/utils'; 
 
 export class LoginView extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
             invitedPartyId: ''
-        }
+        }        
 
         this.db = firebase.firestore();
         this.login = this.login.bind(this);
@@ -30,18 +31,17 @@ export class LoginView extends React.Component {
         }
 
         const userID = await this.getLoginFromDevice();
-        if(userID) {
+        if(userID !== 'NO_USER_ID') {
             console.log('Trying login to last user from device storage');
             
-            const user = await this.db.collection('user').doc(userID).get();
+            const user = await this.db.collection(DB_TABLES.USER).doc(userID).get();
             if(user.exists) {
 
                 this.setState({remmemberLogin: true})
                 const data = user.data();
                 const { userName } = data;
                 console.log('succeded login to ', userName);
-                Alert.alert('Success login recent user', userName);
-                
+
                 const loggedInUser = { name: userName, id: userID };
                 if (this.state.invitedPartyId) {
                     this.autoJoinInvitedParty(this.state.invitedPartyId, loggedInUser);
@@ -53,6 +53,10 @@ export class LoginView extends React.Component {
 
     componentWillUnmount() {
         Linking.removeEventListener('url', this._handleUrl);
+    }
+
+    handleLogout = async () => {
+        await this.saveLoginToDevice('NO_USER_ID');
     }
 
     saveLoginToDevice = async (userID) => {
@@ -68,7 +72,7 @@ export class LoginView extends React.Component {
           const userID = await AsyncStorage.getItem('USER_ID')
           return userID;
         } catch(error) {
-            console.log('ex', error); 
+            console.log(error); 
         }
       }
 
@@ -78,7 +82,7 @@ export class LoginView extends React.Component {
         console.log('on login', userName);
 
         try {
-            const response = await this.db.collection('user').where('userName', '==', userName).limit(1).get();
+            const response = await this.db.collection(DB_TABLES.USER).where('userName', '==', userName).limit(1).get();
             const user = response.docs[0];
             let id
             if (user) {    // if user already exist on DB
@@ -91,7 +95,7 @@ export class LoginView extends React.Component {
                 } 
                 console.log('exist user', data.userName, 'id ', id);
             } else {     //  else create a new user
-                const userResponse = await this.db.collection('user').add({
+                const userResponse = await this.db.collection(DB_TABLES.USER).add({
                     userName,
                     password,
                     joinTime: new Date(),
@@ -126,15 +130,14 @@ export class LoginView extends React.Component {
                 scopes: ['profile', 'email'],
             });
 
-            // console.log('on Google Signin, result', result);
             if (result.type === 'success') {
                 const { id, name: userName, email, photoUrl } = result.user;
                 const googleID = `GOOGLE:${id}`;
 
-                const user = await this.db.collection('user').doc(googleID).get();
+                const user = await this.db.collection(DB_TABLES.USER).doc(googleID).get();
                 if(!user.exists) {
                     console.log('Creating new user on firestore:', userName, googleID);
-                    await this.db.collection('user').doc(googleID).set({
+                    await this.db.collection(DB_TABLES.USER).doc(googleID).set({
                         userName,
                         joinTime: new Date(),
                         savedPlaylists: []
@@ -163,7 +166,6 @@ export class LoginView extends React.Component {
 
     _handleUrl = (url) => {
         const urlStr = (typeof(url) === 'object')? url.url : url;
-        console.log('invited FULL URL: ', urlStr);
         const paramsArr = urlStr.split('=');
         if (paramsArr.length > 1) {
             const invitedPartyId = paramsArr[paramsArr.length - 1];
@@ -182,7 +184,7 @@ export class LoginView extends React.Component {
     async autoJoinInvitedParty(invitedPartyId, loggedInUser) {
         const db = firebase.firestore();
         try {
-            const response = await db.collection('party').where('joinId', '==', parseInt(invitedPartyId)).limit(1).get();
+            const response = await db.collection(DB_TABLES.PARTY).where('joinId', '==', parseInt(invitedPartyId)).limit(1).get();
             const party = response.docs[0];
             const partyId = party.id
             const data = party.data();
@@ -191,7 +193,7 @@ export class LoginView extends React.Component {
             // const userId = participants[participants.length - 1] + 1;
             participants.push(loggedInUser);
             Alert.alert(`Joining Party ${name}`);
-            await db.collection('party').doc(partyId).update({ participants});
+            await db.collection(DB_TABLES.PARTY).doc(partyId).update({ participants});
             
             this.props.navigation.navigate('Party View', {
                 partyId: partyId,
@@ -210,6 +212,9 @@ export class LoginView extends React.Component {
     }
 
     render() {
+        const logout = this.props.route?.params?.logout || false;
+        if(logout) this.handleLogout();
+
         return (
             <View style={styles.center}>
                 <Text style={styles.title}>Choose your sign in method</Text>
