@@ -7,12 +7,22 @@ export default class PublicPartyItem extends React.Component {
         super(props);
     }
 
+    joinParty() {
+        Alert.alert('Join party ', this.props.name);
+        // this.props.navigation.navigate('Party View', {
+        //     partyId: this.props.joinId,
+        //     isHost: false,
+        //     userId: ////////,
+        //     playlist: //////,
+        //     isInvited: false
+        // });
+    }
+
     render() {
         return (
             <TouchableOpacity
                 onPress={() => {
-                    // this.props.onClickFunc(this.props.item)
-                    Alert.alert('Join party ', this.props.name);
+                    this.joinParty();
                 }}>
                 <View style={this.props.condition === 'play' ? styles.partyItemPlayed : styles.partyItemPaused}>
                     <Text style={{ flex: 6 }}>

@@ -6,6 +6,12 @@ export const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center'
   },
+  homePage: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#fff7e3'
+  },
   title: {
     fontSize: 24,
     marginBottom: 16
