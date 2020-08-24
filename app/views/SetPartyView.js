@@ -1,13 +1,12 @@
 import React from 'react';
-import { StyleSheet, Text, View, TextInput, Alert, TouchableOpacity, Button, Keyboard, Switch } from 'react-native';
-import PartyView from './PartyView'
-import firebase from '../../firebase'
-import { styles } from '../styles/styles.js'
-import { StackActions } from '@react-navigation/native'
+import { Text, View, TextInput, Alert, Button, Keyboard, Switch } from 'react-native';
+import firebase from '../../firebase';
+import { styles } from '../styles/styles.js';
+import { StackActions } from '@react-navigation/native';
 import DropDownPicker from 'react-native-dropdown-picker';
 import Icon from 'react-native-vector-icons/Feather';
 
-import { DB_TABLES, USER_PERMISSION } from '../../assets/utils'; 
+import { DB_TABLES, USER_PERMISSION, PARTY_MODES } from '../../assets/utils'; 
 
 export default class SetPartyView extends React.Component {
     constructor(props) {
@@ -57,8 +56,6 @@ export default class SetPartyView extends React.Component {
                     loggedInUser.permission = USER_PERMISSION.HOST;
                     
                     const participants = [ loggedInUser ];
-
-                    const participants = [loggedInUser];
                     const isPublic = this.state.isPublic;
                     const partyMode = this.state.partyMode;
                     const currentTime = new Date();
@@ -107,7 +104,7 @@ export default class SetPartyView extends React.Component {
 
                     const loggedInUser = this.state.loggedInUser;
 
-                    loggedInUser.permission = partyMode === partyModes.FRIENDLY ? userPermissions.DJ : userPermissions.GUEST;       /////////////// determined by party mode
+                    loggedInUser.permission = partyMode === PARTY_MODES.FRIENDLY ? USER_PERMISSION.DJ : USER_PERMISSION.GUEST;
 
                     participants.push(loggedInUser)
                     await db.collection('party').doc(partyId).update({ participants });
@@ -155,8 +152,8 @@ export default class SetPartyView extends React.Component {
                         <View style={styles.partyModePicker}>
                             <DropDownPicker
                                 items={[
-                                    { label: 'View Only', value: partyModes.VIEW_ONLY, icon: () => <Icon name="music" size={18} color="#900" /> },
-                                    { label: 'Friendly', value: partyModes.FRIENDLY, icon: () => <Icon name="music" size={18} color="#900" /> },
+                                    { label: 'View Only', value: PARTY_MODES.VIEW_ONLY, icon: () => <Icon name="music" size={18} color="#900" /> },
+                                    { label: 'Friendly', value: PARTY_MODES.FRIENDLY, icon: () => <Icon name="music" size={18} color="#900" /> },
                                 ]}
                                 placeholder="Select Party Mode "
 

@@ -1,7 +1,6 @@
 import React from 'react';
 import { View } from 'react-native';
 import { WebView } from 'react-native-webview';
-import { MaterialCommunityIcons } from 'react-native-vector-icons';
 import { styles } from '../../styles/styles.js';
 import Player from './Player.js';
 
@@ -113,17 +112,4 @@ export default class YoutubeView extends React.Component {
         )
     }
 }
-
-// 'onReady': onPlayerReady,
-// function onPlayerReady(event) {
-//     event.target.seekTo(${this.props.activeVideo.currentTime});
-// }
-
-// function onPlayerStateChange(event) {
-//     if(${this.props.isActionMaker} && event.data === YT.PlayerState.PAUSED) {
-//         window.ReactNativeWebView.postMessage(player.getCurrentTime());
-//     } else if(${this.props.isHost} && event.data === YT.PlayerState.ENDED) {
-//         window.ReactNativeWebView.postMessage("ended");
-//     }
-// }
 

@@ -5,7 +5,7 @@ import * as Google from 'expo-google-app-auth';
 import AsyncStorage from '@react-native-community/async-storage';
 import firebase from '../../firebase';
 import * as Linking from 'expo-linking';
-import { DB_TABLES } from '../../assets/utils'; 
+import { DB_TABLES,PARTY_MODES,USER_PERMISSION } from '../../assets/utils'; 
 
 export class LoginView extends React.Component {
     constructor(props) {
@@ -187,16 +187,16 @@ export class LoginView extends React.Component {
             const party = response.docs[0];
             const partyId = party.id
             const data = party.data();
-            const { participants, playlist, name } = data;
+            const { participants, playlist, name, partyMode } = data;
             const playlistId = await this.getPlaylistId(playlist);
-            // const userId = participants[participants.length - 1] + 1;
+            const userId = participants[participants.length - 1] + 1;
+            loggedInUser.permission = partyMode === PARTY_MODES.FRIENDLY ? USER_PERMISSION.DJ : USER_PERMISSION.GUEST;
             participants.push(loggedInUser);
             Alert.alert(`Joining Party ${name}`);
             await db.collection(DB_TABLES.PARTY).doc(partyId).update({ participants});
             
-            this.props.navigation.navigate('Party View', {
+            this.props.navigation.navigate('Party Drawer', {
                 partyId: partyId,
-                isHost: false,
                 userId,
                 playlist: playlistId,
                 isInvited: true,
