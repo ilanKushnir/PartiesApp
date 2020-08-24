@@ -68,6 +68,8 @@ export class SettingsView extends React.Component {
             partyMode: this.state.partyMode,
             participants: this.state.participants
         });
+
+        this.props.navigation.navigate("Party View Stack");
     }
 
     render() {
@@ -121,7 +123,7 @@ export class SettingsView extends React.Component {
                         <Button
                             onPress={this.updateSettingsInDB}
                             title="Save"
-                            disabled={false}//
+                            disabled={!this.state.isHost}
                         />
                     </View>
                 </View>

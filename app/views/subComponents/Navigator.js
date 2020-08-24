@@ -13,7 +13,7 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import { Ionicons } from '@expo/vector-icons';
 import PartyTimeTab from '../../tabs/PartyTimeTab.js';
 import AddToPlaylistView from '../AddToPlaylistView.js';
-import { LoginView } from '../LogjnView.js';
+import { LoginView } from '../LoginView.js';
 import { SettingsView } from '../SettingsView.js';
 import { ParticipantsView } from '../ParticipantsView.js';
 
@@ -34,7 +34,7 @@ export default class Navigator extends React.Component {
                 initialParams={{ logout: navigation?.route?.params?.logout || false}}
             />
             <Stack.Screen name="Bottom Tabs" component={this.BottomTabs} />
-            <Stack.Screen name="Party View" component={PartyView} />
+            <Stack.Screen name="Party Drawer" component={this.PartyViewDrawer} />
         </Stack.Navigator>
     }
 
@@ -121,10 +121,9 @@ export default class Navigator extends React.Component {
                         loggedInUser: navigation.route.params.loggedInUser,
                         userId: navigation.route.params.userId,
                         partyId: navigation.route.params.partyId,
-                        isHost: navigation.route.params.isHost,
                         playlist: navigation.route.params.playlist,
                         isInvited: navigation.route.params.isInvited,
-
+                        participants: navigation.route.params.participants
                     }}
                     options={{
                         drawerLabel: 'Party',

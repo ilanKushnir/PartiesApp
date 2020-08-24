@@ -1,7 +1,6 @@
 
 import React from 'react';
-import { Text, View, Alert, TouchableOpacity, Button, Clipboard, Share } from 'react-native';
-import TrackItem from './subComponents/TrackItem';
+import { Text, View, Alert, Share } from 'react-native';
 import YoutubeView from './subComponents/YoutubeView';
 import firebase from '../../firebase';
 import { styles } from '../styles/styles.js';

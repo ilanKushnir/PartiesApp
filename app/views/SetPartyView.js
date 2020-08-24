@@ -1,9 +1,8 @@
 import React from 'react';
-import { StyleSheet, Text, View, TextInput, Alert, TouchableOpacity, Button, Keyboard, Switch } from 'react-native';
-import PartyView from './PartyView'
-import firebase from '../../firebase'
-import { styles } from '../styles/styles.js'
-import { StackActions } from '@react-navigation/native'
+import { Text, View, TextInput, Alert, Button, Keyboard, Switch } from 'react-native';
+import firebase from '../../firebase';
+import { styles } from '../styles/styles.js';
+import { StackActions } from '@react-navigation/native';
 import DropDownPicker from 'react-native-dropdown-picker';
 import Icon from 'react-native-vector-icons/Feather';
 

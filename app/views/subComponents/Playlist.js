@@ -1,12 +1,9 @@
 import React from 'react';
-import { Text, View, FlatList, Image, Alert, TouchableOpacity } from 'react-native';
+import { Text, View, Alert } from 'react-native';
 import TrackItem from './TrackItem.js';
 import firebase from '../../../firebase.js';
-import { StackActions } from '@react-navigation/native';
 import { styles } from '../../styles/styles.js';
 import { Button } from 'react-native';
-import { SwipeableFlatList } from 'react-native-swipeable-flat-list';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import DraggableFlatList from 'react-native-draggable-flatlist';
 import { DB_TABLES } from '../../../assets/utils'; 
 
