@@ -107,5 +107,15 @@ export const styles = StyleSheet.create({
     paddingVertical: 10,
     marginHorizontal: 5,
     backgroundColor: '#f5f5f5',
+  },
+
+  ParticipantItem: {
+    flexDirection: 'row',
+    alignContent: 'center',
+    borderTopWidth: 1,
+    borderTopColor: '#6C7A89',
+    paddingVertical: 10,
+    marginHorizontal: 5,
+    justifyContent:'space-between'
   }
 });
