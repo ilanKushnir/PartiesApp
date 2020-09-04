@@ -8,8 +8,7 @@ import { StackActions } from '@react-navigation/native';
 import Playlist from './subComponents/Playlist.js';
 import * as Linking from 'expo-linking';
 import { MaterialCommunityIcons } from 'react-native-vector-icons';
-import { DB_TABLES, USER_PERMISSION } from '../../assets/utils'; 
-import { log } from 'react-native-reanimated';
+import { DB_TABLES, USER_PERMISSION } from '../../assets/utils';
 
 export class PartyView extends React.Component {
     static navigationOptions = {
