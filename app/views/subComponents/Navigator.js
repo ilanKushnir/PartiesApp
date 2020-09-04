@@ -192,7 +192,6 @@ export default class Navigator extends React.Component {
     render() {
         return (
             <NavigationContainer>
-                {/* <BackButtonHandler/>  */}
                 {this.MainAppStack()}
             </NavigationContainer>
         )
