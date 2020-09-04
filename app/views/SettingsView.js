@@ -75,19 +75,19 @@ export class SettingsView extends React.Component {
     render() {
         return (
             <View style={{ flex: 0.9 }}>
-                <View style={styles.row}>
-                    <View style={{ position: 'relative', left: 10 }} >
-                        <MaterialCommunityIcons
-                            onPress={() => this.props.navigation.openDrawer()}
-                            name="menu"
-                            size={30}
-                            color="#696969"
-                        />
+                    <View style={styles.row}>
+                        <View style={{ position: 'relative', left: 10 }} >
+                            <MaterialCommunityIcons
+                                onPress={() => this.props.navigation.openDrawer()}
+                                name="menu"
+                                size={30}
+                                color="#696969"
+                            />
+                        </View>
+                        <View style={{ ...styles.center }}>
+                            <Text style={styles.title}>Settings</Text>
+                        </View>
                     </View>
-                    <View style={{ ...styles.center }}>
-                        <Text style={styles.title}>Settings</Text>
-                    </View>
-                </View>
                 <View style={{ ...styles.center, flex: 4}}>
                     <View style={{ ...styles.row, ...styles.publicSwitch, flex: 0.2 }}>
                         <Text>Public</Text>
