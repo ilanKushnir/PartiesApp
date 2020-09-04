@@ -116,6 +116,19 @@ export const styles = StyleSheet.create({
     borderTopColor: '#6C7A89',
     paddingVertical: 10,
     marginHorizontal: 5,
-    justifyContent:'space-between'
-  }
+    justifyContent: 'space-between'
+  },
+  ActivePlaylistItem: {
+    flexDirection: 'row',
+    alignContent: 'center',
+    borderWidth: 1,
+    borderColor: '#BAB0B0',
+    marginHorizontal: 5,
+    paddingTop: 23,
+    alignSelf: 'stretch',
+    marginBottom: 5,
+    backgroundColor: '#DBE0E0',
+    borderRadius:10,
+
+  },
 });

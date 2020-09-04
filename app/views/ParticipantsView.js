@@ -9,7 +9,7 @@ import ButtonGroup from 'react-native-button-group';
 import RadioGroup from 'react-native-radio-button-group';
 import { color } from 'react-native-reanimated';
 import firebase from '../../firebase';
-import { DB_TABLES, USER_PERMISSION } from '../../assets/utils'; 
+import { DB_TABLES, USER_PERMISSION } from '../../assets/utils';
 
 
 export class ParticipantsView extends React.Component {
@@ -21,8 +21,9 @@ export class ParticipantsView extends React.Component {
             changePermission: false,
             partyId: props.route.params.partyId,
             partyMode: props.route.params.partyMode,
-            participants: props.route.params.participants
-            
+            participants: props.route.params.participants.filter(participant => participant.id !== this.props.route.params.loggedInUser.id),
+            loggedInUser: this.props.route.params.loggedInUser
+
             // participants: [{
             //     "id": "1",
             //     "name": "DEKEL",
@@ -57,12 +58,18 @@ export class ParticipantsView extends React.Component {
     }
 
     updateParticipantsPermissionsInDb = async () => {
+        let participants = this.state.participants;
+        participants.push({
+            id: this.state.loggedInUser.id,
+            name: this.state.loggedInUser.name,
+            permission: this.state.loggedInUser.permission
+        });
         await this.db.collection('party').doc(this.state.partyId).update({
-            participants: this.state.participants
+            participants: participants
         });
     }
 
-     componentWillUnmount() {
+    componentWillUnmount() {
         this.dbbindingResponse();
     }
 
@@ -78,10 +85,10 @@ export class ParticipantsView extends React.Component {
         try {
             this.dbbindingResponse = await this.db.collection(DB_TABLES.PARTY).doc(this.state.partyId).onSnapshot(snapshot => {
                 const data = snapshot.data();
-                const {participants} = data;
+                const { participants } = data;
 
                 this.setState({
-                   participants
+                    participants: participants.filter(participant => participant.id !== this.props.route.params.loggedInUser.id)
                 });
             })
         } catch (error) {
@@ -107,23 +114,23 @@ export class ParticipantsView extends React.Component {
 
     renderParticipantItem = ({ item, index }) => {
         var radiogroup_options = [
-            { id: 0, label: 'HOST' },
             { id: 1, label: 'DJ' },
             { id: 2, label: 'GUEST' }
         ];
 
         return (
+
             <View style={styles.ParticipantItem} >
                 <Text>{item.name + '-' + item.permission} </Text>
                 {
-                    this.props.route.params.loggedInUser.permission === 'HOST' &&
+                    this.state.loggedInUser.permission === 'HOST' &&
                     (this.state.changePermission && this.state.changePermissionIndex === index ?
                         <View style={{ flexDirection: 'row' }}>
                             <RadioGroup
                                 options={radiogroup_options}
                                 onChange={(option) => this.changePermission(option.label, item.id)}
                                 horizontal={true}
-                                activeButtonId={radiogroup_options.filter(option => option.label === item.permission)[0].id}
+                                activeButtonId={radiogroup_options.filter(option => option.label === item.permission[0] ? option.label === item.permission[0].id : null)}
                             />
                             <TouchableOpacity
                                 style={{ height: 32, position: 'relative', top: 4 }}
@@ -159,8 +166,9 @@ export class ParticipantsView extends React.Component {
     render() {
         return (
             <SafeAreaView style={{ position: 'relative' }}>
-                <View style={{ height: 50, flexDirection: 'row' }}>
-                    <View style={{ left: 10 }} >
+                <View style={{
+                    height: 50, flexDirection: 'row', position: 'relative', top: 12, alignSelf: 'stretch'}}>
+                    <View style={{ left: 10,flex:1 }} >
                         <MaterialCommunityIcons
                             onPress={() => this.props.navigation.openDrawer()}
                             name="menu"
@@ -168,11 +176,11 @@ export class ParticipantsView extends React.Component {
                             color="#696969"
                         />
                     </View>
-                    <View style={{
-                        alignItems: "center",
-                        alignSelf: 'center'
-                    }}>
-                        <Text style={styles.title}>Participants</Text>
+                    <View style={{ left: 10,flex:2 }}>
+                        <Text style={{
+                            fontSize: 24,
+                            marginBottom: 16
+                        }}>Participants</Text>
                     </View>
                 </View>
                 <FlatList

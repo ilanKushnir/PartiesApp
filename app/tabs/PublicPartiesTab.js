@@ -4,7 +4,7 @@ import { styles } from '../styles/styles.js'
 import { StackActions } from '@react-navigation/native';
 import firebase from '../../firebase.js';
 import PublicPartyItem from '../views/subComponents/PublicPartyItem';
-import { DB_TABLES } from '../../assets/utils'; 
+import { DB_TABLES } from '../../assets/utils';
 
 export class PublicPartiesTab extends React.Component {
   constructor(props) {
@@ -24,64 +24,85 @@ export class PublicPartiesTab extends React.Component {
       console.log(error);
     }
   }
-  
-  bindPartiesChangesFromDB = async() => {
+
+  bindPartiesChangesFromDB = async () => {
     let updatePartiesArr = this.state.publicParties;
     try {
       const observer = await this.db.collection(DB_TABLES.PARTY).orderBy("creationTime", "desc").where("isPublic", "==", true).limit(100)
-      .onSnapshot(querySnapshot => {
+        .onSnapshot(querySnapshot => {
 
-        querySnapshot.docChanges().forEach(change => {
-          const { name, condition, joinId } = change.doc.data();
-          const id = change.doc.id;
+          querySnapshot.docChanges().forEach(change => {
+            const { name, condition, joinId } = change.doc.data();
+            const id = change.doc.id;
 
-          if (change.type === 'added') {
-            updatePartiesArr.push({ id, joinId, name, condition });
-          }
-          if (change.type === 'modified') {
-            updatePartiesArr.map((party) => {
-              if(party.joinId === joinId){
-                party.condition = condition;
-              }
-              return party;
-            });
-          }
+            if (change.type === 'added') {
+              updatePartiesArr.push({ id, joinId, name, condition });
+            }
+            if (change.type === 'modified') {
+              updatePartiesArr.map((party) => {
+                if (party.joinId === joinId) {
+                  party.condition = condition;
+                }
+                return party;
+              });
+            }
 
-          this.setState({ 
-            PublicParties: updatePartiesArr,
-            listLoaded: true
-          })
+            this.setState({
+              PublicParties: updatePartiesArr,
+              listLoaded: true
+            })
+          });
         });
-      });
     } catch (error) {
       console.log(error);
     }
-  } 
+  }
 
   render() {
     return (
-      <View style={styles.center}>
-        <Text style={styles.title}>Public Parties</Text>
-        <View style={{ flex: 1, paddingTop: 100 }}>
+      <View style={{justifyContent: "center",alignItems: "center",flex:1}}>
+        <Text style={{ ...styles.title, position: 'absolute', top: 17 }}>Public Parties</Text>
+        <View style={{
+          flex: 1, paddingTop: 65,
+          alignSelf: 'stretch',
+          textAlign: 'center',
+          height:200
+        }}>
+          <View style={{ flexDirection: "row", justifyContent: 'space-evenly'}}>
+            <Text style={{
+              flex: 6, fontWeight: 'bold', position: 'relative', left: 9,marginBottom:15
+            }}>
+              Name
+                    </Text>
+            <Text style={{ flex: 6, fontWeight: 'bold' }}>
+              Status
+                    </Text>
+            <Text style={{ flex: 2, fontWeight: 'bold' }}>
+              ID
+             </Text>
+          </View>
           {this.state.listLoaded && (
-                <FlatList
-                    data={this.state.publicParties}
-                    renderItem={({ item }) =>
-                    <PublicPartyItem
-                          key={item.id}
-                          joinId={item.joinId}
-                          name={item.name}
-                          condition={item.condition}
-                          // onClickFunc={() => this.loadVideoToPlayer(index)}
-                      />
-                    }
-                    keyExtractor={item => item.id}
+            <FlatList
+            style={{ alignSelf: 'stretch'
+          }}
+              data={this.state.publicParties}
+              renderItem={({ item }) =>
+                <PublicPartyItem
+                  key={item.id}
+                  joinId={item.joinId}
+                  name={item.name}
+                  condition={item.condition}
+                // onClickFunc={() => this.loadVideoToPlayer(index)}
                 />
+              }
+              keyExtractor={item => item.id}
+            />
           )}
           {!this.state.listLoaded && (
-              <Text> LOADING... </Text>
+            <Text> LOADING... </Text>
           )}
         </View>
+        {/* <View style={{height:50}}></View> */}
       </View>
     )
   }
