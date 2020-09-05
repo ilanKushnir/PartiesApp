@@ -132,7 +132,6 @@ export default class Playlist extends React.Component {
                 const trackReference = this.db.collection(DB_TABLES.TRACK).doc();
                 batch.set(trackReference, track);
                 track.id = trackReference.id;
-                console.log('on batch, track uid', trackReference.id);
             });
 
             await batch.commit();
@@ -146,9 +145,6 @@ export default class Playlist extends React.Component {
         catch (error) {
             console.log(error)
         }
-
-        console.log(this.state.tracks);
-
     }
 
     loadVideoToPlayer = async (index) => {
@@ -232,7 +228,7 @@ export default class Playlist extends React.Component {
                                 imageSrc={item.image}
                                 item={item}
                                 togglingMode={false}
-                                onClickFunc={() => this.loadVideoToPlayer(index)}
+                                onClickFunc={this.props.isDJ ? () => this.loadVideoToPlayer(index) : () => {}}
                                 onLongPress={drag}
                                 editableMode={this.state.editMode}
                                 deleteTrack={this.deleteTrackFromPlaylist}
