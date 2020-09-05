@@ -143,7 +143,13 @@ export class SettingsView extends React.Component {
                             defaultValue={this.state.partyMode}
                         />
                     </View>
-
+                    <View style={{ position: 'absolute', bottom: 40 }}>
+                        <Button
+                            onPress={this.updateSettingsInDB}
+                            title="Save"
+                            disabled={!this.state.isHost}
+                        />
+                    </View>
                 </View>
 
             </View>

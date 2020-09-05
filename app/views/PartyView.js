@@ -115,7 +115,6 @@ export class PartyView extends React.Component {
         }
 
         const { permission: newPermission } = myUserOnDB;
-        console.log('old', oldPermission, 'new', newPermission);
 
         if (myUserOnDB && oldPermission !== newPermission) {
             const downgraded =

@@ -38,7 +38,7 @@ export default class TrackItem extends React.Component {
                     }
                 }}>
 
-                <View style={{ ...this.state.selected ? styles.trackItemSelected : styles.trackItem, backgroundColor: '#DBE0E0', alignSelf: 'stretch' }}>
+                <View style={ this.state.selected ? {...styles.trackItemSelected} : {...styles.trackItem} }>
 
                     <Image
                         style={{ flex: 1, width: 20, height: 35, marginRight: 10 }}
