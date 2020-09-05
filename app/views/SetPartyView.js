@@ -5,7 +5,6 @@ import { styles } from '../styles/styles.js';
 import { StackActions } from '@react-navigation/native';
 import DropDownPicker from 'react-native-dropdown-picker';
 import Icon from 'react-native-vector-icons/Feather';
-
 import { DB_TABLES, USER_PERMISSION, PARTY_MODES } from '../../assets/utils'; 
 
 export default class SetPartyView extends React.Component {
@@ -36,7 +35,7 @@ export default class SetPartyView extends React.Component {
             ];
             handleSetParty = async (partyName) => {
                 try {
-                    const lastCreatedParty = await db.collection(DB_TABLES.PARTY).orderBy('creationTime', 'desc').limit(1).get();
+                    const lastCreatedParty = await db.collection(DB_TABLES.PARTY).orderBy('joinId', 'desc').limit(1).get();
                     let joinId;
                     if (lastCreatedParty.docs[0]) {
                         const partyData = lastCreatedParty.docs[0].data();
@@ -76,7 +75,6 @@ export default class SetPartyView extends React.Component {
                     const partyId = response.id;
                     this.props.navigation.navigate('Party Drawer', {
                         partyId,
-                        isHost: true,
                         playlist: playlistId,
                         isInvited: false,
                         participants,
@@ -103,12 +101,17 @@ export default class SetPartyView extends React.Component {
                     const { name, participants, playlist, lastUpdatedTime, partyMode } = data;
                     const playlistId = await this.getPlaylistId(playlist);
 
-                    const loggedInUser = this.state.loggedInUser;
+                    let loggedInUser = this.state.loggedInUser;
 
-                    loggedInUser.permission = partyMode === PARTY_MODES.FRIENDLY ? USER_PERMISSION.DJ : USER_PERMISSION.GUEST;
+                    const myUserInParticipants = participants.find(user => user.id === loggedInUser.id);
+                    if(myUserInParticipants) {
+                        loggedInUser = myUserInParticipants;
 
-                    participants.push(loggedInUser)
-                    await db.collection('party').doc(partyId).update({ participants });
+                    } else {    //  User is new to this party
+                        loggedInUser.permission = partyMode === PARTY_MODES.FRIENDLY ? USER_PERMISSION.DJ : USER_PERMISSION.GUEST;
+                        participants.push(loggedInUser);
+                        await db.collection(DB_TABLES.PARTY).doc(partyId).update({ participants });
+                    }
 
                     Alert.alert(`Joining Party ${name}`);
                     this.props.navigation.navigate('Party Drawer', {

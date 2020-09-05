@@ -59,6 +59,7 @@ export class PublicPartiesTab extends React.Component {
   }
 
   render() {
+    const { navigation } = this.props;
     return (
       <View style={{justifyContent: "center",alignItems: "center",flex:1,...styles.appBackgroundColor}}>
         <Text style={{ ...styles.title, position: 'absolute', top: 17 }}>Public Parties</Text>
@@ -92,8 +93,9 @@ export class PublicPartiesTab extends React.Component {
                   joinId={item.joinId}
                   name={item.name}
                   condition={item.condition}
-                // onClickFunc={() => this.loadVideoToPlayer(index)}
-                />
+                  navigation={navigation}
+                  loggedInUser={this.props.route.params.loggedInUser}
+              />
               }
               keyExtractor={item => item.id}
             />

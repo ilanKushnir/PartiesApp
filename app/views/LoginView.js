@@ -6,6 +6,7 @@ import AsyncStorage from '@react-native-community/async-storage';
 import firebase from '../../firebase';
 import * as Linking from 'expo-linking';
 import { DB_TABLES,PARTY_MODES,USER_PERMISSION } from '../../assets/utils'; 
+import { CommonActions } from '@react-navigation/native';
 
 export class LoginView extends React.Component {
     constructor(props) {
@@ -189,20 +190,32 @@ export class LoginView extends React.Component {
             const data = party.data();
             const { participants, playlist, name, partyMode } = data;
             const playlistId = await this.getPlaylistId(playlist);
-            const userId = participants[participants.length - 1] + 1;
-            loggedInUser.permission = partyMode === PARTY_MODES.FRIENDLY ? USER_PERMISSION.DJ : USER_PERMISSION.GUEST;
-            participants.push(loggedInUser);
-            Alert.alert(`Joining Party ${name}`);
-            await db.collection(DB_TABLES.PARTY).doc(partyId).update({ participants});
             
-            this.props.navigation.navigate('Party Drawer', {
-                partyId: partyId,
-                userId,
-                playlist: playlistId,
-                isInvited: true,
-                participants,
-                loggedInUser
+            const myUserInParticipants = participants.find(user => user.id === loggedInUser.id);
+            if(myUserInParticipants) {
+                loggedInUser = myUserInParticipants;
+            } else {    //  User is new to this party
+                loggedInUser.permission = partyMode === PARTY_MODES.FRIENDLY ? USER_PERMISSION.DJ : USER_PERMISSION.GUEST;
+                participants.push(loggedInUser);
+                await db.collection(DB_TABLES.PARTY).doc(partyId).update({ participants});
+            }
+
+            const navigateAction = CommonActions.reset({
+                index: 0,
+                routes: [
+                    {
+                        name: 'Party Time Tab',
+                        params: {
+                            partyId: partyId,
+                            playlist: playlistId,
+                            isInvited: true,
+                            participants,
+                            loggedInUser
+                        },
+                    }
+                    ],
             });
+            this.props.navigation.dispatch(navigateAction);
         }
         catch (e) {
             console.log('Error join existing party', e)
