@@ -4,6 +4,7 @@ import { styles } from '../../styles/styles';
 import { DB_TABLES, USER_PERMISSION, PARTY_MODES } from '../../../assets/utils'; 
 import firebase from '../../../firebase.js';
 import { CommonActions } from '@react-navigation/native';
+import { color } from 'react-native-reanimated';
 
 export default class PublicPartyItem extends React.Component {
     constructor(props) {
@@ -55,16 +56,27 @@ export default class PublicPartyItem extends React.Component {
 
     render() {
         return (
-            <TouchableOpacity
-                onPress={this.joinParty}>
-                <View style={this.props.condition === 'play' ? styles.partyItemPlayed : styles.partyItemPaused}>
+            <TouchableOpacity onPress={this.joinParty}>
+                <View style={{ ...styles.ActivePlaylistItem, flexDirection: "row", justifyContent: 'space-evenly', height: 60 }}>
+                    <Text style={{ flex: 6,position:'relative',left:9, fontSize:16 }}>
+                        {this.props.name}
+                    </Text>
+                    <Text style={{ flex: 6, color: this.props.condition === 'play' ? 'green' : 'red' }}>
+                        {this.props.condition}
+                    </Text>
+                    <Text style={{ flex: 2 }}>
+                        {this.props.joinId}
+                    </Text>
+                </View>
+
+                {/* <View style={this.props.condition === 'play' ? styles.partyItemPlayed : styles.partyItemPaused}>
                     <Text style={{ flex: 6 }}>
                         {this.props.joinId} - {this.props.name}
                     </Text>
                     <Text style={{ flex: 6 }}>
                         status: {this.props.condition}
                     </Text>
-                </View>
+                </View> */}
             </TouchableOpacity>
         )
     }

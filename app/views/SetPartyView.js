@@ -78,7 +78,8 @@ export default class SetPartyView extends React.Component {
                         playlist: playlistId,
                         isInvited: false,
                         participants,
-                        loggedInUser
+                        loggedInUser,
+                        partyMode: partyMode
                     });
                 } catch (error) {
                     console.log(`Error starting new party ${error}`);
@@ -112,7 +113,8 @@ export default class SetPartyView extends React.Component {
                         playlist: playlistId,
                         isInvited: false,
                         participants,
-                        loggedInUser
+                        loggedInUser,
+                        partyMode: partyMode
                     });
                 } catch (e) {
                     console.log('Error join existing party', e)

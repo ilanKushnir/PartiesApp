@@ -8,7 +8,7 @@ import { StackActions } from '@react-navigation/native';
 import Playlist from './subComponents/Playlist.js';
 import * as Linking from 'expo-linking';
 import { MaterialCommunityIcons } from 'react-native-vector-icons';
-import { DB_TABLES, USER_PERMISSION } from '../../assets/utils'; 
+import { DB_TABLES, USER_PERMISSION } from '../../assets/utils';
 
 export class PartyView extends React.Component {
     static navigationOptions = {
@@ -70,7 +70,8 @@ export class PartyView extends React.Component {
                     activeVideo: {
                         id,
                         currentTime
-                    }
+                    },
+                    isDJ: loggedInUser.permission !== USER_PERMISSION.GUEST
                 });
             })
         } catch (error) {
@@ -191,12 +192,6 @@ export class PartyView extends React.Component {
     }
 
     leaveParty = async () => {
-        if (this.state.isInvited) {
-            this.props.navigation.dispatch(StackActions.pop());
-        } else {
-            this.props.navigation.dispatch(StackActions.popToTop());
-        }
-
         try {
             const party = await this.db.collection(DB_TABLES.PARTY).doc(this.state.partyId).get();
             let { participants } = party.data();
@@ -211,10 +206,18 @@ export class PartyView extends React.Component {
 
                 await this.db.collection(DB_TABLES.PARTY).doc(this.state.partyId).update({ participants });
             }
+
+            if (this.state.isInvited) {
+                this.props.navigation.dispatch(StackActions.pop());
+            } else {
+                this.props.navigation.dispatch(StackActions.popToTop());
+            }
         } catch (error) {
             console.log(`Error on leave party ${error}`);
             Alert.alert(`Error on leave party`);
         }
+
+
     }
 
     onIdPress = async () => {

@@ -30,14 +30,14 @@ export default class Navigator extends React.Component {
             }}
             headerMode='none'
         >
-            <Stack.Screen name="Login" component={LoginView} 
-                initialParams={{ logout: navigation?.route?.params?.logout || false}}
+            <Stack.Screen name="Login" component={LoginView}
+                initialParams={{ logout: navigation?.route?.params?.logout || false }}
             />
             <Stack.Screen name="Bottom Tabs" component={this.BottomTabs} />
         </Stack.Navigator>
     }
 
-    BottomTabs = (navigation) => {        
+    BottomTabs = (navigation) => {
         return <Tab.Navigator
             initialRouteName="Home"
             barStyle={{ backgroundColor: '#ff6347' }}
@@ -152,7 +152,8 @@ export default class Navigator extends React.Component {
                     initialParams={{
                         participants: navigation.route.params.participants,
                         loggedInUser: navigation.route.params.loggedInUser,
-
+                        partyId: navigation.route.params.partyId,
+                        partyMode: navigation.route.params.partyMode,
                     }}
                     options={{
                         drawerLabel: 'Participants',
@@ -171,7 +172,7 @@ export default class Navigator extends React.Component {
                     }}
                     options={{
                         drawerLabel: 'Settings',
-                        drawerIcon: ({ size }) => ( 
+                        drawerIcon: ({ size }) => (
                             <Ionicons
                                 name="ios-settings"
                                 size={size}
@@ -204,7 +205,6 @@ export default class Navigator extends React.Component {
     render() {
         return (
             <NavigationContainer>
-                {/* <BackButtonHandler/>  */}
                 {this.MainAppStack()}
             </NavigationContainer>
         )
@@ -215,7 +215,7 @@ export default class Navigator extends React.Component {
 
 
 
-/* 
+/*
 Use this to fix error:
 1. "Unable to resolve module ./components/Checkbox from node_modules\react-native-paper\lib\module\index.js"
 2. Unable to resolve "./NavigationNativeContainer" from "node_modules/@react-navigation/native/src/index.tsx"
