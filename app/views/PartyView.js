@@ -40,6 +40,15 @@ export class PartyView extends React.Component {
         this.db = firebase.firestore();        
     }
 
+    componentDidMount = async () => {
+        try {
+            // bind party continues updates from DB to this component
+            await this.bindPartyChangesFromDB();
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
     fixCurrentTimeDeviation = (videoTime, lastUpdatedTime) => {
         const currentTime = new Date();
         const delta = (currentTime - lastUpdatedTime.toDate()) / 1000;
@@ -126,15 +135,6 @@ export class PartyView extends React.Component {
         }
 
         return participants;
-    }
-
-    async componentDidMount() {
-        try {
-            // bind party continues updates from DB to this component
-            await this.bindPartyChangesFromDB();
-        } catch (error) {
-            console.log(error);
-        }
     }
 
     loadNextVideoToPlayer = () => {

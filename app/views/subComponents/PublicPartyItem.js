@@ -13,7 +13,7 @@ export default class PublicPartyItem extends React.Component {
 
     joinParty = async () => {
         const db = firebase.firestore();
-        const { loggedInUser, joinId } = this.props;
+        let { loggedInUser, joinId } = this.props;
 
         try {
             const response = await db.collection(DB_TABLES.PARTY).where('joinId', '==', parseInt(joinId)).limit(1).get();
@@ -22,9 +22,15 @@ export default class PublicPartyItem extends React.Component {
             const data = party.data();
             const { participants, playlist, name, partyMode } = data;
             const playlistId = await this.getPlaylistId(playlist);
-            loggedInUser.permission = partyMode === PARTY_MODES.FRIENDLY ? USER_PERMISSION.DJ : USER_PERMISSION.GUEST;
-            participants.push(loggedInUser);
-            await db.collection(DB_TABLES.PARTY).doc(partyId).update({ participants});
+
+            const myUserInParticipants = participants.find(user => user.id === loggedInUser.id);
+            if(myUserInParticipants) {
+                loggedInUser = myUserInParticipants;
+            } else {    //  User is new to this party
+                loggedInUser.permission = partyMode === PARTY_MODES.FRIENDLY ? USER_PERMISSION.DJ : USER_PERMISSION.GUEST;
+                participants.push(loggedInUser);
+                await db.collection(DB_TABLES.PARTY).doc(partyId).update({ participants});
+            }
 
             const navigateAction = CommonActions.reset({
                 index: 0,

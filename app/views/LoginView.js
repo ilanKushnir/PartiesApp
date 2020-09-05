@@ -190,10 +190,15 @@ export class LoginView extends React.Component {
             const data = party.data();
             const { participants, playlist, name, partyMode } = data;
             const playlistId = await this.getPlaylistId(playlist);
-            loggedInUser.permission = partyMode === PARTY_MODES.FRIENDLY ? USER_PERMISSION.DJ : USER_PERMISSION.GUEST;
-            participants.push(loggedInUser);
-            await db.collection(DB_TABLES.PARTY).doc(partyId).update({ participants});
             
+            const myUserInParticipants = participants.find(user => user.id === loggedInUser.id);
+            if(myUserInParticipants) {
+                loggedInUser = myUserInParticipants;
+            } else {    //  User is new to this party
+                loggedInUser.permission = partyMode === PARTY_MODES.FRIENDLY ? USER_PERMISSION.DJ : USER_PERMISSION.GUEST;
+                participants.push(loggedInUser);
+                await db.collection(DB_TABLES.PARTY).doc(partyId).update({ participants});
+            }
 
             const navigateAction = CommonActions.reset({
                 index: 0,

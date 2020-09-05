@@ -101,10 +101,17 @@ export default class SetPartyView extends React.Component {
                     const { name, participants, playlist, lastUpdatedTime, partyMode } = data;
                     const playlistId = await this.getPlaylistId(playlist);
 
-                    const loggedInUser = this.state.loggedInUser;
-                    loggedInUser.permission = partyMode === PARTY_MODES.FRIENDLY ? USER_PERMISSION.DJ : USER_PERMISSION.GUEST;
-                    participants.push(loggedInUser)
-                    await db.collection('party').doc(partyId).update({ participants });
+                    let loggedInUser = this.state.loggedInUser;
+
+                    const myUserInParticipants = participants.find(user => user.id === loggedInUser.id);
+                    if(myUserInParticipants) {
+                        loggedInUser = myUserInParticipants;
+
+                    } else {    //  User is new to this party
+                        loggedInUser.permission = partyMode === PARTY_MODES.FRIENDLY ? USER_PERMISSION.DJ : USER_PERMISSION.GUEST;
+                        participants.push(loggedInUser);
+                        await db.collection(DB_TABLES.PARTY).doc(partyId).update({ participants });
+                    }
 
                     Alert.alert(`Joining Party ${name}`);
                     this.props.navigation.navigate('Party Drawer', {
