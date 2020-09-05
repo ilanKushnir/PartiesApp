@@ -80,6 +80,7 @@ export const styles = StyleSheet.create({
     alignContent: 'center',
     paddingVertical: 10,
     marginHorizontal: 5,
+    alignSelf: 'stretch',
     backgroundColor: '#DBE0E0',
   },
   trackItemSelected: {
@@ -87,6 +88,7 @@ export const styles = StyleSheet.create({
     alignContent: 'center',
     paddingVertical: 10,
     marginHorizontal: 5,
+    alignSelf: 'stretch',
     backgroundColor: '#95A5A6',
   },
   publicSwitch: {

@@ -18,11 +18,17 @@ export class PublicPartiesTab extends React.Component {
   }
 
   async componentDidMount() {
+    this._isMounted = true;
+
     try {
       await this.bindPartiesChangesFromDB();
     } catch (error) {
       console.log(error);
     }
+  }
+
+  componentWillUnmount() {
+    this._isMounted = false;
   }
 
   bindPartiesChangesFromDB = async () => {
