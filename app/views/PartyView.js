@@ -43,6 +43,8 @@ export class PartyView extends React.Component {
     }
 
     componentDidMount = async () => {
+        this._isMounted = true;
+
         try {
             // bind party continues updates from DB to this component
             await this.bindPartyChangesFromDB();
@@ -50,6 +52,10 @@ export class PartyView extends React.Component {
             console.log(error);
         }
     }
+
+    componentWillUnmount() {
+        this._isMounted = false;
+      }
 
     fixCurrentTimeDeviation = (videoTime, lastUpdatedTime) => {
         const currentTime = new Date();
@@ -67,7 +73,8 @@ export class PartyView extends React.Component {
                 // If party is playing - fix deviation from last updated to current time
                 const currentTime = condition === 'play' ?
                     this.fixCurrentTimeDeviation(data.currentTime, data.lastUpdatedTime) : data.currentTime;
-                const loggedInUser = this.handleLoggedInUser(participants);
+                const loggedInUser = this.handleLoggedInUser(participants);                
+                if(loggedInUser === 'removed') return;
 
                 this.setState({
                     loggedInUser,
@@ -96,7 +103,7 @@ export class PartyView extends React.Component {
         const { id, permission: oldPermission } = user;
         const myUserOnDB = participants.find(user => user.id === id);
 
-        if (participants.length && !myUserOnDB) {  // loggedInUser has been kicked
+        if (participants.length && !myUserOnDB) {  // loggedInUser has been kicked            
             if (this.state.isInvited) {
                 this.props.navigation.dispatch(StackActions.pop());
             } else {
@@ -104,12 +111,12 @@ export class PartyView extends React.Component {
             }
             Alert.alert(`You have been kicked from party ${this.state.party.partyName}. It has been a pleasure`)
 
-            return;
+            return 'removed';
         }
 
         const { permission: newPermission } = myUserOnDB;
 
-        if (oldPermission !== newPermission) {
+        if (myUserOnDB && oldPermission !== newPermission) {
             const downgraded =
                 (oldPermission === USER_PERMISSION.HOST) ||
                 (oldPermission === USER_PERMISSION.DJ && newPermission === USER_PERMISSION.GUEST);
@@ -118,12 +125,12 @@ export class PartyView extends React.Component {
             Alert.alert(`You have been ${updateCase} to ${newPermission}`);
         }
 
-        return myUserOnDB || user;
+        return myUserOnDB //|| user;
     }
 
     updateHost = participants => {
-        const hosts = participants.filter(user => user.permission === USER_PERMISSION.HOST);
-        if (hosts.length) return participants;
+        // const hosts = participants.filter(user => user.permission === USER_PERMISSION.HOST);
+        // if (hosts.length) return participants;
 
         if (this.state.loggedInUser.permission === USER_PERMISSION.HOST) {
             for (let i = 0; i < participants.length; i++) {

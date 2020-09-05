@@ -113,7 +113,6 @@ export default class SetPartyView extends React.Component {
                         await db.collection(DB_TABLES.PARTY).doc(partyId).update({ participants });
                     }
 
-                    Alert.alert(`Joining Party ${name}`);
                     this.props.navigation.navigate('Party Drawer', {
                         partyId,
                         isHost: false,

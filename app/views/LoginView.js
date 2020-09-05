@@ -21,6 +21,7 @@ export class LoginView extends React.Component {
     }
 
     componentDidMount = async () => {
+        this._isMounted = true;
         try {
             const url = await Linking.getInitialURL();
             if (url) {
@@ -52,6 +53,7 @@ export class LoginView extends React.Component {
     }
 
     componentWillUnmount() {
+        this._isMounted = false;
         Linking.removeEventListener('url', this._handleUrl);
     }
 
