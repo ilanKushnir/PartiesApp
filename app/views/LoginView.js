@@ -189,7 +189,6 @@ export class LoginView extends React.Component {
             const data = party.data();
             const { participants, playlist, name, partyMode } = data;
             const playlistId = await this.getPlaylistId(playlist);
-            const userId = participants[participants.length - 1] + 1;
             loggedInUser.permission = partyMode === PARTY_MODES.FRIENDLY ? USER_PERMISSION.DJ : USER_PERMISSION.GUEST;
             participants.push(loggedInUser);
             Alert.alert(`Joining Party ${name}`);
@@ -197,7 +196,6 @@ export class LoginView extends React.Component {
             
             this.props.navigation.navigate('Party Drawer', {
                 partyId: partyId,
-                userId,
                 playlist: playlistId,
                 isInvited: true,
                 participants,

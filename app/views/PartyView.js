@@ -15,7 +15,7 @@ export class PartyView extends React.Component {
         header: null
     };
 
-    constructor(props) {
+    constructor(props) {        
         super(props);
         this.state = {
             activeVideo: {
@@ -31,14 +31,13 @@ export class PartyView extends React.Component {
                 condition: '',
                 playlist: props.route.params.playlist
             },
-            userId: props.route.params.userId,
             isDJ: props.route.params.loggedInUser.permission === USER_PERMISSION.HOST || 
                 props.route.params.loggedInUser.permission === USER_PERMISSION.DJ,
             isInvited: props.route.params.isInvited,
             loggedInUser: props.route.params.loggedInUser
         };
         this.loadVideoToPlayer = this.loadVideoToPlayer.bind(this);
-        this.db = firebase.firestore();
+        this.db = firebase.firestore();        
     }
 
     fixCurrentTimeDeviation = (videoTime, lastUpdatedTime) => {
