@@ -9,6 +9,8 @@ export default class PartyTimeTab extends React.Component {
     }
 
     componentDidMount = () => {
+        this._isMounted = true;
+
         if(this.props?.route?.params?.partyId) {
             const { loggedInUser, partyId, playlist, isInvited, participants } = this.props.route.params;
 
@@ -20,6 +22,10 @@ export default class PartyTimeTab extends React.Component {
                 loggedInUser
             });
         }
+    }
+
+    componentWillUnmount() {
+        this._isMounted = false;
     }
 
     render() {

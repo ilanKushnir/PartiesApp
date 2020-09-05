@@ -41,6 +41,8 @@ export class SettingsView extends React.Component {
     }
 
     async componentDidMount() {
+        this._isMounted = true;
+
         try {
             // bind settings continues updates from DB to this component
             await this.bindPartyChangesFromDB();
@@ -48,6 +50,10 @@ export class SettingsView extends React.Component {
             console.log(error);
         }
     }
+
+    componentWillUnmount() {
+        this._isMounted = false;
+      }
 
     updatePermissions = (partyMode) => {
         let participants = this.state.participants.map(user => {

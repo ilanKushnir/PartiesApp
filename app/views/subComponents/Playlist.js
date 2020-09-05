@@ -172,6 +172,7 @@ export default class Playlist extends React.Component {
     }
 
     async componentDidMount() {
+        this._isMounted = true;
         try {
             const playlistId = await this.getPlaylistId();
             this.setState({
@@ -184,7 +185,9 @@ export default class Playlist extends React.Component {
         }
     }
 
-
+    componentWillUnmount() {
+        this._isMounted = false;
+      }
 
     render() {
         return (

@@ -21,16 +21,21 @@ export default class AddToPlaylistView extends React.Component {
     }
 
     async componentDidMount() {
+        this._isMounted = true;
         this.fetchYoutubeVideos()
     }
+
+    componentWillUnmount() {
+        this._isMounted = false;
+      }
 
     async fetchYoutubeVideos() {
         try {
             var searchString = this.state.searchValue.split(' ').join('+');
             // fetch videos from youtube
-            const response = await fetch(`https://www.googleapis.com/youtube/v3/search?part=snippet&q=${this.state.searchValue}&type=video&videoLicense=creativeCommon&key=AIzaSyBA1MCrElZzexam8ythKLd4TvkhVYtxbos`)
+            const response = await fetch(`https://www.googleapis.com/youtube/v3/search?part=snippet&q=${this.state.searchValue}&type=video&videoLicense=creativeCommon&key=AIzaSyCNt8xCcmLrwicT43F8nNBxci5d8rgOWNI`)
             const responseJson = await response.json()
-            // console.log(responseJson)
+            console.log(responseJson.items ? '' : responseJson);
             this.setState({
                 listLoaded: true,
                 videoList: Array.from(responseJson.items)

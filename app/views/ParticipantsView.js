@@ -126,11 +126,10 @@ export class ParticipantsView extends React.Component {
         });
     }
 
-    componentWillUnmount() {
-        this.dbbindingResponse();
-    }
-
+    
     async componentDidMount() {
+        this._isMounted = true;
+        
         try {
             // bind party continues updates from DB to this component
             await this.bindParticipantsFromDB();
@@ -138,6 +137,12 @@ export class ParticipantsView extends React.Component {
             console.log(error);
         }
     }
+    
+    componentWillUnmount() {
+        this._isMounted = false;
+        this.dbbindingResponse();
+    }
+
     bindParticipantsFromDB = async () => {
         try {
             this.dbbindingResponse = await this.db.collection(DB_TABLES.PARTY).doc(this.state.partyId).onSnapshot(snapshot => {
@@ -155,7 +160,7 @@ export class ParticipantsView extends React.Component {
     }
 
 
-    changePermission(newPermission, participantId) {
+    async changePermission(newPermission, participantId) {
 
         let updatedParticipants = this.state.participants.map(participant => {
 
@@ -166,7 +171,7 @@ export class ParticipantsView extends React.Component {
         });
 
         this.setState({ selectedOption: newPermission, changePermissionIndex: -1, participants: updatedParticipants });
-        this.updateParticipantsPermissionsInDb();
+        await this.updateParticipantsPermissionsInDb();
     }
 
     renderParticipantItem = ({ item, index }) => {
