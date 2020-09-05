@@ -132,7 +132,7 @@ export default class SetPartyView extends React.Component {
     render() {
         const { message, inputPlaceholder, buttonText, handleSetParty } = this.getAttributes(this.state.isNewParty);
         return (
-            <View style={styles.center}>
+            <View style={{...styles.center,...styles.appBackgroundColor}}>
                 <View style={{...styles.center,flex:0.2}}>
                     <Text style={styles.title}>{message}</Text>
                     <TextInput style={styles.input} placeholder={inputPlaceholder}
@@ -151,7 +151,7 @@ export default class SetPartyView extends React.Component {
                                 trackColor={{ false: "#767577", true: "#ff7752" }}
                             />
                         </View>
-                        <View style={styles.partyModePicker}>
+                        <View style={{...styles.partyModePicker, backgroundColor:'#fff7e3'}}>
                             <DropDownPicker
                                 items={[
                                     { label: 'View Only', value: PARTY_MODES.VIEW_ONLY, icon: () => <Icon name="music" size={18} color="#900" /> },
@@ -160,11 +160,11 @@ export default class SetPartyView extends React.Component {
                                 placeholder="Select Party Mode "
 
                                 containerStyle={{ height: 40, width: 180, marginTop: 10, marginBottom: 10 }}
-                                style={{ backgroundColor: '#fafafa' }}
+                                style={{ backgroundColor: '#ffa974' }}
                                 itemStyle={{
                                     justifyContent: 'flex-start',
                                 }}
-                                dropDownStyle={{ backgroundColor: '#fafafa' }}
+                                dropDownStyle={{ backgroundColor: '#ffa974' }}
                                 onChangeItem={item => this.setState({ partyMode: item.value })}
                             />
                         </View>

@@ -10,8 +10,13 @@ export const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#fff7e3'
+    flexDirection: 'column',
+
   },
+  appBackgroundColor: {
+    backgroundColor: '#fff7e3',
+  },
+
   title: {
     fontSize: 24,
     marginBottom: 16
@@ -25,7 +30,8 @@ export const styles = StyleSheet.create({
     fontSize: 25,
     padding: 10,
     fontStyle: 'italic',
-    fontWeight: 'bold'
+    fontWeight: 'bold',
+    maxWidth: 250
   },
   input: {
     borderWidth: 1,
@@ -58,7 +64,10 @@ export const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     position: "relative",
-    alignSelf: 'stretch'
+    alignSelf: 'stretch',
+    borderRadius: 5,
+    borderWidth: 1
+
   },
   column: {
     flexDirection: 'column',
@@ -69,17 +78,13 @@ export const styles = StyleSheet.create({
   trackItem: {
     flexDirection: 'row',
     alignContent: 'center',
-    borderTopWidth: 1,
-    borderTopColor: '#6C7A89',
     paddingVertical: 10,
     marginHorizontal: 5,
-    backgroundColor: '#ECF0F1',
+    backgroundColor: '#DBE0E0',
   },
   trackItemSelected: {
     flexDirection: 'row',
     alignContent: 'center',
-    borderTopWidth: 1,
-    borderTopColor: '#6C7A89',
     paddingVertical: 10,
     marginHorizontal: 5,
     backgroundColor: '#95A5A6',
@@ -112,23 +117,36 @@ export const styles = StyleSheet.create({
   ParticipantItem: {
     flexDirection: 'row',
     alignContent: 'center',
-    borderTopWidth: 1,
-    borderTopColor: '#6C7A89',
-    paddingVertical: 10,
+    borderWidth: 1,
+    borderColor: '#6C7A89',
     marginHorizontal: 5,
-    justifyContent: 'space-between'
+    justifyContent: 'space-between',
+    marginBottom: 5,
+    backgroundColor: '#DBE0E0',
+    borderRadius: 10,
+    paddingLeft: 5,
+    paddingTop: 15
+
   },
   ActivePlaylistItem: {
     flexDirection: 'row',
     alignContent: 'center',
-    borderWidth: 1,
-    borderColor: '#BAB0B0',
     marginHorizontal: 5,
     paddingTop: 23,
     alignSelf: 'stretch',
     marginBottom: 5,
     backgroundColor: '#DBE0E0',
-    borderRadius:10,
+    borderRadius: 10,
+    borderWidth: 1,
 
   },
+  PlaylistItem: {
+    alignContent: 'center',
+    alignSelf: 'stretch',
+    marginBottom: 5,
+    backgroundColor: '#DBE0E0',
+    borderRadius: 10,
+    borderWidth: 1.5,
+    alignSelf: 'stretch'
+  }
 });

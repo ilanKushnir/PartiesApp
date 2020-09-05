@@ -215,7 +215,7 @@ export class LoginView extends React.Component {
         if(logout) this.handleLogout();
 
         return (
-            <View style={styles.center}>
+            <View style={{...styles.center,...styles.appBackgroundColor }}>
                 <Text style={styles.title}>Choose your sign in method</Text>
                 <TextInput style={styles.input} placeholder="User Name"
                     onChangeText={userName => this.setState({ userName })}

@@ -22,8 +22,65 @@ export class ParticipantsView extends React.Component {
             partyId: props.route.params.partyId,
             partyMode: props.route.params.partyMode,
             participants: props.route.params.participants.filter(participant => participant.id !== this.props.route.params.loggedInUser.id),
-            loggedInUser: this.props.route.params.loggedInUser
+            loggedInUser: this.props.route.params.loggedInUser,
 
+            // participants: [{
+            //     "id": "1",
+            //     "name": "DekelDekelDekelDekelDekelDekelDekelDekelDekel",
+            //     "permission": "HOST",
+            // },
+            // {
+            //     "id": "2",
+            //     "name": "Ofir",
+            //     "permission": "Guest",
+            // },
+            // {
+            //     "id": "3",
+            //     "name": "Amit",
+            //     "permission": "Guest",
+            // },
+            // {
+            //     "id": "4",
+            //     "name": "Ilan",
+            //     "permission": "Guest",
+            // },
+            // {
+            //     "id": "5",
+            //     "name": "Tomer",
+            //     "permission": "Guest",
+            // },
+            // {
+            //     "id": "6",
+            //     "name": "Ohad",
+            //     "permission": "Guest",
+            // },
+            // {
+            //     "id": "7",
+            //     "name": "Or",
+            //     "permission": "Guest",
+            // },
+            // {
+            //     "id": "8",
+            //     "name": "Maya",
+            //     "permission": "Guest",
+            // },
+            // {
+            //     "id": "9",
+            //     "name": "Shira",
+            //     "permission": "Guest",
+            // },
+            // {
+            //     "id": "10",
+            //     "name": "Yuval",
+            //     "permission": "Guest",
+            // },
+            // {
+            //     "id": "11",
+            //     "name": "Sam",
+            //     "permission": "Guest",
+            // },
+
+            // ]
             // participants: [{
             //     "id": "1",
             //     "name": "DEKEL",
@@ -120,8 +177,11 @@ export class ParticipantsView extends React.Component {
 
         return (
 
-            <View style={styles.ParticipantItem} >
-                <Text>{item.name + '-' + item.permission} </Text>
+            <View style={{ ...styles.ParticipantItem }} >
+                <View style={{ flexDirection: 'row' }}>
+                    <Text numberOfLines={1} style={{ fontWeight: 'bold', maxWidth: 130, maxHeight: 50 }}>{item.name} </Text>
+                    <Text>{'(' + item.permission + ')'} </Text>
+                </View>
                 {
                     this.state.loggedInUser.permission === 'HOST' &&
                     (this.state.changePermission && this.state.changePermissionIndex === index ?
@@ -153,7 +213,7 @@ export class ParticipantsView extends React.Component {
                                     changePermissionIndex: index
                                 });
                             }}>
-                            <Text>
+                            <Text style={{ color: '#ff7752', fontSize: 15, paddingRight: 5 }}>
                                 Change Permission
                         </Text>
                         </TouchableOpacity>)
@@ -165,29 +225,35 @@ export class ParticipantsView extends React.Component {
 
     render() {
         return (
-            <SafeAreaView style={{ position: 'relative' }}>
+            <SafeAreaView style={{ position: 'relative', ...styles.appBackgroundColor,flex:1 }}>
                 <View style={{
-                    height: 50, flexDirection: 'row', position: 'relative', top: 12, alignSelf: 'stretch'}}>
-                    <View style={{ left: 10,flex:1 }} >
+                    height: 50, flexDirection: 'row', position: 'relative', top: 12, marginBottom: 15, alignSelf: 'stretch'
+                }}>
+                    <View style={{ left: 10, flex: 1 }} >
                         <MaterialCommunityIcons
                             onPress={() => this.props.navigation.openDrawer()}
                             name="menu"
                             size={30}
-                            color="#696969"
+                            color='#ff7752'
                         />
                     </View>
-                    <View style={{ left: 10,flex:2 }}>
+                    <View style={{ left: 10, flex: 2 }}>
                         <Text style={{
                             fontSize: 24,
                             marginBottom: 16
                         }}>Participants</Text>
                     </View>
                 </View>
-                <FlatList
-                    data={this.state.participants}
-                    renderItem={this.renderParticipantItem}
-                    keyExtractor={(item) => item.id}
-                />
+                <View style={{ ...styles.appBackgroundColor }}>
+                    <FlatList
+                        style={{ ...styles.appBackgroundColor }}
+                        data={this.state.participants}
+                        renderItem={this.renderParticipantItem}
+                        keyExtractor={(item) => item.id}
+                    />
+                    {/* <View style={{ ...styles.appBackgroundColor,height:1000,zIndex:-1}}>
+                    </View> */}
+                </View>
             </SafeAreaView>
         );
     }

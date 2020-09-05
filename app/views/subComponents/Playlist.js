@@ -5,7 +5,7 @@ import firebase from '../../../firebase.js';
 import { styles } from '../../styles/styles.js';
 import { Button } from 'react-native';
 import DraggableFlatList from 'react-native-draggable-flatlist';
-import { DB_TABLES } from '../../../assets/utils'; 
+import { DB_TABLES } from '../../../assets/utils';
 
 export default class Playlist extends React.Component {
     constructor(props) {
@@ -160,13 +160,13 @@ export default class Playlist extends React.Component {
     }
 
     loadNextVideoToPlayer = () => {
-        if(this.state.activeVideoIndex < this.state.tracks.length - 1) {
+        if (this.state.activeVideoIndex < this.state.tracks.length - 1) {
             this.loadVideoToPlayer(this.state.activeVideoIndex + 1);
         }
     }
 
     loadPrevVideoToPlayer = () => {
-        if(this.state.activeVideoIndex > 0) {
+        if (this.state.activeVideoIndex > 0) {
             this.loadVideoToPlayer(this.state.activeVideoIndex - 1);
         }
     }
@@ -225,7 +225,7 @@ export default class Playlist extends React.Component {
                         }
                         renderItem={({ item, index, drag }) => (
                             <TrackItem
-                                style={{ height: 48 }}
+                                style={{ height: 48,...styles.PlaylistItem}}
                                 key={item.id}
                                 id={item.videoId}
                                 title={item.title}
@@ -239,10 +239,6 @@ export default class Playlist extends React.Component {
                             />
                         )}
                     />
-                )}
-
-                {!this.state.listLoaded && (
-                    <Text> LOADING... </Text>
                 )}
             </View>
         )
