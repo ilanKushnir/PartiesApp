@@ -16,6 +16,7 @@ import AddToPlaylistView from '../AddToPlaylistView.js';
 import { LoginView } from '../LoginView.js';
 import { SettingsView } from '../SettingsView.js';
 import { ParticipantsView } from '../ParticipantsView.js';
+import { styles } from '../../styles/styles.js';
 
 const Stack = createStackNavigator();
 const Tab = createMaterialBottomTabNavigator();
@@ -126,9 +127,10 @@ export default class Navigator extends React.Component {
     PartyViewDrawer = (navigation) => {
         return (
             <Drawer.Navigator
+                drawerStyle={{ ...styles.appBackgroundColor }}
                 drawerPosition="left"
                 drawerType="front"
-                drawerStyle={{ width: 180 }}
+                drawerStyle={{ width: 180,...styles.appBackgroundColor }}
             >
                 <Drawer.Screen name="Party View Stack" component={this.PartyViewStack}
                     initialParams={{

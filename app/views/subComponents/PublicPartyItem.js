@@ -68,7 +68,7 @@ export default class PublicPartyItem extends React.Component {
                         {this.props.name}
                     </Text>
                     <Text style={{ flex: 6, color: this.props.condition === 'play' ? 'green' : 'red' }}>
-                        {this.props.condition}
+                        {this.props.condition === 'pause'? 'Paused':'Playing'}
                     </Text>
                     <Text style={{ flex: 2 }}>
                         {this.props.joinId}

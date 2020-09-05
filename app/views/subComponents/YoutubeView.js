@@ -85,8 +85,8 @@ export default class YoutubeView extends React.Component {
 
         return (
             <View style={{ flex: 1 }}>
-                <View pointerEvents="none" style={{flex:3.1,    backgroundColor: '#000000',}}>
-                <WebView style={{ flex: 1,    backgroundColor:'#000000' }}
+                <View pointerEvents="none" style={{flex:3.1,...styles.appBackgroundColor}}>
+                <WebView style={{ flex: 1, backgroundColor:'#CAE0E0',alignSelf:'stretch',...styles.appBackgroundColor}}
                     pointerEvents="none"
                     javascriptEnabled={true}
                     useWebKit={true}

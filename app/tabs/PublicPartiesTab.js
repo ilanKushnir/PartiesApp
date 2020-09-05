@@ -61,7 +61,7 @@ export class PublicPartiesTab extends React.Component {
   render() {
     const { navigation } = this.props;
     return (
-      <View style={{justifyContent: "center",alignItems: "center",flex:1}}>
+      <View style={{justifyContent: "center",alignItems: "center",flex:1,...styles.appBackgroundColor}}>
         <Text style={{ ...styles.title, position: 'absolute', top: 17 }}>Public Parties</Text>
         <View style={{
           flex: 1, paddingTop: 65,

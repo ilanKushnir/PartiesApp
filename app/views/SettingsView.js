@@ -6,7 +6,7 @@ import DropDownPicker from 'react-native-dropdown-picker';
 import Icon from 'react-native-vector-icons/Feather';
 import firebase from '../../firebase';
 
-import { DB_TABLES, USER_PERMISSION, PARTY_MODES } from '../../assets/utils'; 
+import { DB_TABLES, USER_PERMISSION, PARTY_MODES } from '../../assets/utils';
 
 export class SettingsView extends React.Component {
     constructor(props) {
@@ -74,21 +74,39 @@ export class SettingsView extends React.Component {
 
     render() {
         return (
-            <View style={{ flex: 0.9 }}>
-                    <View style={styles.row}>
+            <View style={{ flex: 1, ...styles.appBackgroundColor, alignSelf: 'stretch' }}>
+                {/* <View style={styles.row}>
                         <View style={{ position: 'relative', left: 10 }} >
                             <MaterialCommunityIcons
                                 onPress={() => this.props.navigation.openDrawer()}
                                 name="menu"
                                 size={30}
-                                color="#696969"
-                            />
+                                color= '#ff7752'
+                                />
                         </View>
                         <View style={{ ...styles.center }}>
                             <Text style={styles.title}>Settings</Text>
                         </View>
+                    </View> */}
+                <View style={{
+                    height: 50, flexDirection: 'row', position: 'relative', top: 30, marginBottom: 15, alignSelf: 'stretch'
+                }}>
+                    <View style={{ left: 10, flex: 1 }} >
+                        <MaterialCommunityIcons
+                            onPress={() => this.props.navigation.openDrawer()}
+                            name="menu"
+                            size={30}
+                            color='#ff7752'
+                        />
                     </View>
-                <View style={{ ...styles.center, flex: 4}}>
+                    <View style={{ left: 10, flex: 1.8 }}>
+                        <Text style={{
+                            fontSize: 24,
+                            marginBottom: 16
+                        }}>Settings</Text>
+                    </View>
+                </View>
+                <View style={{ ...styles.center, flex: 4 }}>
                     <View style={{ ...styles.row, ...styles.publicSwitch, flex: 0.2 }}>
                         <Text>Public</Text>
                         <Switch
@@ -109,24 +127,19 @@ export class SettingsView extends React.Component {
                             placeholder="Select Party Mode "
 
                             containerStyle={{ height: 40, width: 180, marginTop: 10, marginBottom: 10 }}
-                            style={{ backgroundColor: '#fafafa' }}
+                            style={{ backgroundColor: '#ffa974' }}
                             itemStyle={{
                                 justifyContent: 'flex-start',
                             }}
-                            dropDownStyle={{ backgroundColor: '#fafafa' }}
+                            dropDownStyle={{ backgroundColor: '#ffa974' }}
                             onChangeItem={item => this.updatePermissions(item.value)}
                             disabled={!this.state.isHost}
                             defaultValue={this.state.partyMode}
                         />
                     </View>
-                    <View style={{ position: 'absolute', bottom: 40 }}>
-                        <Button
-                            onPress={this.updateSettingsInDB}
-                            title="Save"
-                            disabled={!this.state.isHost}
-                        />
-                    </View>
+
                 </View>
+
             </View>
         )
     }

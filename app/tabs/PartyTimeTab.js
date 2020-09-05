@@ -24,7 +24,7 @@ export default class PartyTimeTab extends React.Component {
 
     render() {
         return (
-            <View style={styles.center, styles.row}>
+            <View style={{...styles.center, ...styles.row,...styles.appBackgroundColor}}>
                 <View style={styles.column}>
                     <MaterialCommunityIcons
                         onPress={() => this.props.navigation.navigate('Set Party', { isNewParty: true })}

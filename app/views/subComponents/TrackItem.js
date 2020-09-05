@@ -27,6 +27,7 @@ export default class TrackItem extends React.Component {
     render() {
         return (
             <TouchableOpacity
+                style={{ ...styles.PlaylistItem }}
                 onPress={() => {
                     this.props.onClickFunc(this.props.item)
                     this.toggleItemSelection()
@@ -37,12 +38,13 @@ export default class TrackItem extends React.Component {
                     }
                 }}>
 
-                <View style={this.state.selected ? styles.trackItemSelected : styles.trackItem}>
+                <View style={{ ...this.state.selected ? styles.trackItemSelected : styles.trackItem, backgroundColor: '#DBE0E0', alignSelf: 'stretch' }}>
+
                     <Image
                         style={{ flex: 1, width: 20, height: 35, marginRight: 10 }}
                         source={{ uri: this.props.imageSrc }}
                     />
-                    <Text style={{ flex: 6 }}>
+                    <Text style={{ flex: 6, alignSelf: 'center' }}>
                         {this.props.title}
                     </Text>
 

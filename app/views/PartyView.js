@@ -31,7 +31,9 @@ export class PartyView extends React.Component {
                 condition: '',
                 playlist: props.route.params.playlist
             },
+
             isDJ: props.route.params.loggedInUser.permission === USER_PERMISSION.HOST || 
+
                 props.route.params.loggedInUser.permission === USER_PERMISSION.DJ,
             isInvited: props.route.params.isInvited,
             loggedInUser: props.route.params.loggedInUser
@@ -91,7 +93,7 @@ export class PartyView extends React.Component {
 
     handleLoggedInUser = participants => {
         const user = this.state.loggedInUser.id ? this.state.loggedInUser : this.state.loggedInUser[0];
-        const { id, permission: oldPermission } = user;        
+        const { id, permission: oldPermission } = user;
         const myUserOnDB = participants.find(user => user.id === id);
 
         if (participants.length && !myUserOnDB) {  // loggedInUser has been kicked
@@ -249,33 +251,33 @@ ${redirectUrl}`,
     render() {
         return (
 
-            <View style={{ flex: 1, backgroundColor: '#ECF0F1', }}>
+            <View style={{ flex: 1, ...styles.appBackgroundColor }}>
                 <View style={{ ...styles.rowHeader, flex: 0.5, position: 'relative', top: 10 }}>
-
-                    <MaterialCommunityIcons
-                        onPress={() => this.props.navigation.openDrawer()}
-                        name="menu"
-                        size={30}
-                        color="#696969"
-                    />
-                    <MaterialCommunityIcons
-                        onPress={this.onIdPress}
-                        name="share-variant"
-                        size={25}
-                        color="#696969"
-                    />
-
-                    <Text style={styles.partyName}>{this.state.party.partyName}</Text>
+                    <View style={{flexDirection:'row',justifyContent:'space-between',minWidth:70}}>
+                        <MaterialCommunityIcons
+                            onPress={() => this.props.navigation.openDrawer()}
+                            name="menu"
+                            size={30}
+                            color='#ff7752'
+                        />
+                        <MaterialCommunityIcons
+                            onPress={this.onIdPress}
+                            name="share-variant"
+                            size={25}
+                            color='#ff7752'
+                        />
+                    </View>
+                    <Text numberOfLines={1} style={styles.partyName}>{this.state.party.partyName}</Text>
                     <MaterialCommunityIcons
                         onPress={this.onPressLeaveParty}
                         name="logout"
                         size={30}
-                        color="#ff0000"
+                        color="red"
                     />
                 </View>
 
-                <View style={{ flex: 2.2, backgroundColor: '#000000' }}>
-                    <YoutubeView style={{ backgroundColor: '#000000' }}
+                <View style={{ flex: 2.2, backgroundColor: '#CAE0E0' }}>
+                    <YoutubeView style={{ backgroundColor: '#CAE0E0' }}
                         activeVideo={this.state.activeVideo}
                         condition={this.state.party.condition}
                         isDJ={this.state.isDJ}
