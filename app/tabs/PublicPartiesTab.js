@@ -52,9 +52,11 @@ export class PublicPartiesTab extends React.Component {
                 return party;
               });
             }
-
+            
+            updatePartiesArr = updatePartiesArr.sort((a,b) => b.joinId - a.joinId);
+            
             this.setState({
-              PublicParties: updatePartiesArr,
+              PublicParties: updatePartiesArr,  
               listLoaded: true
             })
           });

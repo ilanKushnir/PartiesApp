@@ -125,7 +125,7 @@ export class PartyView extends React.Component {
             Alert.alert(`You have been ${updateCase} to ${newPermission}`);
         }
 
-        return myUserOnDB //|| user;
+        return myUserOnDB;//|| user;
     }
 
     updateHost = participants => {
