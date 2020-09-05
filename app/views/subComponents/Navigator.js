@@ -34,7 +34,6 @@ export default class Navigator extends React.Component {
                 initialParams={{ logout: navigation?.route?.params?.logout || false }}
             />
             <Stack.Screen name="Bottom Tabs" component={this.BottomTabs} />
-            <Stack.Screen name="Party Drawer" component={this.PartyViewDrawer} />
         </Stack.Navigator>
     }
 
@@ -56,6 +55,7 @@ export default class Navigator extends React.Component {
             <Tab.Screen
                 name="Public Parties Tab"
                 component={PublicPartiesTab}
+                initialParams={{ loggedInUser: navigation.route.params.loggedInUser }}
                 options={{
                     tabBarLabel: 'Public Parties',
                     tabBarIcon: ({ color }) => (
@@ -91,6 +91,19 @@ export default class Navigator extends React.Component {
     }
 
     PartyTabStack = (navigation) => {
+        const isPublicOrInvitation = navigation?.route?.params?.partyId;
+        let initialParams = null;
+
+        if(isPublicOrInvitation) {
+            initialParams = { 
+                loggedInUser: navigation.route.params.loggedInUser || null,
+                partyId: navigation.route.params.partyId || null,
+                playlist: navigation.route.params.playlist || null,
+                isInvited: navigation.route.params.isInvited || null,
+                participants: navigation.route.params.participants || null,
+                };
+        }
+
         return (
             <Stack.Navigator
                 screenOptions={{
@@ -98,15 +111,16 @@ export default class Navigator extends React.Component {
                 }}
                 headerMode='none'
             >
-                <Stack.Screen name="Party Time" component={PartyTimeTab} />
+                <Stack.Screen name="Party Time" component={PartyTimeTab}
+                    initialParams={initialParams || null}
+                />
                 <Stack.Screen name="Set Party"
                     initialParams={{ loggedInUser: navigation.route.params.loggedInUser }}
                     component={SetPartyView}
                 />
-                <Stack.Screen name="Party Drawer" component={this.PartyViewDrawer}
-                />
+                <Stack.Screen name="Party Drawer" component={this.PartyViewDrawer} />
             </Stack.Navigator >
-        )
+        );
     }
 
     PartyViewDrawer = (navigation) => {
@@ -119,7 +133,6 @@ export default class Navigator extends React.Component {
                 <Drawer.Screen name="Party View Stack" component={this.PartyViewStack}
                     initialParams={{
                         loggedInUser: navigation.route.params.loggedInUser,
-                        userId: navigation.route.params.userId,
                         partyId: navigation.route.params.partyId,
                         playlist: navigation.route.params.playlist,
                         isInvited: navigation.route.params.isInvited,
@@ -176,7 +189,6 @@ export default class Navigator extends React.Component {
             <Stack.Navigator headerMode='none'>
                 <Stack.Screen name="Party View" component={PartyView}
                     initialParams={{
-                        userId: navigation.route.params.userId,
                         partyId: navigation.route.params.partyId,
                         isHost: navigation.route.params.isHost,
                         playlist: navigation.route.params.playlist,
