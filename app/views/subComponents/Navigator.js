@@ -64,15 +64,6 @@ export default class Navigator extends React.Component {
                 }}
             />
             <Tab.Screen
-                name="History Tab"
-                component={HistoryTab}
-                options={{
-                    tabBarLabel: 'History',
-                    tabBarIcon: ({ color }) => (
-                        <MaterialCommunityIcons name="history" color={color} size={25} />),
-                }}
-            />
-            <Tab.Screen
                 name="Party Time Tab"
                 initialParams={{ loggedInUser: navigation.route.params.loggedInUser }}
                 component={this.PartyTabStack}
