@@ -44,8 +44,9 @@ export default class SetPartyView extends React.Component {
                     } else {
                         joinId = 100;
                     }
+                    
                     const playlistResponse = await db.collection(DB_TABLES.PLAYLIST).add({
-                        tracks: []
+                        tracks: [db.doc(`/track/0JjxdBPLJqlKRe77plFz`)]
                     });
                     const { id: playlistId } = playlistResponse;
                     const playlist = await db.doc(`/playlist/${playlistId}`);   // playlist Reference on DB
@@ -61,10 +62,10 @@ export default class SetPartyView extends React.Component {
                     const response = await db.collection(DB_TABLES.PARTY).add({
                         joinId,
                         name: partyName || `Party #${joinId}`,
-                        condition: 'pause',
+                        condition: 'play',
                         playlist,
                         creationTime: currentTime,
-                        activeVideoId: '',
+                        activeVideoId: 'eirZ-weKAuw',
                         currentTime: 0,
                         lastUpdatedTime: currentTime,
                         participants,
