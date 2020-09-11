@@ -1,7 +1,7 @@
 import React from 'react';
 import { View } from 'react-native';
 import { WebView } from 'react-native-webview';
-import { styles } from '../../styles/styles.js';
+import { styles } from '../../../styles/styles.js';
 import Player from './Player.js';
 
 const playVideo = 'player.playVideo();'

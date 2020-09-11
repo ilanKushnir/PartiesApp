@@ -1,5 +1,5 @@
 import React from 'react'
-import Navigator from './app/views/subComponents/Navigator.js'
+import Navigator from './app/navigation/Navigator.js'
 window.addEventListener = x => x;   //  mock eventListener to satisfy Firestore
 console.ignoredYellowBox = ['Warning:'];
 console.disableYellowBox = true;

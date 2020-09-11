@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, TouchableOpacity, Image, Text } from 'react-native';
-import { styles } from '../../styles/styles.js'
+import { styles } from '../../../styles/styles.js'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 
 export default class TrackItem extends React.Component {

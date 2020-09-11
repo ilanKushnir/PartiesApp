@@ -3,7 +3,7 @@ import { View, Text, Button, FlatList } from 'react-native';
 import { styles } from '../styles/styles.js'
 import { StackActions } from '@react-navigation/native';
 import firebase from '../../firebase.js';
-import PublicPartyItem from '../views/subComponents/PublicPartyItem';
+import PublicPartyItem from '../views/PublicPartyItem';
 import { DB_TABLES } from '../../assets/utils';
 
 export class PublicPartiesTab extends React.Component {
