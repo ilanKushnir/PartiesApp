@@ -1,7 +1,7 @@
 import React from 'react';
 import { Text, View, FlatList, Button, TextInput } from 'react-native';
-import TrackItem from './subComponents/TrackItem';
-import { styles } from '../styles/styles.js'
+import TrackItem from './TrackItem';
+import { styles } from '../../../styles/styles.js'
 import { StackActions } from '@react-navigation/native'
 
 export default class AddToPlaylistView extends React.Component {

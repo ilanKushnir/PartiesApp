@@ -1,14 +1,14 @@
 
 import React from 'react';
 import { Text, View, Alert, Share } from 'react-native';
-import YoutubeView from './subComponents/YoutubeView';
-import firebase from '../../firebase';
-import { styles } from '../styles/styles.js';
+import YoutubeView from './player/YoutubeView';
+import firebase from '../../../firebase';
+import { styles } from '../../styles/styles.js';
 import { StackActions } from '@react-navigation/native';
-import Playlist from './subComponents/Playlist.js';
+import Playlist from './playlist/Playlist.js';
 import * as Linking from 'expo-linking';
 import { MaterialCommunityIcons } from 'react-native-vector-icons';
-import { DB_TABLES, USER_PERMISSION } from '../../assets/utils';
+import { DB_TABLES, USER_PERMISSION } from '../../../assets/utils';
 
 export class PartyView extends React.Component {
     static navigationOptions = {

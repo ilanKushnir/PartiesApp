@@ -1,8 +1,8 @@
 import React from 'react';
 import { View, TouchableOpacity, Image, Text, Alert } from 'react-native';
-import { styles } from '../../styles/styles';
-import { DB_TABLES, USER_PERMISSION, PARTY_MODES } from '../../../assets/utils'; 
-import firebase from '../../../firebase.js';
+import { styles } from '../styles/styles';
+import { DB_TABLES, USER_PERMISSION, PARTY_MODES } from '../../assets/utils'; 
+import firebase from '../../firebase.js';
 import { CommonActions } from '@react-navigation/native';
 import { color } from 'react-native-reanimated';
 

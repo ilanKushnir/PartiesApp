@@ -3,13 +3,13 @@ import { FlatList, SafeAreaView, StatusBar, StyleSheet, Text, TouchableOpacity }
 import { slide as Menu } from 'react-burger-menu'
 import { Button } from 'react-native-paper';
 import { View } from 'react-native';
-import { styles } from '../styles/styles.js'
+import { styles } from '../../styles/styles.js'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import ButtonGroup from 'react-native-button-group';
 import RadioGroup from 'react-native-radio-button-group';
 import { color } from 'react-native-reanimated';
-import firebase from '../../firebase';
-import { DB_TABLES, USER_PERMISSION } from '../../assets/utils';
+import firebase from '../../../firebase';
+import { DB_TABLES, USER_PERMISSION } from '../../../assets/utils';
 
 
 export class ParticipantsView extends React.Component {
@@ -23,94 +23,6 @@ export class ParticipantsView extends React.Component {
             partyMode: props.route.params.partyMode,
             participants: props.route.params.participants.filter(participant => participant.id !== this.props.route.params.loggedInUser.id),
             loggedInUser: this.props.route.params.loggedInUser,
-
-            // participants: [{
-            //     "id": "1",
-            //     "name": "DekelDekelDekelDekelDekelDekelDekelDekelDekel",
-            //     "permission": "HOST",
-            // },
-            // {
-            //     "id": "2",
-            //     "name": "Ofir",
-            //     "permission": "Guest",
-            // },
-            // {
-            //     "id": "3",
-            //     "name": "Amit",
-            //     "permission": "Guest",
-            // },
-            // {
-            //     "id": "4",
-            //     "name": "Ilan",
-            //     "permission": "Guest",
-            // },
-            // {
-            //     "id": "5",
-            //     "name": "Tomer",
-            //     "permission": "Guest",
-            // },
-            // {
-            //     "id": "6",
-            //     "name": "Ohad",
-            //     "permission": "Guest",
-            // },
-            // {
-            //     "id": "7",
-            //     "name": "Or",
-            //     "permission": "Guest",
-            // },
-            // {
-            //     "id": "8",
-            //     "name": "Maya",
-            //     "permission": "Guest",
-            // },
-            // {
-            //     "id": "9",
-            //     "name": "Shira",
-            //     "permission": "Guest",
-            // },
-            // {
-            //     "id": "10",
-            //     "name": "Yuval",
-            //     "permission": "Guest",
-            // },
-            // {
-            //     "id": "11",
-            //     "name": "Sam",
-            //     "permission": "Guest",
-            // },
-
-            // ]
-            // participants: [{
-            //     "id": "1",
-            //     "name": "DEKEL",
-            //     "permission": "HOST",
-            // },
-            // {
-            //     "id": "2",
-            //     "name": "OFIR",
-            //     "permission": "GUEST",
-            // },
-            // {
-            //     "id": "3",
-            //     "name": "AMIT",
-            //     "permission": "DJ",
-            // },
-            // {
-            //     "id": "4",
-            //     "name": "Ilan",
-            //     "permission": "GUEST",
-            // },
-            // {
-            //     "id": "5",
-            //     "name": "TOMER",
-            //     "permission": "GUEST",
-            // },
-            // {
-            //     "id": "6",
-            //     "name": "OHAD",
-            //     "permission": "GUEST",
-            // }]
         };
     }
 
@@ -256,8 +168,6 @@ export class ParticipantsView extends React.Component {
                         renderItem={this.renderParticipantItem}
                         keyExtractor={(item) => item.id}
                     />
-                    {/* <View style={{ ...styles.appBackgroundColor,height:1000,zIndex:-1}}>
-                    </View> */}
                 </View>
             </SafeAreaView>
         );

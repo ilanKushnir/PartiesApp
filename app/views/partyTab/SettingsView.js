@@ -1,12 +1,12 @@
 import React from 'react';
 import { View, Text, Switch, Button } from 'react-native';
-import { styles } from '../styles/styles.js';
+import { styles } from '../../styles/styles.js';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import DropDownPicker from 'react-native-dropdown-picker';
 import Icon from 'react-native-vector-icons/Feather';
-import firebase from '../../firebase';
+import firebase from '../../../firebase';
 
-import { DB_TABLES, USER_PERMISSION, PARTY_MODES } from '../../assets/utils';
+import { DB_TABLES, USER_PERMISSION, PARTY_MODES } from '../../../assets/utils';
 
 export class SettingsView extends React.Component {
     constructor(props) {
@@ -33,8 +33,6 @@ export class SettingsView extends React.Component {
                     participants
                 });
             })
-
-            // TODO - when distructing component --> call DBbindingResponse() to unbind it from DB
         } catch (error) {
             console.log('bindChanges changes From DB error', error)
         }
@@ -81,19 +79,6 @@ export class SettingsView extends React.Component {
     render() {
         return (
             <View style={{ flex: 1, ...styles.appBackgroundColor, alignSelf: 'stretch' }}>
-                {/* <View style={styles.row}>
-                        <View style={{ position: 'relative', left: 10 }} >
-                            <MaterialCommunityIcons
-                                onPress={() => this.props.navigation.openDrawer()}
-                                name="menu"
-                                size={30}
-                                color= '#ff7752'
-                                />
-                        </View>
-                        <View style={{ ...styles.center }}>
-                            <Text style={styles.title}>Settings</Text>
-                        </View>
-                    </View> */}
                 <View style={{
                     height: 50, flexDirection: 'row', position: 'relative', top: 30, marginBottom: 15, alignSelf: 'stretch'
                 }}>

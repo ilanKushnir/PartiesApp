@@ -1,11 +1,11 @@
 import React from 'react';
 import { Text, View, Alert } from 'react-native';
 import TrackItem from './TrackItem.js';
-import firebase from '../../../firebase.js';
-import { styles } from '../../styles/styles.js';
+import firebase from '../../../../firebase.js';
+import { styles } from '../../../styles/styles.js';
 import { Button } from 'react-native';
 import DraggableFlatList from 'react-native-draggable-flatlist';
-import { DB_TABLES } from '../../../assets/utils';
+import { DB_TABLES } from '../../../../assets/utils';
 
 export default class Playlist extends React.Component {
     constructor(props) {

@@ -1,7 +1,7 @@
 import React from 'react'
 import { View } from 'react-native'
 import { MaterialCommunityIcons } from 'react-native-vector-icons'
-import { styles } from '../../styles/styles.js'
+import { styles } from '../../../styles/styles.js'
 
 export default class Player extends React.Component {
 

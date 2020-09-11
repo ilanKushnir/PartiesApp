@@ -2,21 +2,19 @@ import React from 'react'
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createDrawerNavigator } from '@react-navigation/drawer';
-import { PartyView } from '../PartyView.js';
-import SetPartyView from '../SetPartyView.js';
+import { PartyView } from '../views/partyTab/PartyView.js';
+import SetPartyView from '../views/partyTab/SetPartyView.js';
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
-import { HomeTab } from '../../tabs/HomeTab.js';
-import { PublicPartiesTab } from '../../tabs/PublicPartiesTab.js';
-import HistoryTab from '../../tabs/HistoryTab.js';
-import { BackButtonHandler } from './AndroidBackHandler.js';
+import { HomeTab } from '../tabs/HomeTab.js';
+import { PublicPartiesTab } from '../tabs/PublicPartiesTab.js';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { Ionicons } from '@expo/vector-icons';
-import PartyTimeTab from '../../tabs/PartyTimeTab.js';
-import AddToPlaylistView from '../AddToPlaylistView.js';
-import { LoginView } from '../LoginView.js';
-import { SettingsView } from '../SettingsView.js';
-import { ParticipantsView } from '../ParticipantsView.js';
-import { styles } from '../../styles/styles.js';
+import PartyTimeTab from '../tabs/PartyTimeTab.js';
+import AddToPlaylistView from '../views/partyTab/playlist/AddToPlaylistView.js';
+import { LoginView } from '../views/LoginView.js';
+import { SettingsView } from '../views/partyTab/SettingsView.js';
+import { ParticipantsView } from '../views/partyTab/ParticipantsView.js';
+import { styles } from '../styles/styles.js';
 
 const Stack = createStackNavigator();
 const Tab = createMaterialBottomTabNavigator();
@@ -203,16 +201,3 @@ export default class Navigator extends React.Component {
         )
     }
 }
-
-
-
-
-
-/*
-Use this to fix error:
-1. "Unable to resolve module ./components/Checkbox from node_modules\react-native-paper\lib\module\index.js"
-2. Unable to resolve "./NavigationNativeContainer" from "node_modules/@react-navigation/native/src/index.tsx"
-
-npx react-native start --reset-cache
-npm install
-*/
